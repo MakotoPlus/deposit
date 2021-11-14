@@ -121,6 +121,9 @@ function DashboardContent() {
               Deposit
             </Typography>
             <IconButton color="inherit">
+              <Badge badgeContent={4} color="secondary">
+                <NotificationsIcon />
+              </Badge>
             </IconButton>
           </Toolbar>
         </AppBar>
@@ -140,6 +143,7 @@ function DashboardContent() {
           <Divider />
           <List>{mainListItems}</List>
           <Divider />
+          <List>{secondaryListItems}</List>
         </Drawer>
         <Box
           component="main"

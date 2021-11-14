@@ -22,13 +22,13 @@ export const mainListItems = (
       <ListItemIcon>
         <ShoppingCartIcon />
       </ListItemIcon>
-      <ListItemText primary="Orders" />
+      <ListItemText primary="計画" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
-      <ListItemText primary="Customers" />
+      <ListItemText primary="実績" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
@@ -36,15 +36,11 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Reports" />
     </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="Integrations" />
-    </ListItem>
   </div>
 );
 
+/**
+ * 削除
 export const secondaryListItems = (
   <div>
     <ListSubheader inset>Saved reports</ListSubheader>
@@ -68,3 +64,6 @@ export const secondaryListItems = (
     </ListItem>
   </div>
 );
+
+*/
+
