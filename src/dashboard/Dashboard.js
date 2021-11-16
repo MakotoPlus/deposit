@@ -13,6 +13,7 @@ import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
+import { makeStyles } from '@material-ui/core/styles';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -87,13 +88,19 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 const mdTheme = createTheme();
+const useStyles = makeStyles({
+  menulist: {
+    display: 'list-item'  /* 縦に並べる */
+  },
+});
+
 
 function DashboardContent() {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
-
+  const classes = useStyles();
   return (
     <Router>
     <ThemeProvider theme={mdTheme}>
@@ -147,14 +154,17 @@ function DashboardContent() {
             </IconButton>
           </Toolbar>
           <Divider />
-          <List>{mainListItems}</List>
+          <List className={classes.menulist}>
+            {mainListItems}
+            {secondaryListItems}
+          </List>
           <Divider />
         </Drawer>
-      <Routes>
-        <Route exact path="/" element={<MainPage/>}/>
-        <Route exact path="/plan" element={<PlanPage/>}/>
-        <Route exact path="/result" element={<ResultPage/>}/>
-      </Routes>
+        <Routes>
+          <Route exact path="/" element={<MainPage/>}/>
+          <Route exact path="/plan" element={<PlanPage/>}/>
+          <Route exact path="/result" element={<ResultPage/>}/>
+        </Routes>
       </Box>
     </ThemeProvider>
     </Router>

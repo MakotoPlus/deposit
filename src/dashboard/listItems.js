@@ -1,4 +1,5 @@
 import * as React from 'react';
+import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -12,7 +13,7 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import { Link } from "react-router-dom";
 
 export const mainListItems = (
-  <div>
+  <List component="nav">
     <Link to="/">
     <ListItem button>
       <ListItemIcon>
@@ -43,11 +44,12 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Reports" />
     </ListItem>
-  </div>
+  </List>
 );
 
 /**
  * 削除
+ * */
 export const secondaryListItems = (
   <div>
     <ListSubheader inset>Saved reports</ListSubheader>
@@ -71,6 +73,4 @@ export const secondaryListItems = (
     </ListItem>
   </div>
 );
-
-*/
 
