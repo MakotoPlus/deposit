@@ -106,16 +106,88 @@ function createData(id, insert_yyyymmdd, deposit_group_name, depositItem_name,
         '123,222',
         'KEY_003'
     ),
-];
+    createData(
+      4,
+      '2021/11/03',
+      '貯金グループ',
+      '旅行',
+      '貯金',
+      '123,222',
+      'KEY_003'
+    ),
+    createData(
+      5,
+      '2021/11/03',
+      '貯金グループ',
+      '旅行',
+      '貯金',
+      '123,222',
+      'KEY_003'
+    ),
+    createData(
+      6,
+      '2021/11/03',
+      '貯金グループ',
+      '旅行',
+      '貯金',
+      '123,222',
+      'KEY_003'
+    ),
+    createData(
+      7,
+      '2021/11/03',
+      '貯金グループ',
+      '旅行',
+      '貯金',
+      '123,222',
+      'KEY_003'
+    ),
+    createData(
+      8,
+      '2021/11/03',
+      '貯金グループ',
+      '旅行',
+      '貯金',
+      '123,222',
+      'KEY_003'
+    ),
+    createData(
+      9,
+      '2021/11/03',
+      '貯金グループ',
+      '旅行',
+      '貯金',
+      '123,222',
+      'KEY_003'
+    ),
+    createData(
+      10,
+      '2021/11/03',
+      '貯金グループ',
+      '旅行',
+      '貯金',
+      '123,222',
+      'KEY_003'
+    ),
+    createData(
+      11,
+      '2021/11/03',
+      '貯金グループ',
+      '旅行',
+      '貯金',
+      '123,222',
+      'KEY_003'
+    ),
+  ];
 
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-  },
-  container: {
-    maxHeight: 440,
-  },
-});
+  const useStyles = makeStyles({
+    root: {
+      width: '100%',
+    },
+    container: {
+      maxHeight: 440,
+    },
+  });
 
 export default function StickyHeadTable() {
   const classes = useStyles();
