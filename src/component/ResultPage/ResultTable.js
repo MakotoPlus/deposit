@@ -81,7 +81,7 @@ function createData(id, insert_yyyymmdd, deposit_group_name, depositItem_name,
   const rows = [
     createData(
         1,
-        '2021/11/01',
+        '2021/11/91',
         '貯金グループ',
         '住宅',
         '貯金',
@@ -189,7 +189,7 @@ function createData(id, insert_yyyymmdd, deposit_group_name, depositItem_name,
     },
   });
 
-export default function StickyHeadTable() {
+export default function ResultTable() {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);

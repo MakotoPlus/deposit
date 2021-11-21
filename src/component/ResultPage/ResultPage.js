@@ -7,7 +7,7 @@ import Paper from '@mui/material/Paper';
 //import ResultList from "./ResultFixedHeder";
 //import FlexLayoutGrid from "./ResultDataGrid";
 //import ResultList from "./ResultList_err";
-import StickyHeadTable from "./ResultFixedHeder";
+import ResultTable from "./ResultTable";
 import ResultInputDialog from "./../ResultInputDialog";
 
 function ResultPage(){
@@ -37,7 +37,7 @@ function ResultPage(){
                   }}
                 >
               <ResultInputDialog subtitle="New Data"/>
-              <StickyHeadTable />
+              <ResultTable />
             </Paper>
           </Grid>
         </Grid>
