@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function PlunUpdateDialog({subtitle}) {
+export default function ResultUpdateDialog({subtitle}) {
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
   //const [fullWidth, setFullWidth] = React.useState(true);
@@ -50,33 +50,28 @@ export default function PlunUpdateDialog({subtitle}) {
   const handleClose = () => {
     setOpen(false);
   };
-/**
-<Button variant="outlined" color="primary" onClick={handleClickOpen}>
-  {subtitle}
-</Button>
- */
+
   return (
     <div>
-      <Link component="button" variant="body2" onClick={handleClickOpen}>
+      <Link component="button" onClick={handleClickOpen}>
         {subtitle}
       </Link>
       <Dialog 
         fullWidth="true"
-        maxWidth="xs"
         open={open} 
         onClose={handleClose} 
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">{subtitle}</DialogTitle>
         <DialogContent>
+
           <form className={classes.root} noValidate autoComplete="off">
-              <DepositGroupSelect />
-              <DepositItemSelect />
-              <div className={classes.inilineBlock}>
-                <DepositTypeSelect />
-                <DepositValueText />
-              </div>
-          </form>
+            <DatePicker01 labelName="登録年月日" />
+            <DepositGroupSelect />
+            <DepositItemSelect />
+            <DepositTypeSelect />
+            <DepositValueText />
+        </form>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">

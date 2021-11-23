@@ -25,7 +25,7 @@ function ResultPage(){
       }}
     >
       <Toolbar />
-      <Container maxWidth="lg" sx={{ mt: 2, mb: 1 }}>
+      <Container maxWidth="100%" sx={{ mt: 2, mb: 1 }}>
         <Grid container spacing={1}>
           <Grid item xs={12}>
             <Paper

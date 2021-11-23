@@ -59,7 +59,7 @@ function createData(id, deposit_group_name, deposit_value) {
       width: '100%',
     },
     container: {
-      maxHeight: 200,
+      maxHeight: 235,
     },
   });
 

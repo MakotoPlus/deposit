@@ -156,6 +156,7 @@ function DashboardContent() {
           <Divider />
           <List className={classes.menulist}>
             {mainListItems}
+
             {secondaryListItems}
           </List>
           <Divider />

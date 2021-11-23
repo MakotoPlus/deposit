@@ -24,35 +24,35 @@ function PlanPage(){
       }}
     >
       <Toolbar />
-      <Container maxWidth="lg" sx={{ mt: 2, mb: 1 }}>
+      <Container maxWidth="100%" sx={{ mt: 2, mb: 1 }}>
         <Grid container spacing={1}>
-          <Grid item xs={12} md={8} lg={9}>
-            <Paper
-                  sx={{
-                    p: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 300,
-                  }}
-                >
-              <PlanGroupSumary />
-            </Paper>
-          </Grid>
           <Grid item xs={12} md={4} lg={3}>
             <Paper
               sx={{
                 p: 2,
                 display: 'flex',
                 flexDirection: 'column',
+                height: 200,
+              }}
+              >
+              <PlanTotal />
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={8} lg={9}>
+            <Paper
+              sx={{
+                p: 1,
+                display: 'flex',
+                flexDirection: 'column',
                 height: 300,
               }}
-            >
-              <PlanTotal />
+              >
+              <PlanGroupSumary />
             </Paper>
           </Grid>
         </Grid>
       </Container>
-      <Container maxWidth="lg" sx={{ mt: 2, mb: 1 }}>
+      <Container maxWidth="100%" sx={{ mt: 2, mb: 1 }}>
         <Grid container spacing={1}>
           <Grid item xs={12}>
             <Paper
