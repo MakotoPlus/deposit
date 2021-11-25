@@ -37,6 +37,7 @@ export default function DepositGroupSelect() {
           value={age}
           onChange={handleChange}
         >
+          <MenuItem value={0}>　</MenuItem>
           <MenuItem value={10}>ローン</MenuItem>
           <MenuItem value={20}>車</MenuItem>
           <MenuItem value={30}>住宅</MenuItem>

@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 //import ResultList from "./ResultList_err";
 import ResultTable from "./ResultTable";
 import ResultInputDialog from "./../ResultInputDialog";
+import ResultSearchForm from "./../ResultSearchForm";
 
 function ResultPage(){
   return (
@@ -25,6 +26,22 @@ function ResultPage(){
       }}
     >
       <Toolbar />
+      <Container maxWidth="100%" sx={{ mt: 2, mb: 1 }}>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <Paper
+                  sx={{
+                    p: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: 150,
+                  }}
+                >
+              <ResultSearchForm />
+            </Paper>
+          </Grid>
+        </Grid>
+      </Container>
       <Container maxWidth="100%" sx={{ mt: 2, mb: 1 }}>
         <Grid container spacing={1}>
           <Grid item xs={12}>

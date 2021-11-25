@@ -37,6 +37,7 @@ export default function DepositItemSelect() {
           value={age}
           onChange={handleChange}
         >
+          <MenuItem value="">　</MenuItem>
           <MenuItem value={10}>住宅</MenuItem>
           <MenuItem value={20}>車保険</MenuItem>
           <MenuItem value={30}>車税金</MenuItem>
