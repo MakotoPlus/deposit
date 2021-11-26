@@ -26,7 +26,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PlanPage from '../component/PlanPage/PlanPage';
 import ResultPage from '../component/ResultPage/ResultPage';
 import MainPage from './../component/MainPage';
-
+import GraphPage from './../component/GraphPage';
 
 function Copyright(props) {
   return (
@@ -134,7 +134,7 @@ function DashboardContent() {
               Deposit
             </Typography>
             <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
+              <Badge badgeContent={1} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
@@ -165,6 +165,7 @@ function DashboardContent() {
           <Route exact path="/" element={<MainPage/>}/>
           <Route exact path="/plan" element={<PlanPage/>}/>
           <Route exact path="/result" element={<ResultPage/>}/>
+          <Route exact path="/graph" element={<GraphPage/>}/>
         </Routes>
       </Box>
     </ThemeProvider>

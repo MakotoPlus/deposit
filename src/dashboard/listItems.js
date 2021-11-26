@@ -38,12 +38,14 @@ export const mainListItems = (
         <ListItemText primary="実績" />
       </ListItem>
     </Link>
-    <ListItem button>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary="サマリ" />
-    </ListItem>
+    <Link to="/graph">
+      <ListItem button>
+        <ListItemIcon>
+          <BarChartIcon />
+        </ListItemIcon>
+        <ListItemText primary="Graph" />
+      </ListItem>
+    </Link>
   </List>
 );
 
