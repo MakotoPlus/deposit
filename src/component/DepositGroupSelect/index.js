@@ -26,15 +26,18 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DepositGroupSelect() {
   const classes = useStyles();
-  const [age, setAge] = React.useState('');
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
+  const [data, setData] = useState({ results: [] });
+  //const [age, setAge] = React.useState('');
+  //const handleChange = (event) => {
+  //  setAge(event.target.value);
+  //};
 
   useEffect(async() =>{
-    const result = await axios.get(prj_const.ServerUrl + "/api/deposit_item/");
+    const result = await axios.get(prj_const.ServerUrl + "/api/deposit_group/");
     console.log(result);
-  });
+    setData(result.data);
+    //setData(result.data.results);
+  },[]);
 
 
   return (
@@ -43,15 +46,15 @@ export default function DepositGroupSelect() {
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={age}
-          onChange={handleChange}
+          //onChange={handleChange}
         >
-          <MenuItem value={0}>　</MenuItem>
-          <MenuItem value={10}>ローン</MenuItem>
-          <MenuItem value={20}>車</MenuItem>
-          <MenuItem value={30}>住宅</MenuItem>
-          <MenuItem value={40}>レジャー</MenuItem>
-          <MenuItem value={50}>株</MenuItem>
+        {
+          data.results.map((item => (
+              <MenuItem value={item.deposit_group_key}>
+                {item.deposit_group_name}
+              </MenuItem>
+          )))
+        }
         </Select>
       </FormControl>
   );
