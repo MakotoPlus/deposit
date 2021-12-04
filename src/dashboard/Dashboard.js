@@ -10,24 +10,25 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
+//import Container from '@mui/material/Container';
+//import Grid from '@mui/material/Grid';
+//import Paper from '@mui/material/Paper';
 import { makeStyles } from '@material-ui/core/styles';
-import Link from '@mui/material/Link';
+//import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
-import Chart from './Chart';
-import Deposits from './Deposits';
-import Orders from './Orders';
+//import Chart from './Chart';
+//import Deposits from './Deposits';
+//import Orders from './Orders';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PlanPage from '../component/PlanPage/PlanPage';
 import ResultPage from '../component/ResultPage/ResultPage';
 import MainPage from './../component/MainPage';
 import GraphPage from './../component/GraphPage';
 
+/*
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -40,6 +41,8 @@ function Copyright(props) {
     </Typography>
   );
 }
+*/
+
 
 const drawerWidth = 240;
 

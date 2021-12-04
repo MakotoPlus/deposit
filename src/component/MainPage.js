@@ -1,23 +1,24 @@
 import * as React from 'react';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiDrawer from '@mui/material/Drawer';
+//import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+//import { styled, createTheme } from '@mui/material/styles';
+//import CssBaseline from '@mui/material/CssBaseline';
+//import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
-import MuiAppBar from '@mui/material/AppBar';
+//import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
+//import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
+//import Divider from '@mui/material/Divider';
+//import IconButton from '@mui/material/IconButton';
+//import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems } from '../dashboard/listItems';
+//import MenuIcon from '@mui/icons-material/Menu';
+//import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+//import NotificationsIcon from '@mui/icons-material/Notifications';
+//import { mainListItems } from '../dashboard/listItems';
 import Chart from '../dashboard/Chart';
 import Deposits from '../dashboard/Deposits';
 import Orders from '../dashboard/Orders';
@@ -35,8 +36,8 @@ function Copyright(props) {
   );
 }
 
-const drawerWidth = 240;
-
+//const drawerWidth = 240;
+/*
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
@@ -54,7 +55,8 @@ const AppBar = styled(MuiAppBar, {
     }),
   }),
 }));
-
+*/
+/*
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     '& .MuiDrawer-paper': {
@@ -80,14 +82,15 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     },
   }),
 );
+*/
 
-const mdTheme = createTheme();
+//const mdTheme = createTheme();
 
 function MainPage() {
-  const [open, setOpen] = React.useState(true);
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
+  //const [open, setOpen] = React.useState(true);
+  //const toggleDrawer = () => {
+  //  setOpen(!open);
+  //};
 
   return (
     <Box

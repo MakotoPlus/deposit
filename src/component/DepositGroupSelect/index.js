@@ -3,7 +3,7 @@ import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
+//import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 const prj_const = require('./../prj_const.js')
@@ -13,6 +13,9 @@ const prj_const = require('./../prj_const.js')
 /**
  * 預金項目グループ 選択コントロール
  * 
+ * 
+ * Select は下記オブジェクトでないとダメなんじゃないか？
+ * { value : XXX, labe : XXXX}
  */
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -24,36 +27,85 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+let depositGroup = [
+  { value : "1",
+    label : "test1"
+  },
+  { value : "2",
+    label : "test2"
+  },
+];
+const space_data = { 
+  value : "0"
+  ,label : "　"
+}
+
 export default function DepositGroupSelect() {
   const classes = useStyles();
-  const [data, setData] = useState({ results: [] });
+  const [depositGroups, setDepositGroup] = useState([space_data]);
+  const [selectedAccountId, setSelectedAccountId] = useState(-1);
   //const [age, setAge] = React.useState('');
-  //const handleChange = (event) => {
-  //  setAge(event.target.value);
-  //};
+  //const [selectedValue, setSelectedValue ] = useState({value : 0});
+  const handleChange = (event) => {
+    console.log(event.target.value);    
+    //setSelectedValue({value : event.target.value});
+    //setData(event.target.value);
+    //setDepositGroup(event.target.value);
 
-  useEffect(async() =>{
-    const result = await axios.get(prj_const.ServerUrl + "/api/deposit_group/");
-    console.log(result);
-    setData(result.data);
-    //setData(result.data.results);
+    setSelectedAccountId(Number(event.target.value))
+  };
+
+  useEffect(() => {
+    async function fetchData(){
+      let result = await axios.get(prj_const.ServerUrl + "/api/deposit_group/");        console.log(result.data);
+      /*
+      // 空白データ先頭に追加
+      depositGroup = [];
+      //depositGroup.push(space_data);
+      result.data.results.map(result =>(
+        depositGroup.push({ 
+          value: result.deposit_group_key.toString(),
+          label: result.deposit_group_name
+        })
+      ));*/
+      //setDepositGroup(depositGroup);
+      console.log(depositGroup);    
+      setDepositGroup(depositGroup);
+    }
+    fetchData();
   },[]);
-
-
+  /*
+  useEffect(async() =>{
+    let result = await axios.get(prj_const.ServerUrl + "/api/deposit_group/");
+    //console.log(result);
+    // 空白データ先頭に追加
+    const space_data = { deposit_group_key : 0
+                        ,deposit_group_name : "　"
+                      }
+    //setData(space_data);
+    result.data.results.unshift(space_data);
+    setData(result.data);
+  },[]);
+  */
   return (
       <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">貯金グループ</InputLabel>
+        <InputLabel id="depositGroup-select-label">貯金グループ</InputLabel>
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          //onChange={handleChange}
+          labelId="depositGroup-select-label"
+          id="depositGroup-select"
+          label="貯金グループ"
+          options = {space_data.value}
+          value={selectedAccountId === -1 ? "" : selectedAccountId}
+          onChange={handleChange}
         >
         {
-          data.results.map((item => (
-              <MenuItem value={item.deposit_group_key}>
-                {item.deposit_group_name}
-              </MenuItem>
-          )))
+          Array.isArray(depositGroups) && depositGroups.length > 0 ?
+            depositGroups.map((depositGroup) => (
+              <MenuItem key={depositGroup.value} value={depositGroup.value}>
+                {depositGroup.label}
+              </MenuItem> )) :
+            <MenuItem disable={true} value="">""</MenuItem>
         }
         </Select>
       </FormControl>

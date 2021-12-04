@@ -42,12 +42,13 @@ const useStyles = makeStyles((theme) => ({
 export default function PlanInputDialog({subtitle}) {
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
-  //const [fullWidth, setFullWidth] = React.useState(true);
+  const [fullWidth, ] = React.useState(true);
   //const [maxWidth, setMaxWidth] = React.useState('sm');
 
   const handleClickOpen = () => {
     setOpen(true);
   };
+
 
   const handleClose = () => {
     setOpen(false);
@@ -59,7 +60,7 @@ export default function PlanInputDialog({subtitle}) {
         New Data
       </Button>
       <Dialog 
-        fullWidth="true"
+        fullWidth={fullWidth}
         maxWidth="xs"
         open={open} 
         onClose={handleClose} 

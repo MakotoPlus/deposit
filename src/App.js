@@ -2,9 +2,9 @@
 //import './App.css';
 import React from 'react';
 //import Button from '@material-ui/core/Button';
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+//import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from './dashboard/Dashboard';
-import PlanPage from './component/PlanPage/PlanPage';
+//import PlanPage from './component/PlanPage/PlanPage';
 
 function App() {
   return (

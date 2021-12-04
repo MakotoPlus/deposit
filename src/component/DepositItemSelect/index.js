@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect }  from 'react';
+import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
+//import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+const prj_const = require('./../prj_const.js')
 
 /**
  * 預金項目 選択コントロール
@@ -22,11 +24,25 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DepositItemSelect() {
   const classes = useStyles();
-  const [age, setAge] = React.useState('');
+  const [data, setData] = useState({ results: [] });
+  //const [age, setAge] = React.useState('');
+  //const handleChange = (event) => {
+  //  setAge(event.target.value);
+  //};
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
+  useEffect(()=>{
+    async function fetchData(){
+      let result = await axios.get(prj_const.ServerUrl + "/api/deposit_item/");
+      //console.log(result);
+      // 空白データ先頭に追加
+      let space_data = { depositItem_key : 0
+                          ,depositItem_name : "　"
+                        }
+      result.data.results.unshift(space_data);
+      setData(result.data);
+    }
+    fetchData();
+  },[]);
 
   return (
       <FormControl className={classes.formControl}>
@@ -34,22 +50,16 @@ export default function DepositItemSelect() {
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={age}
-          onChange={handleChange}
+          //value={age}
+          //onChange={handleChange}
         >
-          <MenuItem value="">　</MenuItem>
-          <MenuItem value={10}>住宅</MenuItem>
-          <MenuItem value={20}>車保険</MenuItem>
-          <MenuItem value={30}>車税金</MenuItem>
-          <MenuItem value={40}>新車台</MenuItem>
-          <MenuItem value={50}>車車検</MenuItem>
-          <MenuItem value={60}>ガソリン</MenuItem>
-          <MenuItem value={70}>家税金</MenuItem>
-          <MenuItem value={80}>修繕費</MenuItem>
-          <MenuItem value={90}>老後</MenuItem>
-          <MenuItem value={100}>旅行積立</MenuItem>
-          <MenuItem value={110}>その他</MenuItem>
-          <MenuItem value={120}>Xcat株</MenuItem>
+        {
+          data.results.map((item , index)=> (
+              <MenuItem key={index} value={item.deposit_group_key}>
+                {item.deposit_group_name}
+              </MenuItem>
+          ))
+        }
         </Select>
       </FormControl>
   );

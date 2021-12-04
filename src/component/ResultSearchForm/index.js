@@ -7,7 +7,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import Box from '@mui/material/Box';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@mui/material/Typography';
+//import Typography from '@mui/material/Typography';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+// 一次退避
+//                 <DepositItemSelect />
+
 export default function ResultSearchForm(){
     const classes = useStyles();
     const [value, setValue] = React.useState([null, null]);
@@ -34,13 +37,12 @@ export default function ResultSearchForm(){
                 className={`${classes.Box} ${classes.buttonBox}`}
                 >        
                 <DepositGroupSelect />
-                <DepositItemSelect />
                 <LocalizationProvider dateAdapter={AdapterDateFns} > 
                     <DateRangePicker
                         startText="日付 FROM"
                         endText="日付 TO"
                         value={value}
-                        inputFormat="yyyy/MM/dd"
+                        //inputFormat="yyyy/MM/dd"
                         onChange={(newValue) => {
                         setValue(newValue);
                         }}
