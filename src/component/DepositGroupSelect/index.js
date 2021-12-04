@@ -28,14 +28,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-let depositGroup = [
+//let depositGroups = [];
+/*
   { value : "1",
     label : "test1"
   },
   { value : "2",
     label : "test2"
   },
-];
+];*/
 const space_data = { 
   value : "0"
   ,label : "　"
@@ -48,46 +49,27 @@ export default function DepositGroupSelect() {
   //const [age, setAge] = React.useState('');
   //const [selectedValue, setSelectedValue ] = useState({value : 0});
   const handleChange = (event) => {
-    console.log(event.target.value);    
-    //setSelectedValue({value : event.target.value});
-    //setData(event.target.value);
-    //setDepositGroup(event.target.value);
-
+    console.debug(`DepositGroupSelect Select: ${event.target.value}`);
     setSelectedAccountId(Number(event.target.value))
   };
 
   useEffect(() => {
     async function fetchData(){
       let result = await axios.get(prj_const.ServerUrl + "/api/deposit_group/");        console.log(result.data);
-      /*
       // 空白データ先頭に追加
-      depositGroup = [];
-      //depositGroup.push(space_data);
+      let data = [space_data];
       result.data.results.map(result =>(
-        depositGroup.push({ 
+        data.push({ 
           value: result.deposit_group_key.toString(),
           label: result.deposit_group_name
         })
-      ));*/
-      //setDepositGroup(depositGroup);
-      console.log(depositGroup);    
-      setDepositGroup(depositGroup);
+      ));
+      console.log(data);    
+      setDepositGroup(data);
     }
     fetchData();
   },[]);
-  /*
-  useEffect(async() =>{
-    let result = await axios.get(prj_const.ServerUrl + "/api/deposit_group/");
-    //console.log(result);
-    // 空白データ先頭に追加
-    const space_data = { deposit_group_key : 0
-                        ,deposit_group_name : "　"
-                      }
-    //setData(space_data);
-    result.data.results.unshift(space_data);
-    setData(result.data);
-  },[]);
-  */
+
   return (
       <FormControl className={classes.formControl}>
         <InputLabel id="depositGroup-select-label">貯金グループ</InputLabel>
@@ -95,7 +77,6 @@ export default function DepositGroupSelect() {
           labelId="depositGroup-select-label"
           id="depositGroup-select"
           label="貯金グループ"
-          options = {space_data.value}
           value={selectedAccountId === -1 ? "" : selectedAccountId}
           onChange={handleChange}
         >

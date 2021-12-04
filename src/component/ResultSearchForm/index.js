@@ -23,8 +23,6 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-// 一次退避
-//                 <DepositItemSelect />
 
 export default function ResultSearchForm(){
     const classes = useStyles();
@@ -37,6 +35,7 @@ export default function ResultSearchForm(){
                 className={`${classes.Box} ${classes.buttonBox}`}
                 >        
                 <DepositGroupSelect />
+                <DepositItemSelect />
                 <LocalizationProvider dateAdapter={AdapterDateFns} > 
                     <DateRangePicker
                         startText="日付 FROM"

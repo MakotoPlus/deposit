@@ -22,43 +22,56 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+const space_data = { 
+  value : "0"
+  ,label : "　"
+}
+
+
 export default function DepositItemSelect() {
   const classes = useStyles();
-  const [data, setData] = useState({ results: [] });
-  //const [age, setAge] = React.useState('');
-  //const handleChange = (event) => {
-  //  setAge(event.target.value);
-  //};
+  const [depositItems, setDepositItems] = useState([space_data]);
+  const [selectedAccountId, setSelectedAccountId] = useState(-1);
+  const handleChange = (event) => {
+    console.debug(`DepositItemSelect Select: ${event.target.value}`);
+    setSelectedAccountId(Number(event.target.value))
+  };
 
   useEffect(()=>{
     async function fetchData(){
       let result = await axios.get(prj_const.ServerUrl + "/api/deposit_item/");
       //console.log(result);
       // 空白データ先頭に追加
-      let space_data = { depositItem_key : 0
-                          ,depositItem_name : "　"
-                        }
-      result.data.results.unshift(space_data);
-      setData(result.data);
+      let data = [space_data];
+      result.data.results.map(result =>(
+        data.push({ 
+          value: result.depositItem_key.toString(),
+          label: result.depositItem_name
+        })
+      ));
+      setDepositItems(data);
     }
     fetchData();
   },[]);
 
   return (
       <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">貯金項目</InputLabel>
+        <InputLabel id="depositItem-select-label">貯金項目</InputLabel>
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          //value={age}
-          //onChange={handleChange}
+          labelId="depositItem-select-label"
+          id="depositItem-select"
+          label="貯金項目"
+          value={selectedAccountId === -1 ? "" : selectedAccountId}
+          onChange={handleChange}
         >
         {
-          data.results.map((item , index)=> (
-              <MenuItem key={index} value={item.deposit_group_key}>
-                {item.deposit_group_name}
-              </MenuItem>
-          ))
+          Array.isArray(depositItems) && depositItems.length > 0 ?
+          depositItems.map((item)=> (
+              <MenuItem key={item.value} value={item.value}>
+                {item.label}
+              </MenuItem>)) 
+          : <MenuItem disable={true} value="">""</MenuItem>
         }
         </Select>
       </FormControl>
