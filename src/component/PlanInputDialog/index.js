@@ -4,8 +4,9 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import DepositGroupSelect from '../DepositGroupSelect';
-import DepositItemSelect from '../DepositItemSelect';
+//import DepositGroupSelect from '../DepositGroupSelect';
+//import DepositItemSelect from '../DepositItemSelect';
+import DepositItemSelectGrouping from '../DepositItemSelectGrouping'
 import DepositTypeSelect from '../DepositTypeSelect';
 import DepositValueText from '../DepositValueText';
 import { makeStyles } from '@material-ui/core/styles';
@@ -61,7 +62,7 @@ export default function PlanInputDialog({subtitle}) {
       </Button>
       <Dialog 
         fullWidth={fullWidth}
-        maxWidth="xs"
+        maxWidth="sm"
         open={open} 
         onClose={handleClose} 
         aria-labelledby="form-dialog-title"
@@ -69,12 +70,11 @@ export default function PlanInputDialog({subtitle}) {
         <DialogTitle id="form-dialog-title">{subtitle}</DialogTitle>
         <DialogContent>
           <form className={classes.root} noValidate autoComplete="off">
-              <DepositGroupSelect />
-              <DepositItemSelect />
-              <div className={classes.inilineBlock}>
-                <DepositTypeSelect />
-                <DepositValueText />
-              </div>
+            <div className={classes.inilineBlock}>
+                  <DepositItemSelectGrouping />
+                  <DepositTypeSelect />
+                  <DepositValueText />
+            </div>
           </form>
         </DialogContent>
         <DialogActions>
