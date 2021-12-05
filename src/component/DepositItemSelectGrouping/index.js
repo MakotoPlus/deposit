@@ -24,6 +24,7 @@ function SelectOptionItems(props){
       </React.Fragment>
     )
   }
+  //const handle = props.handle;
   //console.log("htmlOptions defined");
   //console.log(props.depositItems);
   return (
@@ -31,7 +32,7 @@ function SelectOptionItems(props){
       {
       props.depositItems.map((items)=>(
         (items.group_id === props.group_id) 
-        ? <option value={items.key}>{items.name}</option>
+        ? <option value={items.depositItem_key}>{items.depositItem_name}</option>
         : ""
       ))
       }
@@ -39,7 +40,7 @@ function SelectOptionItems(props){
   )
 }
 
-export default function DepositItemSelectGrouping() {
+export default function DepositItemSelectGrouping(props) {
   const classes = useStyles();
 
   /**
@@ -59,8 +60,10 @@ export default function DepositItemSelectGrouping() {
    *                   }
    *                  }]
    */
+  const handle = props.handle;
   const [depositGroups, setDepositGroups] = useState([]);
   const [depositItems, setDepositItems] = useState([]);
+  //const [depositItemKey, setDepositItemkey] = useState(undefined);
 
   useEffect(()=>{
     async function fetchData(){
@@ -70,8 +73,8 @@ export default function DepositItemSelectGrouping() {
       let items = [];
       result.data.results.map((result)=>{
         items.push({
-          key: result.depositItem_key.toString(),
-          name: result.depositItem_name,
+          depositItem_key: result.depositItem_key.toString(),
+          depositItem_name: result.depositItem_name,
           group_id : result.deposit_group_key.deposit_group_key.toString()
         });
         if (false === (result.deposit_group_key.deposit_group_key.toString() in groups )){
@@ -100,10 +103,17 @@ export default function DepositItemSelectGrouping() {
     fetchData();
   },[]);
 
+  const handleChange = (event) =>{
+    console.debug(event.target.value);
+    handle(event.target.value);
+  }
+
   return (
     <FormControl className={classes.formControl}>
-      <InputLabel htmlFor="deposit-grouped-native-select">預金項目</InputLabel>
-      <Select native defaultValue="" id="deposit-grouped-native-select">
+      <InputLabel htmlFor="deposit-grouped-native-select" required>預金項目</InputLabel>
+      <Select native defaultValue="" id="deposit-grouped-native-select"
+        onChange={handleChange}>
+      <option aria-label="None" value="" />
       {
         depositGroups.map((depositGroup)=>(
           <optgroup key={depositGroup.group_id} label={depositGroup.group_name} >

@@ -7,8 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 //import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DatePicker01 from '../DatePicker01'
-import DepositGroupSelect from '../DepositGroupSelect';
-import DepositItemSelect from '../DepositItemSelect';
+import DepositItemSelectGrouping from '../DepositItemSelectGrouping';
 import DepositTypeSelect from '../DepositTypeSelect';
 import DepositValueText from '../DepositValueText';
 import { makeStyles } from '@material-ui/core/styles';
@@ -50,6 +49,9 @@ export default function ResultInputDialog({subtitle}) {
     setOpen(false);
   };
 
+
+ 
+
   return (
     <div>
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
@@ -66,8 +68,7 @@ export default function ResultInputDialog({subtitle}) {
 
           <form className={classes.root} noValidate autoComplete="off">
             <DatePicker01 labelName="登録年月日" />
-            <DepositGroupSelect />
-            <DepositItemSelect />
+            <DepositItemSelectGrouping />
             <DepositTypeSelect />
             <DepositValueText />
         </form>

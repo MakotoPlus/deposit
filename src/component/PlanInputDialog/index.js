@@ -41,10 +41,23 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function PlanInputDialog({subtitle}) {
-  const [open, setOpen] = React.useState(false);
   const classes = useStyles();
   const [fullWidth, ] = React.useState(true);
   //const [maxWidth, setMaxWidth] = React.useState('sm');
+
+  const [open, setOpen] = React.useState(false);
+  //
+  // 金額入力Text
+  const [depositValue, setDepositValue] = React.useState(0);
+  const handleDepositUpdate = value => setDepositValue(value);
+
+    //
+  // 預金項目Select
+  // DepositItemSelectGrouping
+  const [depositItemkey, setDepositItemkey] = React.useState(0);
+  const handleDepositItemkey = value => setDepositItemkey(value);
+
+  
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -54,6 +67,14 @@ export default function PlanInputDialog({subtitle}) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleCreate = () => {
+    console.log("Create");
+    console.log(`PlaninputDialog.depositValue=[${depositValue}]`);
+    console.log(`DepositItemSelectGrouping.depositItemkey=[${depositItemkey}]`);
+    //setOpen(false);
+  };
+
 
   return (
     <div>
@@ -71,9 +92,9 @@ export default function PlanInputDialog({subtitle}) {
         <DialogContent>
           <form className={classes.root} noValidate autoComplete="off">
             <div className={classes.inilineBlock}>
-                  <DepositItemSelectGrouping />
+                  <DepositItemSelectGrouping handle={handleDepositItemkey} />
                   <DepositTypeSelect />
-                  <DepositValueText />
+                  <DepositValueText handle={handleDepositUpdate} value={0} />
             </div>
           </form>
         </DialogContent>
@@ -81,7 +102,7 @@ export default function PlanInputDialog({subtitle}) {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleCreate} color="primary">
             Create
           </Button>
         </DialogActions>
