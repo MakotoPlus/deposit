@@ -10,6 +10,9 @@ import DepositItemSelectGrouping from '../DepositItemSelectGrouping'
 import DepositTypeSelect from '../DepositTypeSelect';
 import DepositValueText from '../DepositValueText';
 import { makeStyles } from '@material-ui/core/styles';
+import { TYPE_EXPENSES, TYPE_DEPOSIT } from '../prj_const';
+import axios from 'axios';
+const prj_const = require('./../prj_const.js')
 
 //
 // 貯金計画データ登録ダイアログ
@@ -51,13 +54,16 @@ export default function PlanInputDialog({subtitle}) {
   const [depositValue, setDepositValue] = React.useState(0);
   const handleDepositUpdate = value => setDepositValue(value);
 
-    //
+  //
   // 預金項目Select
   // DepositItemSelectGrouping
   const [depositItemkey, setDepositItemkey] = React.useState(0);
   const handleDepositItemkey = value => setDepositItemkey(value);
 
-  
+  //
+  // 預金/支出
+  const [depositType, setDepositType] = React.useState(TYPE_DEPOSIT);
+  const handleDepositType = value => setDepositType(value);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -72,7 +78,26 @@ export default function PlanInputDialog({subtitle}) {
     console.log("Create");
     console.log(`PlaninputDialog.depositValue=[${depositValue}]`);
     console.log(`DepositItemSelectGrouping.depositItemkey=[${depositItemkey}]`);
-    //setOpen(false);
+    console.log(`PlaninputDialog.depositType=[${depositType}]`);
+
+    const data ={
+        depositItem_key : depositItemkey,
+        deposit_type : depositType,
+        deposit_value : depositValue,
+        insert_yyyymmdd : "2021/12/20",
+        delete_flag : false,
+        u_user : "e32d322c17d640cc9d1b260822e0cbea",
+        update_date : "2021-11-28T13:41:28+09:00"
+    }
+    // Post実行
+    //
+    axios.post(prj_const.ServerUrl + "/api/deposit/", data 
+      ).then(response =>{
+        console.log(response);
+      }, error =>{
+        console.error(error);
+    });
+
   };
 
 
@@ -93,7 +118,7 @@ export default function PlanInputDialog({subtitle}) {
           <form className={classes.root} noValidate autoComplete="off">
             <div className={classes.inilineBlock}>
                   <DepositItemSelectGrouping handle={handleDepositItemkey} />
-                  <DepositTypeSelect />
+                  <DepositTypeSelect handle={handleDepositType} />
                   <DepositValueText handle={handleDepositUpdate} value={0} />
             </div>
           </form>

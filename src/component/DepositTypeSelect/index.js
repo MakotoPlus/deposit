@@ -11,6 +11,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Switch from '@material-ui/core/Switch';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import { TYPE_EXPENSES, TYPE_DEPOSIT } from '../prj_const';
 
 /**
  * 貯金/支出 選択コントロール
@@ -63,14 +64,20 @@ import Typography from '@material-ui/core/Typography';
    checked: {},
  }))(Switch);
  
- export default function CustomizedSwitches() {
+ export default function CustomizedSwitches(props) {
+   const handle = props.handle;
    const [state, setState] = React.useState({
      checkedC: true,
    });
+   //const [typeValue, setTypeValue] = React.useState(TYPE_DEPOSIT);
    const classes = useStyles();
 
    const handleChange = (event) => {
      setState({ ...state, [event.target.name]: event.target.checked });
+     //console.log(event.target.checked);
+     // event.target.checked = False (貯金) : True(支出)
+     //setTypeValue( event.target.checked ? TYPE_EXPENSES : TYPE_DEPOSIT);
+     handle(event.target.checked ? TYPE_EXPENSES : TYPE_DEPOSIT);
    };
  
    return (
