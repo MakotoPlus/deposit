@@ -98,7 +98,8 @@ const useStyles = makeStyles({
 });
 
 
-function DashboardContent() {
+function DashboardContent(props) {
+  const component = props.component;
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -106,72 +107,72 @@ function DashboardContent() {
   const classes = useStyles();
   return (
     <Router>
-    <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <AppBar position="absolute" open={open}>
-          <Toolbar
-            sx={{
-              pr: '24px', // keep right padding when drawer closed
-            }}
-          >
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={toggleDrawer}
+      <ThemeProvider theme={mdTheme}>
+        <Box sx={{ display: 'flex' }}>
+          <CssBaseline />
+          <AppBar position="absolute" open={open}>
+            <Toolbar
               sx={{
-                marginRight: '36px',
-                ...(open && { display: 'none' }),
+                pr: '24px', // keep right padding when drawer closed
               }}
             >
-              <MenuIcon />
-            </IconButton>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="open drawer"
+                onClick={toggleDrawer}
+                sx={{
+                  marginRight: '36px',
+                  ...(open && { display: 'none' }),
+                }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography
+                component="h1"
+                variant="h6"
+                color="inherit"
+                noWrap
+                sx={{ flexGrow: 1 }}
+              >
+                Deposit
+              </Typography>
+              <IconButton color="inherit">
+                <Badge badgeContent={1} color="secondary">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+          <Drawer variant="permanent" open={open}>
+            <Toolbar
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                px: [1],
+              }}
             >
-              Deposit
-            </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={1} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        <Drawer variant="permanent" open={open}>
-          <Toolbar
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              px: [1],
-            }}
-          >
-            <IconButton onClick={toggleDrawer}>
-              <ChevronLeftIcon />
-            </IconButton>
-          </Toolbar>
-          <Divider />
-          <List className={classes.menulist}>
-            {mainListItems}
+              <IconButton onClick={toggleDrawer}>
+                <ChevronLeftIcon />
+              </IconButton>
+            </Toolbar>
+            <Divider />
+            <List className={classes.menulist}>
+              {mainListItems}
 
-            {secondaryListItems}
-          </List>
-          <Divider />
-        </Drawer>
-        <Routes>
-          <Route exact path="/" element={<MainPage/>}/>
-          <Route exact path="/plan" element={<PlanPage/>}/>
-          <Route exact path="/result" element={<ResultPage/>}/>
-          <Route exact path="/graph" element={<GraphPage/>}/>
-        </Routes>
-      </Box>
-    </ThemeProvider>
+              {secondaryListItems}
+            </List>
+            <Divider />
+          </Drawer>
+          <Routes>
+            <Route exact path="/" element={<MainPage/>}/>
+            <Route exact path="/plan" element={<PlanPage/>}/>
+            <Route exact path="/result" element={<ResultPage/>}/>
+            <Route exact path="/graph" element={<GraphPage/>}/>
+          </Routes>
+        </Box>
+      </ThemeProvider>
     </Router>
   );
 }

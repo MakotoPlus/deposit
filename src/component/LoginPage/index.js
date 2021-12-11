@@ -12,8 +12,14 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import Dashboard from '../../dashboard/Dashboard';
+
+
 import axios from 'axios';
-const prj_const = require('./../prj_const.js')
+const prj_const = require('../prj_const.js')
+
+
 
 function Copyright() {
   return (
@@ -48,7 +54,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function LoginPage(props) {
+  const setAuthenticated = props.setAuthenticated;
+  const isAuthenticated = props.isAuthenticated;
   const classes = useStyles();
   const [userid, setUserid] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -66,11 +74,11 @@ export default function SignIn() {
         console.log(result);
         console.log("login OK");
         console.log(`token=${result.data.token}`);
-        setMessage("Success")
+        setMessage("Success");
+        setAuthenticated(true);
     }).catch((error)=>{
-        console.error("errorrrrrrrrrrrr");
         console.error(error);
-        setMessage("Login Error")
+        setMessage(prj_const.MSG_ERROR_LOGIN_ERR)
     });
 }
   const handleUseridChange = (event) =>{
@@ -79,8 +87,14 @@ export default function SignIn() {
   const handlePasswordChange = (event) =>{
     setPassword(event.target.value);
   }
-
+  //
+  // このLogin画面はAuthRouterで isAuthenticatedがFalseの場合のみ表示される
+  // よってログインんが成功した場合はこの画面は表示されない?
+  //
   return (
+    (isAuthenticated) ?
+    <Dashboard />
+    :
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
@@ -90,7 +104,7 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Typography component="h1" variant="h6">
+        <Typography component="h1" variant="h6" color="error" >
           {message}
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
@@ -148,5 +162,5 @@ export default function SignIn() {
         <Copyright />
       </Box>
     </Container>
-  );
+  )
 }

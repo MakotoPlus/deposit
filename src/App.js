@@ -3,20 +3,23 @@
 import React from 'react';
 //import Button from '@material-ui/core/Button';
 //import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-//import Dashboard from './dashboard/Dashboard';
+import Dashboard from './dashboard/Dashboard';
 //import PlanPage from './component/PlanPage/PlanPage';
-import Singin from './component/SingIn';
+import AuthRouter from './component/AuthRouter';
 
 function App() {
   return (
     <React.Fragment>
-      <Singin />
+      <AuthRouter />
     </React.Fragment>
   );
 }
 
 /*
-  <Router>
+      <AuthRouter />
+      <Dashboard />
+
+      <Router>
     <Routes>
       <Route exact path="/" element={<Dashboard/>}/>
       <Route exact path="/plan" element={<PlanPage/>}/>
