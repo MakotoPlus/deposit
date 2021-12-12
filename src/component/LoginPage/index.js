@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from 'react';
+import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,8 +12,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+//import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Dashboard from '../../dashboard/Dashboard';
+import {useUserContext} from '../../context/userContext';
 
 
 import axios from 'axios';
@@ -54,10 +55,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LoginPage(props) {
-  const setAuthenticated = props.setAuthenticated;
-  const isAuthenticated = props.isAuthenticated;
+export default function LoginPage() {
   const classes = useStyles();
+  const {user, Login} = useUserContext();  
+  const isAuthenticated = user.isAuthenticated;
+
   const [userid, setUserid] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [message, setMessage] = React.useState("");
@@ -71,11 +73,11 @@ export default function LoginPage(props) {
         password : password
     };
     axios.post(prj_const.ServerUrl + "/api-auth/", body).then((result) =>{
-        console.log(result);
         console.log("login OK");
-        console.log(`token=${result.data.token}`);
         setMessage("Success");
-        setAuthenticated(true);
+        //
+        // ログイン情報を設定
+        Login(userid, userid, result.data.token);
     }).catch((error)=>{
         console.error(error);
         setMessage(prj_const.MSG_ERROR_LOGIN_ERR)

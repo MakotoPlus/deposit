@@ -99,7 +99,7 @@ const useStyles = makeStyles({
 
 
 function DashboardContent(props) {
-  const component = props.component;
+  //const component = props.component;
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
