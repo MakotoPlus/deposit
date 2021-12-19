@@ -48,7 +48,7 @@ export default function DepositGroupSelect() {
   const classes = useStyles();
   const [depositGroups, setDepositGroup] = useState([space_data]);
   const [selectedAccountId, setSelectedAccountId] = useState(-1);
-  const {user} = useUserContext();  
+  const {user} = useUserContext();
   //const [age, setAge] = React.useState('');
   //const [selectedValue, setSelectedValue ] = useState({value : 0});
   const handleChange = (event) => {
