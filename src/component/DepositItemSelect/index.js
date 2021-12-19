@@ -6,6 +6,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 //import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import {useUserContext} from '../../context/userContext';
+
 const prj_const = require('./../prj_const.js')
 
 /**
@@ -31,6 +33,7 @@ const space_data = {
 
 export default function DepositItemSelect() {
   const classes = useStyles();
+  const {user} = useUserContext();
   const [depositItems, setDepositItems] = useState([space_data]);
   const [selectedAccountId, setSelectedAccountId] = useState(-1);
   const handleChange = (event) => {
@@ -40,7 +43,10 @@ export default function DepositItemSelect() {
 
   useEffect(()=>{
     async function fetchData(){
-      let result = await axios.get(prj_const.ServerUrl + "/api/deposit_item/");
+      let headers = {
+        headers : user.Authorization
+      };
+      let result = await axios.get(prj_const.ServerUrl + "/api/deposit_item/", headers);
       //console.log(result);
       // 空白データ先頭に追加
       let data = [space_data];

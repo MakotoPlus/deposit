@@ -4,7 +4,10 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import axios from 'axios';
+import {useUserContext} from '../../context/userContext';
+
 const prj_const = require('./../prj_const.js')
+
 
 /**
  * 預金項目グルーピングモード 選択コントロール
@@ -42,6 +45,8 @@ function SelectOptionItems(props){
 
 export default function DepositItemSelectGrouping(props) {
   const classes = useStyles();
+  const {user} = useUserContext();  
+
 
   /**
    * depositItems = { "1111" : 
@@ -67,7 +72,11 @@ export default function DepositItemSelectGrouping(props) {
 
   useEffect(()=>{
     async function fetchData(){
-      let result = await axios.get(prj_const.ServerUrl + "/api/deposit_item/");
+      let headers = {
+        headers : user.Authorization
+      };
+
+      let result = await axios.get(prj_const.ServerUrl + "/api/deposit_item_list/", headers);
       console.debug(result);
       let groups = {}; // 全てのgropid, groupname を格納(重複なし)
       let items = [];

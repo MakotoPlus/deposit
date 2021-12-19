@@ -3,7 +3,7 @@
 //
 import { createContext, useState, useContext } from 'react';
 
-const UserContext = createContext();
+export const UserContext = createContext();
 
 export function useUserContext(){
     return useContext(UserContext);
@@ -16,15 +16,20 @@ export function UserProvider({children}){
         "username" : "",
         "token" : "",
         "isAuthenticated" : false,
+        "Authorization" : {},
     });
 
     const Login = ((userid, username, token)=>{
+        //console.log(`LOGIN=TOKEN=>${token}`);
         setUser(
             {
                 "userid" : userid,
                 "username" : username,
-                "toekn" : token,
+                "token" : token,
                 "isAuthenticated" : true,
+                "Authorization" : {
+                    Authorization : "JWT " + token
+                },
             }
         )
     });
