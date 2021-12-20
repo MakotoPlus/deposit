@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -9,6 +9,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import PlunUpdateDialog from './../PlanUpdateDialog';
+import axios from 'axios';
+import {useUserContext} from '../../context/userContext';
+const prj_const = require('./../prj_const.js')
 
 //
 // 預金設定明細画面
@@ -30,59 +33,6 @@ function createData(id, deposit_group_name, depositItem_name,
         deposit_value : deposit_value
     };
   }
-  const rows = [
-    createData(
-        1,
-        '貯金グループ',
-        '住宅',
-        '貯金',
-        '123,222',
-    ),
-    createData(
-        2,
-        '車グループ',
-        '時期車代',
-        '貯金',
-        '23,222',
-    ),
-    createData(
-        3,
-        '車グループ',
-        'ガソリン代',
-        '貯金',
-        '123,222',
-    ),
-    createData(
-      4,
-      '家修繕費',
-      '家税金',
-      '貯金',
-      '123,222',
-    ),
-    createData(
-      5,
-      '家修繕費',
-      '修繕費',
-      '貯金',
-      '123,222',
-    ),
-    createData(
-      6,
-      'レジャー',
-      '旅行',
-      '貯金',
-      '123,222',
-    ),
-    createData(
-      7,
-      'レジャー',
-      'その他',
-      '貯金',
-      '123,222',
-      'KEY_003'
-    ),
-  ];
-
   const useStyles = makeStyles({
     root: {
       width: '100%',
@@ -95,7 +45,32 @@ function createData(id, deposit_group_name, depositItem_name,
 export default function PlanTable() {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
+  const {user} = useUserContext();  
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rows, setRows] = React.useState([]);
+  //const [depositItems, setDepositItems] = useState([]);
+
+  useEffect(()=>{
+    async function fetchData(){
+      let headers = {
+        headers : user.Authorization
+      };
+      let result = await axios.get(prj_const.ServerUrl + "/api/savings_list/", headers);
+      // console.debug(result);
+      let results = result.data.results;
+      let rowsObj = results.map(( record, index ) => 
+        createData( index, 
+          record.depositItem_key.deposit_group_name,
+          record.depositItem_key.depositItem_name,
+          record.deposit_type === prj_const.TYPE_DEPOSIT 
+          ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR,
+          record.deposit_value.toLocaleString()
+        ))
+      // console.debug(rowsObj);
+      setRows(rowsObj);
+    }
+    fetchData();
+  },[]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

@@ -83,23 +83,21 @@ export default function PlanInputDialog({subtitle}) {
     console.log(`PlaninputDialog.depositValue=[${depositValue}]`);
     console.log(`DepositItemSelectGrouping.depositItemkey=[${depositItemkey}]`);
     console.log(`PlaninputDialog.depositType=[${depositType}]`);
-
     const data ={
         depositItem_key : depositItemkey,
         deposit_type : depositType,
         deposit_value : depositValue,
-        insert_yyyymmdd : "2021/12/20",
         delete_flag : false,
         u_user : userid,
-        update_date : "2021-11-28T13:41:28+09:00"
+        update_date : new Date().toISOString()
     }
     // Post実行
     //
     //console.log(user);
-    console.log(`JWT ${token}`);
+    //console.log(`JWT ${token}`);
     axios.defaults.headers.common["Authorization"] = `JWT ${token}`;
     axios.defaults.baseURL = prj_const.ServerUrl + "/api";
-    axios.post(prj_const.ServerUrl + "/api/deposit/", data 
+    axios.post(prj_const.ServerUrl + "/api/savings/", data 
       ).then(response =>{
         console.log(response);
       }, error =>{

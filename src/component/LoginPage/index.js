@@ -74,10 +74,9 @@ export default function LoginPage() {
     };
     axios.post(prj_const.ServerUrl + "/api-auth/", body).then((result) =>{
         console.log("login OK");
-        console.log(result);
-        console.log(result.data.token);
+        // console.log(result);
+        // console.log(result.data.token);
         setMessage("Success");
-
         //
         // ログイン情報を設定
         Login(userid, userid, result.data.token);
