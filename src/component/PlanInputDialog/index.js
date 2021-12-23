@@ -10,7 +10,7 @@ import DepositItemSelectGrouping from '../DepositItemSelectGrouping'
 import DepositTypeSelect from '../DepositTypeSelect';
 import DepositValueText from '../DepositValueText';
 import { makeStyles } from '@material-ui/core/styles';
-import { TYPE_EXPENSES, TYPE_DEPOSIT } from '../prj_const';
+import { TYPE_DEPOSIT } from '../prj_const';
 import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 const prj_const = require('./../prj_const.js')

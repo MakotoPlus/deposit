@@ -9,7 +9,7 @@ import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
+//import Badge from '@mui/material/Badge';
 //import Container from '@mui/material/Container';
 //import Grid from '@mui/material/Grid';
 //import Paper from '@mui/material/Paper';
@@ -17,8 +17,13 @@ import { makeStyles } from '@material-ui/core/styles';
 //import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+//import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
+import { SvgIcon } from '@mui/material';
+import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
+import {useUserContext} from './../context/userContext';
+import Link from '@mui/material/Link';
+
 //import Chart from './Chart';
 //import Deposits from './Deposits';
 //import Orders from './Orders';
@@ -97,9 +102,22 @@ const useStyles = makeStyles({
   },
 });
 
+//
+// LogoutIcon
+function LogoutIcon(props) {
+  return (
+    <Link href="#"  color="inherit" white-space="nowrap">
+      <SvgIcon {...props}>
+        <ExitToAppOutlinedIcon />
+      </SvgIcon>
+    </Link>
+  );
+}
+
 
 function DashboardContent(props) {
   //const component = props.component;
+  const {Logout} = useUserContext();
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -137,11 +155,15 @@ function DashboardContent(props) {
               >
                 Deposit
               </Typography>
+              <LogoutIcon item xs={8} onClick={()=>Logout()} />
+              {/*
+              Logout
               <IconButton color="inherit">
                 <Badge badgeContent={1} color="secondary">
                   <NotificationsIcon />
                 </Badge>
               </IconButton>
+              */}
             </Toolbar>
           </AppBar>
           <Drawer variant="permanent" open={open}>

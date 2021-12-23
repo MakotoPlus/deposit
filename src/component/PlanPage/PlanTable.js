@@ -59,7 +59,7 @@ export default function PlanTable() {
       // console.debug(result);
       let results = result.data.results;
       let rowsObj = results.map(( record, index ) => 
-        createData( index, 
+        createData( index + 1, 
           record.depositItem_key.deposit_group_name,
           record.depositItem_key.depositItem_name,
           record.deposit_type === prj_const.TYPE_DEPOSIT 

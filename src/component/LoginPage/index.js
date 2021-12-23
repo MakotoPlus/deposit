@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function LoginPage() {
   const classes = useStyles();
-  const {user, Login} = useUserContext();  
+  const {user, Login} = useUserContext();
   const isAuthenticated = user.isAuthenticated;
 
   const [userid, setUserid] = React.useState("");
