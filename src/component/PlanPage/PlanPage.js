@@ -60,7 +60,7 @@ function PlanPage(){
                     p: 1,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 350,
+                    height: 430,
                   }}
                 >
               <PlanInputDialog subtitle="New Data"/>

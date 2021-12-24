@@ -16,7 +16,7 @@ const prj_const = require('./../prj_const.js')
 //
 // 預金設定明細画面
 const columns = [
-    { id : 'order_dsp', label: 'No', minWidth: 50 }
+    { id : 'id', label: 'No', minWidth: 50 }
     ,{ id : 'deposit_group_name', label: 'Group', minWidth:100 }
     ,{ id : 'depositItem_name', label: 'Name', minWidth:100 }
     ,{ id : 'deposit_type', label: 'Type', minWidth:100 }
@@ -26,7 +26,7 @@ const columns = [
 function createData(id, deposit_group_name, depositItem_name, 
     deposit_type, deposit_value) {
     return { 
-        order_dsp : id,
+        id : id,
         deposit_group_name : deposit_group_name, 
         depositItem_name : depositItem_name, 
         deposit_type : deposit_type, 
@@ -38,48 +38,118 @@ function createData(id, deposit_group_name, depositItem_name,
       width: '100%',
     },
     container: {
-      maxHeight: 250,
+      maxHeight: 350,
     },
   });
+
+//
+// 複数データ取得時は、datasのみ追加して返す
+async function getSavingsList(user, nRunApiCount = 1, page = 1){
+  let headers = {
+    headers : user.Authorization
+  };
+  let result;
+  let results = [];
+  for ( let i = 0; i < nRunApiCount; i++){
+    let urlpath = prj_const.ServerUrl + "/api/savings_list/";
+    if ( page > 1 ){
+      urlpath = urlpath + "?page=" + page;
+    }
+    result = await axios.get(urlpath, headers);
+    results = results.concat(result.data.results);
+    //console.log(result);
+  }
+  result.data.results = results;
+  return result;
+}
 
 export default function PlanTable() {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
+  const [maxData, setMaxData] = React.useState(0);
   const {user} = useUserContext();  
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = React.useState([]);
-  //const [depositItems, setDepositItems] = useState([]);
+  const [serverPage, setServerPage] = React.useState(1);
 
   useEffect(()=>{
-    async function fetchData(){
-      let headers = {
-        headers : user.Authorization
-      };
-      let result = await axios.get(prj_const.ServerUrl + "/api/savings_list/", headers);
-      // console.debug(result);
+    function fetchData(){
+      getSavingsList(user, 1, serverPage).then(result=>{
+        let results = result.data.results;
+        let rowsObj = results.map(( record, index ) => 
+          createData( index + 1, 
+            record.depositItem_key.deposit_group_name,
+            record.depositItem_key.depositItem_name,
+            record.deposit_type === prj_const.TYPE_DEPOSIT 
+            ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR,
+            record.deposit_value.toLocaleString()
+          ))
+        console.debug(result.data.count);
+        setMaxData(result.data.count);
+        setRows(rowsObj);  
+        setServerPage(1 + serverPage);
+      })
+    }
+    fetchData();
+  },[]);
+
+  const handleChangePage = (event, newPage) => {
+    console.log( `handleChangePage newPage=${newPage}`);
+    //
+    // 既に取得件数が最大件数まで来ている場合は何もしない
+    let showDataLast = rowsPerPage * (newPage);
+    if (showDataLast > maxData){
+      //
+      console.log("データ最終取得済み");
+      return;
+    }
+    //
+    // 現在取得済みデータと次ページに表示するデータ件数を比較しもし
+    // まだ取得していないデータ範囲を取得する場合は、通信を実行しデータを取得する
+    // newPage は初期 0 
+    showDataLast = rowsPerPage * (newPage+1);
+    if (showDataLast <= rows.length){
+      setPage(newPage);
+      console.log("データあり");
+      return;
+    }else if (rows.length >= maxData){
+      //既に全データ取得済み時
+      setPage(newPage);
+      console.log("データあり");
+      return;
+    }
+    // 何回Restapi実行件数 = ((表示件数 * 次のページ) - データ取得済み件数 ) / Restapi１回データ取得件数
+    // 小数点切り上げ
+    let nRunApiCount = Math.ceil((showDataLast - rows.length) / prj_const.DATA_GET_COUNT);
+    console.log(`${showDataLast}, ${rows.length} データ取得回数nRunApiCount=${nRunApiCount} Page=${serverPage}`);
+    getSavingsList(user, nRunApiCount, serverPage).then(result=>{
       let results = result.data.results;
       let rowsObj = results.map(( record, index ) => 
-        createData( index + 1, 
+        createData( rows.length + index + 1, 
           record.depositItem_key.deposit_group_name,
           record.depositItem_key.depositItem_name,
           record.deposit_type === prj_const.TYPE_DEPOSIT 
           ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR,
           record.deposit_value.toLocaleString()
         ))
-      // console.debug(rowsObj);
-      setRows(rowsObj);
-    }
-    fetchData();
-  },[]);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+      //console.debug("addTotalDatas------------------");
+      let addTotalDatas = rows.concat(rowsObj);
+      setRows(addTotalDatas);
+      setPage(newPage);
+      //サーバ側の取得ページをカウントアップ
+      setServerPage(nRunApiCount + serverPage);
+      //console.debug(addTotalDatas);
+      //console.log(newPage);
+    }).catch((error)=>{
+        console.error(error);
+    });
+  }
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
+    console.log( `handleChangeRowsPerPage value=${event.target.value}`);
     setPage(0);
-  };
+  }
 
   return (
     <Paper className={classes.root}>
@@ -101,7 +171,7 @@ export default function PlanTable() {
           <TableBody>
             {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
               return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.order_dsp}>
+                <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                   {columns.map((column, index) => {
                     const value = row[column.id];                    
                       return (
@@ -121,9 +191,9 @@ export default function PlanTable() {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
+        rowsPerPageOptions={[5, 10, 25, 100]}
         component="div"
-        count={rows.length}
+        count={maxData}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
