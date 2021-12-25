@@ -67,7 +67,7 @@ import { TYPE_EXPENSES, TYPE_DEPOSIT } from '../prj_const';
  export default function CustomizedSwitches(props) {
    const handle = props.handle;
    const [state, setState] = React.useState({
-     checkedC: true,
+     checkedC: false,
    });
    //const [typeValue, setTypeValue] = React.useState(TYPE_DEPOSIT);
    const classes = useStyles();
