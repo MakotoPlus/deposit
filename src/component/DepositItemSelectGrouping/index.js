@@ -76,11 +76,11 @@ export default function DepositItemSelectGrouping(props) {
         headers : user.Authorization
       };
 
-      let result = await axios.get(prj_const.ServerUrl + "/api/deposit_item_list/", headers);
+      let result = await axios.get(prj_const.ServerUrl + "/api/deposit_item_list/?no_page", headers);
       console.debug(result);
       let groups = {}; // 全てのgropid, groupname を格納(重複なし)
       let items = [];
-      result.data.results.map((result)=>{
+      result.data.map((result)=>{
         items.push({
           depositItem_key: result.depositItem_key.toString(),
           depositItem_name: result.depositItem_name,

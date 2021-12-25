@@ -32,15 +32,15 @@ function createData(id, deposit_group_name, depositItem_name,
         deposit_type : deposit_type, 
         deposit_value : deposit_value
     };
-  }
-  const useStyles = makeStyles({
-    root: {
-      width: '100%',
-    },
-    container: {
-      maxHeight: 350,
-    },
-  });
+}
+const useStyles = makeStyles({
+  root: {
+    width: '100%',
+  },
+  container: {
+    maxHeight: 350,
+  },
+});
 
 //
 // 複数データ取得時は、datasのみ追加して返す
