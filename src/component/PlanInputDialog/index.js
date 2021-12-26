@@ -124,7 +124,7 @@ export default function PlanInputDialog({subtitle}) {
           <form className={classes.root} noValidate autoComplete="off">
             <div className={classes.inilineBlock}>
                   <DepositItemSelectGrouping handle={handleDepositItemkey} />
-                  <DepositTypeSelect handle={handleDepositType} />
+                  <DepositTypeSelect handle={handleDepositType} value={TYPE_DEPOSIT}/>
                   <DepositValueText handle={handleDepositUpdate} value={0} />
             </div>
           </form>

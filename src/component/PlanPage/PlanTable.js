@@ -18,15 +18,16 @@ const prj_const = require('./../prj_const.js')
 const columns = [
     { id : 'id', label: 'No', minWidth: 50 }
     ,{ id : 'deposit_group_name', label: 'Group', minWidth:100 }
-    ,{ id : 'depositItem_name', label: 'Name', minWidth:100 }
+    ,{ id : 'depositItem_name', label: '預金項目', minWidth:100 }
     ,{ id : 'deposit_type', label: 'Type', minWidth:100 }
     ,{ id : 'deposit_value', label: 'Value', minWidth:100, align: 'right', format:(value) => value.toLocaleString(), }
 ]
 
-function createData(id, deposit_group_name, depositItem_name, 
+function createData(id, savings_key, deposit_group_name, depositItem_name, 
     deposit_type, deposit_value) {
     return { 
         id : id,
+        savings_key : savings_key,
         deposit_group_name : deposit_group_name, 
         depositItem_name : depositItem_name, 
         deposit_type : deposit_type, 
@@ -78,6 +79,7 @@ export default function PlanTable() {
         let results = result.data.results;
         let rowsObj = results.map(( record, index ) => 
           createData( index + 1, 
+            record.savings_key,
             record.depositItem_key.deposit_group_name,
             record.depositItem_key.depositItem_name,
             record.deposit_type === prj_const.TYPE_DEPOSIT 
@@ -94,13 +96,13 @@ export default function PlanTable() {
   },[]);
 
   const handleChangePage = (event, newPage) => {
-    console.log( `handleChangePage newPage=${newPage}`);
+    console.debug( `handleChangePage newPage=${newPage}`);
     //
     // 既に取得件数が最大件数まで来ている場合は何もしない
     let showDataLast = rowsPerPage * (newPage);
     if (showDataLast > maxData){
       //
-      console.log("データ最終取得済み");
+      console.debug("データ最終取得済み");
       return;
     }
     //
@@ -110,22 +112,23 @@ export default function PlanTable() {
     showDataLast = rowsPerPage * (newPage+1);
     if (showDataLast <= rows.length){
       setPage(newPage);
-      console.log("データあり");
+      console.debug("データあり");
       return;
     }else if (rows.length >= maxData){
       //既に全データ取得済み時
       setPage(newPage);
-      console.log("データあり");
+      console.debug("データあり");
       return;
     }
     // 何回Restapi実行件数 = ((表示件数 * 次のページ) - データ取得済み件数 ) / Restapi１回データ取得件数
     // 小数点切り上げ
     let nRunApiCount = Math.ceil((showDataLast - rows.length) / prj_const.DATA_GET_COUNT);
-    console.log(`${showDataLast}, ${rows.length} データ取得回数nRunApiCount=${nRunApiCount} Page=${serverPage}`);
+    console.debug(`${showDataLast}, ${rows.length} データ取得回数nRunApiCount=${nRunApiCount} Page=${serverPage}`);
     getSavingsList(user, nRunApiCount, serverPage).then(result=>{
       let results = result.data.results;
       let rowsObj = results.map(( record, index ) => 
         createData( rows.length + index + 1, 
+          record.savings_key,
           record.depositItem_key.deposit_group_name,
           record.depositItem_key.depositItem_name,
           record.deposit_type === prj_const.TYPE_DEPOSIT 
@@ -147,7 +150,7 @@ export default function PlanTable() {
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
-    console.log( `handleChangeRowsPerPage value=${event.target.value}`);
+    console.debug( `handleChangeRowsPerPage value=${event.target.value}`);
     setPage(0);
   }
 
@@ -176,8 +179,8 @@ export default function PlanTable() {
                     const value = row[column.id];                    
                       return (
                         <TableCell key={column.id} align={column.align}>
-                          { (index === 2) ?                             
-                            <PlunUpdateDialog subtitle={value} />
+                          { (index === 2) ?
+                            <PlunUpdateDialog subtitle={value} record={row} />
                             : column.format && typeof value === 'number' ? column.format(value) : value
                           }
                         </TableCell>

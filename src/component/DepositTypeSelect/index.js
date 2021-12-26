@@ -40,7 +40,7 @@ import { TYPE_EXPENSES, TYPE_DEPOSIT } from '../prj_const';
       transform: 'translateX(16px)',
       color: theme.palette.common.white,
       '& + $track': {
-        backgroundColor: '#52d869',
+        backgroundColor: '#ff0000',
         opacity: 1,
         border: 'none',
       },
@@ -66,11 +66,10 @@ import { TYPE_EXPENSES, TYPE_DEPOSIT } from '../prj_const';
  
  export default function CustomizedSwitches(props) {
    const handle = props.handle;
-   const [state, setState] = React.useState({
-     checkedC: false,
-   });
-   //const [typeValue, setTypeValue] = React.useState(TYPE_DEPOSIT);
+   const value = props.value;
    const classes = useStyles();
+   const [state, setState] = React.useState({
+     checkedC: (value === TYPE_DEPOSIT ) ? false : true });
 
    const handleChange = (event) => {
      setState({ ...state, [event.target.name]: event.target.checked });
