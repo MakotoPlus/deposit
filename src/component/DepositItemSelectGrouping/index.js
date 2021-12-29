@@ -22,36 +22,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SelectOptionItems(props){
-  if (undefined === props.depositItems){
-    return (
-      <React.Fragment>
-      </React.Fragment>
-    )
-  }
-  return (
-      props.depositItems.map((items)=>(
-        (items.group_id === props.group_id) 
-        ? <MenuItem key={items.depositItem_key} value={items.depositItem_key}>{items.depositItem_name}</MenuItem>
-        : <React.Fragment></React.Fragment>
-      ))
-  )
-}
-/*
-      props.depositItems.map((items)=>(
-        (items.group_id === props.group_id) 
-        ? <option key={items.depositItem_key} value={items.depositItem_key}>{items.depositItem_name}</option>
-        : ""
-      ))
-
-*/
 export default function DepositItemSelectGrouping(props) {
   const classes = useStyles();
   const {user} = useUserContext();  
-  const handle = props.handle;
-  const depositItemkey = props.depositItemkey;
+  const parentHandle = props.handle;
+  //const props_depositItemkey = props.depositItemkey;
   const [selectMenuItems, setSelectMenuItems] = useState([]);
-  console.debug(`funcstart depositItemkey=${depositItemkey}`);
+  const [defaultDepositItem, setDefaultDepositItem] = useState(props.depositItemObj);
+  const [depositItem_key, setDepositItem_key] = useState(props.depositItemObj.depositItem_key);
+  const [selectItems, setSelectItems] = useState([]);
+  //console.debug(`funcstart depositItemkey=${props_depositItemkey}`);
   console.debug(props);
   useEffect(()=>{
     async function fetchData(){
@@ -67,18 +47,27 @@ export default function DepositItemSelectGrouping(props) {
       // 2. １の情報を利用しリストボックス出力用のXSLTを生成する
       // 3. useStateに設定する
       //
+      console.debug("DepositItemSelectGrouping.userEfect");
       console.debug(result);
       result.data.map((result)=>{
-        items.push({
-          depositItem_key: result.depositItem_key.toString(),
+        let deposit_item_obj = {
+          deposit_group_key : result.deposit_group_key.deposit_group_key,
+          deposit_group_name: result.deposit_group_key.deposit_group_name,
+          depositItem_key : result.depositItem_key,
           depositItem_name: result.depositItem_name,
-          group_id : result.deposit_group_key.deposit_group_key.toString()
+        }
+        items.push({
+          group_id : result.deposit_group_key.deposit_group_key.toString(),
+          deposit_item_obj : deposit_item_obj,
         });
         if (false === (result.deposit_group_key.deposit_group_key.toString() in groups )){
+          let menu_group_value = result.deposit_group_key.deposit_group_key.toString() + "," +
+          result.deposit_group_key.deposit_group_name;
           // group keyが存在しなかったら新規なので追加する
           groups[result.deposit_group_key.deposit_group_key.toString()] = {
             group_id : result.deposit_group_key.deposit_group_key.toString(),
             group_name : result.deposit_group_key.deposit_group_name,
+            menu_group_value : menu_group_value,
           }
         }
       });
@@ -98,20 +87,22 @@ export default function DepositItemSelectGrouping(props) {
       let menuItems = [];
       //
       // 空白は不要なため生成しない
-      //menuItems.push(
-      //  <MenuItem value="">
-      //    <em>None</em>
-      //  </MenuItem>
-      //);
+      menuItems.push(
+        <MenuItem value="">
+          <em>None</em>
+        </MenuItem>
+      );
       Object.keys(groups).forEach((key, i)=>{
+        let groupkey = key + "-" + i
         menuItems.push(
-          <ListSubheader key={groups[key].group_id}>{groups[key].group_name}</ListSubheader>
+          <ListSubheader key={groupkey}>{groups[key].group_name}</ListSubheader>
         )
         // 同一のGroup_idのみ追加して抽出
         const additems = items.filter(item => item.group_id === groups[key].group_id );
         additems.map((item) =>{
+          console.debug(`deposit_item_obj=${item.deposit_item_obj}`)
           menuItems.push(
-            <MenuItem key={item.depositItem_key} value={item.depositItem_key}>{item.depositItem_name}</MenuItem>
+            <MenuItem key={item.depositItem_key} value={item.deposit_item_obj.depositItem_key}>{item.deposit_item_obj.depositItem_name}</MenuItem>
           );
         });
       });
@@ -119,23 +110,44 @@ export default function DepositItemSelectGrouping(props) {
       // 3. useStateに設定する
       //    console.log(menuItems);
       setSelectMenuItems(menuItems);
+      //
+      // Select Listの全データリストを保持
+      setSelectItems(items);
     }
     fetchData();
   },[]);
 
   const handleChange = (event) =>{
     console.debug(event.target.value);
-    handle(event.target.value);
-  }
+    setDepositItem_key(event.target.value);
 
+    // 変更された値(depositItem_key)から全データを保持しているselectItemsから対象のデータオブジェクトを抽出し
+    // 設定する。
+    console.debug(selectItems);
+    const selectItem = selectItems.find( r => r.deposit_item_obj.depositItem_key === event.target.value);
+    console.log('SelectItem');
+    console.log(selectItem);
+    //
+    // 親のハンドル呼出してオブジェクトを設定
+    let newSelectItem = selectItem.deposit_item_obj;
+    console.log('newSelectItem');
+    console.log(newSelectItem);    
+    parentHandle(newSelectItem);
+    //parentHandle(event.target.value);
+    console.log('SelectItem-end');
+  }
   return (
     <FormControl className={classes.formControl}>
       <InputLabel htmlFor="deposit-grouped-native-select" required>預金項目</InputLabel>
-      <Select defaultValue="" id="deposit-grouped-native-select"
-        onChange={handleChange} value={depositItemkey}
+        <Select 
+        defaultValue=""
+        id="deposit-grouped-native-select"
+        onChange={handleChange} 
+        value={depositItem_key}
         >
         {selectMenuItems}
       </Select>
     </FormControl>
   );
 }
+

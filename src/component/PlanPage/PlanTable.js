@@ -19,19 +19,28 @@ const columns = [
     { id : 'id', label: 'No', minWidth: 50 }
     ,{ id : 'deposit_group_name', label: 'Group', minWidth:100 }
     ,{ id : 'depositItem_name', label: '預金項目', minWidth:100 }
-    ,{ id : 'deposit_type', label: 'Type', minWidth:100 }
+    ,{ id : 'deposit_type_str', label: 'Type', minWidth:100 }
     ,{ id : 'deposit_value', label: 'Value', minWidth:100, align: 'right', format:(value) => value.toLocaleString(), }
 ]
 
-function createData(id, savings_key, deposit_group_name, depositItem_name, 
-    deposit_type, deposit_value) {
+function createData(id, savings_key, deposit_group_key,
+    deposit_group_name, depositItem_name, 
+    deposit_type, deposit_type_str, deposit_value, depositItem_key) {
     return { 
         id : id,
         savings_key : savings_key,
         deposit_group_name : deposit_group_name, 
+        //depositItem_key : depositItem_key,
         depositItem_name : depositItem_name, 
         deposit_type : deposit_type, 
-        deposit_value : deposit_value
+        deposit_type_str : deposit_type_str, 
+        deposit_value : deposit_value,
+        deposit_item_obj : {
+          deposit_group_key : deposit_group_key,
+          deposit_group_name : deposit_group_name, 
+          depositItem_key : depositItem_key,
+          depositItem_name : depositItem_name, 
+        }
     };
 }
 const useStyles = makeStyles({
@@ -80,11 +89,14 @@ export default function PlanTable() {
         let rowsObj = results.map(( record, index ) => 
           createData( index + 1, 
             record.savings_key,
+            record.depositItem_key.deposit_group_key,
             record.depositItem_key.deposit_group_name,
             record.depositItem_key.depositItem_name,
+            record.deposit_type,
             record.deposit_type === prj_const.TYPE_DEPOSIT 
             ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR,
-            record.deposit_value.toLocaleString()
+            record.deposit_value.toLocaleString(),
+            record.depositItem_key.depositItem_key,
           ))
         console.debug(result.data.count);
         setMaxData(result.data.count);
@@ -129,11 +141,14 @@ export default function PlanTable() {
       let rowsObj = results.map(( record, index ) => 
         createData( rows.length + index + 1, 
           record.savings_key,
+          record.depositItem_key.deposit_group_key,
           record.depositItem_key.deposit_group_name,
           record.depositItem_key.depositItem_name,
+          record.deposit_type,
           record.deposit_type === prj_const.TYPE_DEPOSIT 
           ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR,
-          record.deposit_value.toLocaleString()
+          record.deposit_value.toLocaleString(),
+          record.depositItem_key.depositItem_key,
         ))
       //console.debug("addTotalDatas------------------");
       let addTotalDatas = rows.concat(rowsObj);
@@ -180,7 +195,7 @@ export default function PlanTable() {
                       return (
                         <TableCell key={column.id} align={column.align}>
                           { (index === 2) ?
-                            <PlunUpdateDialog subtitle={value} record={row} />
+                            <PlunUpdateDialog subtitle={value} record={row} rows={rows} setRows={setRows}/>
                             : column.format && typeof value === 'number' ? column.format(value) : value
                           }
                         </TableCell>

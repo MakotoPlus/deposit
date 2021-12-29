@@ -100,10 +100,9 @@ export default function PlanInputDialog({subtitle}) {
     axios.post(prj_const.ServerUrl + "/api/savings/", data 
       ).then(response =>{
         console.log(response);
-      }, error =>{
+      }).catch( error =>{
         console.error(error);
     });
-
   };
 
 
