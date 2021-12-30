@@ -8,10 +8,15 @@ import TextField from '@material-ui/core/TextField';
  * 
  */
 export default function DepositValueText(props) {
-  const value = props.value.replace(/,/g, '');
+
+  let value = 0;
+  if ('string' === (typeof props.value)){
+    value = props.value.replace(/,/g, '');
+  }else{
+    value = props.value;
+  }
   const handle = props.handle;
   const handelValueChange = (event) =>{
-    //console.log(`event.target.value->${event.target.value}`)
     handle(event.target.value);
   }
   return (

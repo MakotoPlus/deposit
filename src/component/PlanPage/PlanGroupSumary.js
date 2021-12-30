@@ -10,6 +10,8 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
+import {usePlanContext} from '../../context/planContext';
+
 const prj_const = require('./../prj_const.js')
 
 //
@@ -27,10 +29,8 @@ async function getSavingSumaryList(user, nRunApiCount = 1, page = 1){
   let headers = {
     headers : user.Authorization
   };
-  let result;
-  let results = [];
   let urlpath = prj_const.ServerUrl + "/api/saving_sumary_list/?no_page";
-  result = await axios.get(urlpath, headers);
+  let result = await axios.get(urlpath, headers);
   console.log(result);
   return result;
 }
@@ -59,6 +59,7 @@ export default function PlanGroupSumary() {
   const [page, setPage] = React.useState(0);
   const [maxData, setMaxData] = React.useState(0);
   const {user} = useUserContext();  
+  const {plan} = usePlanContext();  
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [rows, setRows] = React.useState([]);
   const [serverPage, setServerPage] = React.useState(1);
@@ -81,7 +82,7 @@ export default function PlanGroupSumary() {
       })
     }
     fetchData();
-  },[]);
+  },[plan]);
 
 
   const handleChangePage = (event, newPage) => {

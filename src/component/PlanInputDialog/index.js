@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { TYPE_DEPOSIT } from '../prj_const';
 import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
+import {usePlanContext} from '../../context/planContext';
 const prj_const = require('./../prj_const.js')
 
 //
@@ -46,7 +47,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PlanInputDialog({subtitle}) {
   const {user} = useUserContext();
-  const token = user.token;
+  const {plan, setPlan, planAllCount, setPlanAllCount} = usePlanContext();  
+  //const token = user.token;
   const userid = user.userid;
   const classes = useStyles();
   const [fullWidth, ] = React.useState(true);
@@ -61,8 +63,12 @@ export default function PlanInputDialog({subtitle}) {
   //
   // 預金項目Select
   // DepositItemSelectGrouping
+  const [depositItemObj, setDepositItemObj] = React.useState({});
   const [depositItemkey, setDepositItemkey] = React.useState(0);
-  const handleDepositItemkey = value => setDepositItemkey(value);
+  const handleDepositItemkey = value => {
+    setDepositItemkey(value.depositItem_key);
+    setDepositItemObj(value);
+  }
 
   //
   // 預金/支出
@@ -95,16 +101,37 @@ export default function PlanInputDialog({subtitle}) {
     //
     //console.log(user);
     //console.log(`JWT ${token}`);
-    axios.defaults.headers.common["Authorization"] = `JWT ${token}`;
+    //axios.defaults.headers.common["Authorization"] = `JWT ${token}`;
+    axios.defaults.headers.common["Authorization"] = user.Authorization.Authorization;
     axios.defaults.baseURL = prj_const.ServerUrl + "/api";
     axios.post(prj_const.ServerUrl + "/api/savings/", data 
       ).then(response =>{
         console.log(response);
+        let newRow = {
+          savings_key: response.data.savings_key,
+          deposit_group_name: depositItemObj.deposit_group_name,
+          deposit_type: response.data.deposit_type,
+          depositItem_name: depositItemObj.depositItem_name,
+          deposit_type_str: response.data.deposit_type === prj_const.TYPE_DEPOSIT 
+            ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR,
+          deposit_value: Number(response.data.deposit_value).toLocaleString(),
+          deposit_item_obj : depositItemObj
+        }
+        //
+        // データ追加は行わないがトータル金額などの更新のためにデータを再設定する
+        //
+        // ここにデータ件数追加された事によりPlanTableの最大件数を1件増やすイベントを追加する
+        //
+        //
+        console.log(newRow);
+        let newRows = [...plan];
+        setPlan(newRows);
+        setPlanAllCount({count: planAllCount.count+1});
+        setOpen(false);
       }).catch( error =>{
         console.error(error);
     });
   };
-
 
   return (
     <div>

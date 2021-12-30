@@ -2,6 +2,8 @@ import React, {useEffect} from 'react';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
+import {usePlanContext} from '../../context/planContext';
+
 const prj_const = require('./../prj_const.js')
 
 //function preventDefault(event) {
@@ -23,6 +25,7 @@ async function getSavingsTotal(user){
 
 export default function PlanTotal() {
   const {user} = useUserContext();
+  const {plan} = usePlanContext();  
   const [savingTotal, setSavingTotal] = React.useState("0");
   useEffect(()=>{
     getSavingsTotal(user).then(result=>{
@@ -32,7 +35,7 @@ export default function PlanTotal() {
     }).catch(error=>{
       console.error(error);
     })
-  });
+  },[plan]);
 
   return (
     <React.Fragment>

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Button from '@material-ui/core/Button';
 //import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -14,9 +14,11 @@ import DepositTypeSelect from '../DepositTypeSelect';
 import DepositValueText from '../DepositValueText';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from '@mui/material/Link';
-import { TYPE_DEPOSIT } from '../prj_const';
+//import { TYPE_DEPOSIT } from '../prj_const';
 import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
+import {usePlanContext} from '../../context/planContext';
+
 const prj_const = require('./../prj_const.js')
 
 
@@ -43,14 +45,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
+async function apiUpdateDeposit(savings_key, data, user){
+  console.debug("/api/savings/--------------------------");
+  axios.defaults.headers.common["Authorization"] = user.Authorization.Authorization;
+  axios.defaults.baseURL = prj_const.ServerUrl + "/api";
+  return await axios.patch(prj_const.ServerUrl + "/api/savings/" + savings_key + "/", data)
+}
+
 export default function PlunUpdateDialog(props) {
   const [subtitle, setSubtitle] = React.useState(props.subtitle);
   const [record, setRecord] = React.useState(props.record);
-  const rows = props.rows;
-  const setRows = props.setRows;
   const savings_key = record.savings_key;
   const [open, setOpen] = React.useState(false);
   const {user} = useUserContext();
+  const {plan, setPlan} = usePlanContext();  
   const classes = useStyles();
   const [fullWidth, ] = React.useState(true);
   //
@@ -64,8 +72,8 @@ export default function PlunUpdateDialog(props) {
   const [depositItemObj, setDepositItemObj] = React.useState(record.deposit_item_obj);
   const [depositItemkey, setDepositItemkey] = React.useState(record.deposit_item_obj.depositItem_key);
   const handleDepositItemObj = value => {
-    console.log("handleDepositItemObj");
-    console.log(value);
+    console.debug("handleDepositItemObj");
+    console.debug(value);
     setDepositItemObj(value);
     setDepositItemkey(value.depositItem_key);
   }
@@ -74,35 +82,7 @@ export default function PlunUpdateDialog(props) {
   // 預金/支出
   const [depositType, setDepositType] = React.useState(props.record.deposit_type);
   const handleDepositType = value => setDepositType(value);
-  /*
-  useEffect(()=>{
-    function fetchData(){
-      console.debug("record");
-      console.debug(record);
-    }
-    fetchData();
-  },[]);
-  */
-
   const handleClickOpen = () => {
-    /*
-    async function fetchData(){
-      let headers = {
-        headers : user.Authorization
-      };
-      console.debug("record");
-      console.debug(record);
-      console.debug("/api/savings/--------------------------");
-      let result = await axios.get(prj_const.ServerUrl + "/api/savings/" + savings_key, headers);
-      console.debug(result);
-      //console.debug(result.data.depositItem_key);
-      setDepositItemkey(result.data.depositItem_key)
-      setDepositValue(result.data.deposit_value);
-      setDepositType(result.data.deposit_type);      
-      setOpen(true);
-    }
-    fetchData();
-    */
     setOpen(true);
   };
 
@@ -110,13 +90,10 @@ export default function PlunUpdateDialog(props) {
     setOpen(false);
   };
 
+
   const handleUpdate = () => {
-    console.log("Update");
-    async function fetchData(){
-      console.debug(`savings_key=${savings_key}`);
-      console.debug(`depositValue=${depositValue}`);
-      console.debug(`depositItemkey=${depositItemkey}`);
-      console.debug(`depositType=${depositType}`);
+    console.debug("Update");
+    function fetchData(){
       const data = {
         depositItem_key : depositItemkey,
         deposit_type : depositType,
@@ -125,22 +102,12 @@ export default function PlunUpdateDialog(props) {
         u_user : user.userid,
         update_date : new Date().toISOString()
       }
-      console.debug("before----------------");
-      console.debug(record);
-      console.debug("after----------------");
-      console.debug(data);
-      console.debug("/api/savings/--------------------------");
-      axios.defaults.headers.common["Authorization"] = user.Authorization.Authorization;
-      axios.defaults.baseURL = prj_const.ServerUrl + "/api";
-      await axios.patch(prj_const.ServerUrl + "/api/savings/" + savings_key + "/", data).then(response =>{
-        console.debug('update success');
-        console.debug(response);
-
+      
+      apiUpdateDeposit(savings_key, data, user).then(response =>{
         // 親の一覧データ更新処理
         //
-        //
-        //更新対象の元ネタデータ取得
-        let newRows = [...rows];
+        console.log(response);
+        let newRows = [...plan];
         let newRow = newRows.find( r => r.savings_key === savings_key );
         newRow.deposit_item_obj = {...depositItemObj};
         newRow.deposit_group_name = newRow.deposit_item_obj.deposit_group_name;
@@ -149,24 +116,14 @@ export default function PlunUpdateDialog(props) {
         newRow.deposit_type_str = depositType === prj_const.TYPE_DEPOSIT 
           ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR;
         newRow.deposit_value = Number(depositValue).toLocaleString();
+        newRow.delete_flag = false;
         console.debug('new row----------------');
-        console.log(newRow);
-        setRows(newRows);
-
+        console.debug(newRow);
+        //setRows(newRows);
+        setPlan(newRows);
         setSubtitle(newRow.depositItem_name);
         setRecord(newRow);
         setOpen(false);
-        //setRows([newRow]);
-        /*
-        let newRecord = {
-          deposit_group_name : 'deposit_group_name',
-          depositItem_name : 'depositItem_name',
-          deposit_value : response.data.deposit_value.toLocaleString(),
-          deposit_type : response.data.deposit_type
-        }
-        setRecord({ ...record, newRecord});  
-        setOpen(false);
-        */
       }).catch(error=>{
         console.error(error);
       })
@@ -176,7 +133,30 @@ export default function PlunUpdateDialog(props) {
 
   const handleDelete = () => {
     console.log("Delete");
-  }
+    function fetchData(){
+      const data = {
+        delete_flag : true,
+        u_user : user.userid,
+        update_date : new Date().toISOString()
+      }
+      
+      apiUpdateDeposit(savings_key, data, user).then(response =>{
+        // 親の一覧データ更新処理
+        //
+        console.log(response);
+        let newRows = [...plan];
+        let newRow = newRows.find( r => r.savings_key === savings_key );
+        newRow.delete_flag = true;
+        console.debug('new row----------------');
+        console.debug(newRow);
+        setPlan(newRows);
+        setRecord(newRow);
+        setOpen(false);
+      }).catch(error=>{
+        console.error(error);
+      })
+    }
+    fetchData();  }
 
   return (
     <div>
@@ -194,7 +174,7 @@ export default function PlunUpdateDialog(props) {
         <DialogContent>
           <form className={classes.root} noValidate autoComplete="off">
               <div className={classes.inilineBlock}>
-                <DepositItemSelectGrouping handle={handleDepositItemObj} depositItemObj={record.deposit_item_obj}/>
+                <DepositItemSelectGrouping handle={handleDepositItemObj} depositItem_key={record.deposit_item_obj.depositItem_key}/>
                 <DepositTypeSelect handle={handleDepositType} value={depositType} />
                 <DepositValueText handle={handleDepositUpdate} value={depositValue} />
               </div>
