@@ -73,7 +73,7 @@ import { TYPE_EXPENSES, TYPE_DEPOSIT } from '../prj_const';
 
    const handleChange = (event) => {
      setState({ ...state, [event.target.name]: event.target.checked });
-     //console.log(event.target.checked);
+     console.log(event.target.checked);
      // event.target.checked = False (貯金) : True(支出)
      //setTypeValue( event.target.checked ? TYPE_EXPENSES : TYPE_DEPOSIT);
      handle(event.target.checked ? TYPE_EXPENSES : TYPE_DEPOSIT);

@@ -17,7 +17,7 @@ export function PlanProvider({children}){
     const [planAllCount, setPlanAllCount] = useState({count: 0})
     const value ={
         plan, setPlan,
-        planAllCount, setPlanAllCount
+        planAllCount, setPlanAllCount,
     }
     return (
         <PlanContext.Provider value={value}>

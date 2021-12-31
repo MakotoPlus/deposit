@@ -15,13 +15,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DatePicker01({labelName}) {
+export default function DatePicker01(props) {
   // The first commit of Material-UI
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const [selectedDate, setSelectedDate] = React.useState(props.yyyymmdd);
   const classes = useStyles();
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
+  const handleDateChange = (dt) => {
+    setSelectedDate(dt);
+    let LocalDate = dt.getFullYear() + "/" + ("00" + (dt.getMonth()+1)).slice(-2) + "/" +  ("00" + dt.getDate()).slice(-2);
+    props.setYyyymmdd(LocalDate);
   };
 
   return (
@@ -31,7 +32,7 @@ export default function DatePicker01({labelName}) {
           <KeyboardDatePicker
             margin="normal"
             id="date-picker-dialog"
-            label={labelName}
+            label={props.labelName}
             format="yyyy/MM/dd"
             value={selectedDate}
             onChange={handleDateChange}

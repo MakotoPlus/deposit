@@ -8,6 +8,9 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import Box from '@mui/material/Box';
 import { makeStyles } from '@material-ui/core/styles';
 //import Typography from '@mui/material/Typography';
+import axios from 'axios';
+import {useUserContext} from '../../context/userContext';
+import {useResultDatasContext} from '../../context/resultDatasContext';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
@@ -23,10 +26,20 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
 export default function ResultSearchForm(){
     const classes = useStyles();
-    const [value, setValue] = React.useState([null, null]);
+    const {user} = useUserContext();
+    const {resultDatas, setResultDatas, 
+        resultAllCount, setResultAllCount,
+        resultSearch, setResultSearch,
+    } = useResultDatasContext();
+    const [fromtoDatevalue, setFromtoDateValue] = React.useState([null, null]);
+    const handleClickSearch = () => {
+        console.debug("Search");
+        console.debug("fromtoDatevalue");
+        console.debug(fromtoDatevalue);
+    };
+    
     return (
         <React.Fragment>
             <Box
@@ -40,10 +53,10 @@ export default function ResultSearchForm(){
                     <DateRangePicker
                         startText="日付 FROM"
                         endText="日付 TO"
-                        value={value}
-                        //inputFormat="yyyy/MM/dd"
-                        onChange={(newValue) => {
-                        setValue(newValue);
+                        value={fromtoDatevalue}
+                        inputFormat="yyyy/MM/dd"
+                        onChange={(newDateValue) => {
+                        setFromtoDateValue(newDateValue);
                         }}
                         renderInput={(startProps, endProps) => (
                         <React.Fragment>
@@ -60,7 +73,7 @@ export default function ResultSearchForm(){
                 m={0} //margin
                 className={`${classes.Box} ${classes.bottomLeftBox}`}
                 >        
-                <Button variant="outlined" color="primary" >
+                <Button variant="outlined" color="primary"  onClick={handleClickSearch}>
                     search
                 </Button>
             </Box>
