@@ -25,6 +25,21 @@ const columns = [
     ,{ id : 'deposit_value', label: 'Value', minWidth:100, align: 'right', format:(value) => value.toLocaleString(), }
 ]
 
+function createObj(record, index, rowPage, page ){
+  return {
+    id : (index + 1) + (rowPage * page),
+    savings_key : record.savings_key,
+    deposit_group_name : record.depositItem_key.deposit_group_name, 
+    depositItem_name : record.depositItem_key.depositItem_name, 
+    deposit_type : record.deposit_type, 
+    deposit_type_str : record.deposit_type === prj_const.TYPE_DEPOSIT ?
+      prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR, 
+    deposit_value : record.deposit_value.toLocaleString(),
+    delete_flag : record.delete_flag,
+    deposit_item_obj : record.depositItem_key,
+  };
+}
+/*
 function createData(id, savings_key, deposit_group_key,
     deposit_group_name, depositItem_name, deposit_type, 
     deposit_type_str, deposit_value, depositItem_key,
@@ -46,6 +61,7 @@ function createData(id, savings_key, deposit_group_key,
         }
     };
 }
+*/
 const useStyles = makeStyles({
   root: {
     width: '100%',
@@ -66,33 +82,58 @@ const useStyles = makeStyles({
 
 //
 // 複数データ取得時は、datasのみ追加して返す
-async function getSavingsList(user, nRunApiCount = 1, page = 1){
+async function getSavingsList(user, urlParameters, urlPath){
+  //
+  // parameters : URLパラメータ (未設定の場合はURLを有効にする)
+  // url: アクセスURLパス
+  let path ="";
+  if (!urlParameters){
+    path = urlPath;
+  }else{
+    path = prj_const.ServerUrl + "/api/savings_list/?" + urlParameters;
+  }
   let headers = {
     headers : user.Authorization
   };
-  let result;
-  let results = [];
-  for ( let i = 0; i < nRunApiCount; i++){
-    let urlpath = prj_const.ServerUrl + "/api/savings_list/";
-    if ( page > 1 ){
-      urlpath = urlpath + "?page=" + page;
-    }
-    result = await axios.get(urlpath, headers);
-    results = results.concat(result.data.results);
-  }
-  result.data.results = results;
-  return result;
+  return await axios.get(path, headers);
 }
 
 export default function PlanTable() {
   const classes = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [maxData, setMaxData] = React.useState(0);
+  const [page, setPage] = React.useState(0);  // 現在のページ位置（開始0）
   const {user} = useUserContext();
   const {plan, setPlan, planAllCount, setPlanAllCount} = usePlanContext();  
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [serverPage, setServerPage] = React.useState(1);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);  //現在のクライアント1ページ表示件数
+  //const [serverPage, setServerPage] = React.useState(1);
 
+  const [prevUrl, setPrevUrl] = React.useState("");   // 前ページURL
+  const [nextUrl, setNextUrl] = React.useState("");   // 次ページURL
+  const [maxData, setMaxData] = React.useState(0);    // 全データ件数
+  const [thisUrl, setThisUrl] = React.useState("");   // 今回アクセスすべきURL
+
+  useEffect(()=>{
+    console.debug('PlanTable');
+    //
+    // 検索パラメータURL再構築
+    let paramLimit = "limit=" + rowsPerPage;
+    let paramOffset = "offset=0";
+    let searchParameters = paramLimit + "&" + paramOffset;
+    setThisUrl(searchParameters);
+    getSavingsList(user, searchParameters, undefined).then(result =>{
+      console.debug(result);
+      //前ページURL・次ページURL・データ件数設定
+      const data = result.data;
+      setPrevUrl(data.previous);
+      setNextUrl(data.next);
+      setMaxData(data.count);
+      setPlanAllCount(data.count);
+      let rowsObj = data.results.map((record, index) => createObj(record, index, rowsPerPage, page));
+      setPage(0);
+      setPlan(rowsObj);
+    }).catch(error=>console.error(error))
+  },[rowsPerPage]);
+
+/*
   useEffect(()=>{
     function fetchData(){
       let nRunApiCount = Math.ceil(rowsPerPage / prj_const.DATA_GET_COUNT);
@@ -103,16 +144,8 @@ export default function PlanTable() {
   },[user]);
 
   useEffect(()=>{
-    if (maxData === planAllCount.count){
-      return;
-    }
-    console.debug(planAllCount);
-    console.debug("AllCount変更-----------[" + planAllCount.count + "]maxData[" + maxData + "]");
-    //初期化
-    //serverPage = 1;
-    //page = 0;
-    let nRunApiCount = Math.ceil(rowsPerPage / prj_const.DATA_GET_COUNT);
-    getList(user, nRunApiCount, 1, 0, true);
+
+
   },[planAllCount]);
 
   const getList = (user, nRunApiCount, serverPage, newPage, isClear = false) =>{
@@ -163,43 +196,39 @@ export default function PlanTable() {
         console.error(error);
     });
   }
-
+**/
+  //次ページ・前ページ移動
   const handleChangePage = (event, newPage) => {
     console.debug( `handleChangePage newPage=${newPage}`);
-    //
-    // 既に取得件数が最大件数まで来ている場合は何もしない
-    let showDataLast = rowsPerPage * (newPage);
-    if (showDataLast > planAllCount.count){
-      //
-      console.debug("データ最終取得済み");
-      return;
+    //現在のページから次ページなのか、前ページなのか判定する
+    let url = "";
+    if ( newPage > page ){
+      url = nextUrl;
+    }else{
+      url = prevUrl;
     }
-    //
-    // 現在取得済みデータと次ページに表示するデータ件数を比較しもし
-    // まだ取得していないデータ範囲を取得する場合は、通信を実行しデータを取得する
-    // newPage は初期 0 
-    showDataLast = rowsPerPage * (newPage+1);
-      if (showDataLast <= plan.length){
+    getSavingsList(user, undefined, url).then(result=>{
+      //前ページURL・次ページURL・データ件数設定
+      const data = result.data;
+      setPrevUrl(data.previous);
+      setNextUrl(data.next);
+      setMaxData(data.count);
+      setPlanAllCount(data.count);
+      let rowsObj = data.results.map((record, index) => 
+        createObj(record, index, rowsPerPage, newPage));
+      setPlan(rowsObj);
       setPage(newPage);
-      console.debug("データあり");
-      return;
-    }else if (plan.length >= planAllCount.count){
-      //既に全データ取得済み時
-      setPage(newPage);
-      console.debug("データあり");
-      return;
-    }
-    // 何回Restapi実行件数 = ((表示件数 * 次のページ) - データ取得済み件数 ) / Restapi１回データ取得件数
-    // 小数点切り上げ
-    let nRunApiCount = Math.ceil((showDataLast - plan.length) / prj_const.DATA_GET_COUNT);
-    console.debug(`${showDataLast}, ${plan.length} データ取得回数nRunApiCount=${nRunApiCount} Page=${serverPage}`);
-    getList(user, nRunApiCount, serverPage, newPage);
-  }
+    }).catch(error => console.error(error))
+  };
 
 
+
+  // 1ページの表示件数変更イベント
+  // 先頭ページでデータ取得しなおし
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    console.debug( `handleChangeRowsPerPage value=${event.target.value}`);
+    let newPage = +event.target.value;
+    console.debug(`handleChangeRowsPerPage::newPage=${newPage}`);
+    setRowsPerPage(newPage);
     setPage(0);
   }
 
@@ -222,7 +251,7 @@ export default function PlanTable() {
           </TableHead>
           <TableBody>
             {
-              plan.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+              plan.slice(0 * rowsPerPage, 0 * rowsPerPage + rowsPerPage).map((row) => {
               const rowClassName = (row.delete_flag) ? classes.DelTableRow : classes.TableRow;
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.id} className={rowClassName}>
@@ -247,7 +276,7 @@ export default function PlanTable() {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25, 100]}
         component="div"
-        count={planAllCount.count}
+        count={planAllCount}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

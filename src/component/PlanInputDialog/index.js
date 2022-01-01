@@ -126,7 +126,7 @@ export default function PlanInputDialog({subtitle}) {
         console.log(newRow);
         let newRows = [...plan];
         setPlan(newRows);
-        setPlanAllCount({count: planAllCount.count+1});
+        setPlanAllCount(planAllCount+1);
         setOpen(false);
       }).catch( error =>{
         console.error(error);
