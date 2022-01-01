@@ -55,10 +55,10 @@ function createObj(record, index, rowPage, page ){
     deposit_type : record.deposit_type,
     deposit_type_str : (record.deposit_type === prj_const.TYPE_DEPOSIT) 
     ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR,
-    deposit_value : record.deposit_value,
+    deposit_value : record.deposit_value.toLocaleString(),
     memo : record.memo,    
     insert_yyyymmdd : record.insert_yyyymmdd,
-    deposit_itemkey : record.depositItem_key,
+    depositItem_key : record.depositItem_key,
     depositItem_name : record.depositItem_key.depositItem_name,
     deposit_group_name : record.depositItem_key.deposit_group_name,
     moneyType_name : record.depositItem_key.moneyType_name,
@@ -82,6 +82,14 @@ const useStyles = makeStyles({
   tableCell: {
     // color: 'red',
   },
+  DelTableRow : {
+    backgroundColor : 'silver',
+    color : 'whilte',
+  },
+  TableRow : {
+    backgroundColor : 'whilte',
+    color : 'black',
+  }
 
 });
 
@@ -115,7 +123,7 @@ export default function ResultTable() {
       url = prevUrl;
     }
     getDepositList(user, undefined, url).then(result=>{
-      console.debug(result);
+      //console.debug(result);
       //前ページURL・次ページURL・データ件数設定
       const data = result.data;
       setPrevUrl(data.previous);
@@ -135,21 +143,6 @@ export default function ResultTable() {
     console.debug(`handleChangeRowsPerPage::newPage=${newPage}`);
     setRowsPerPage(newPage);
     setPage(0);
-    /*
-    getDepositList(user, thisUrl, undefined).then(result=>{
-      console.debug(result);
-      //前ページURL・次ページURL・データ件数設定
-      const data = result.data;
-      setPrevUrl(data.previous);
-      setNextUrl(data.next);
-      setMaxData(data.count);
-      setResultAllCount(data.count);
-      let rowsObj = data.results.map((record, index) => createObj(record, index, newPage, 0));
-      setResultDatas([...rowsObj]);
-      setPage(0);
-      setRowsPerPage(newPage);
-    }).catch(error => console.error(error))
-    */
   }
 
   useEffect(()=>{
@@ -173,12 +166,19 @@ export default function ResultTable() {
     //削除フラグ
     let paramIsDelete = "delete_flag=false";
     if (resultSearch.select_delete){
-      paramIsDelete = "delete_flag=true&delete_flag=false";
+      //paramIsDelete = "delete_flag=true&delete_flag=false";
+      paramIsDelete = "";
     }
     console.log(paramIsDelete);
     //日付(gte=以上 lte=以下)
-    let paramTodate = "insert_yyyymmdd__gte=" + (resultSearch.select_fromto_date[0]) ? resultSearch.select_fromto_date[0] : "";
-    let paramFromdate = "insert_yyyymmdd__lte=" + (resultSearch.select_fromto_date[0]) ? resultSearch.select_fromto_date[1] : "";
+    let paramTodate = "";
+    if (resultSearch.select_fromto_date[0]){
+      paramTodate = "insert_yyyymmdd__gte=" + resultSearch.select_fromto_date[0];
+    }
+    let paramFromdate = "";
+    if (resultSearch.select_fromto_date[1]){
+      paramFromdate = "insert_yyyymmdd__lte=" + (resultSearch.select_fromto_date[1]);
+    }
     let paramLimit = "limit=" + rowsPerPage;
     let paramOffset = "offset=0";
     console.log(paramTodate);
@@ -235,14 +235,15 @@ export default function ResultTable() {
           </TableHead>
           <TableBody>
             {resultDatas.slice(0 * rowsPerPage, 0 * rowsPerPage + rowsPerPage).map((row) => {
+              const rowClassName = (row.delete_flag) ? classes.DelTableRow : classes.TableRow;
               return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                <TableRow hover role="checkbox" tabIndex={-1} key={row.id} className={rowClassName}>
                   {columns.map((column, index) => {
                     const value = row[column.id];
                     return (
                       <TableCell key={column.id} align={column.align} className={classes.tableCell}>
                         { (index === 1) ?
-                          <ResultUpdateDialog subtitle={value} />
+                          <ResultUpdateDialog subtitle={value} record={row} />
                           : column.format && typeof value === 'number' ? column.format(value) : value
                         }
                       </TableCell>

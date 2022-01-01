@@ -31,7 +31,7 @@ export default function DepositItemSelectGrouping(props) {
   const [depositItem_key, setDepositItem_key] = useState(props.depositItem_key);
   const [selectItems, setSelectItems] = useState([]);
   //console.debug(`funcstart depositItemkey=${props_depositItemkey}`);
-  console.debug(props);
+  //console.debug(props);
   useEffect(()=>{
     function fetchData(){
       let headers = {
@@ -45,8 +45,8 @@ export default function DepositItemSelectGrouping(props) {
         // 2. １の情報を利用しリストボックス出力用のXSLTを生成する
         // 3. useStateに設定する
         //
-        console.debug("DepositItemSelectGrouping.userEfect");
-        console.debug(result);
+        //console.debug("DepositItemSelectGrouping.userEfect");
+        //console.debug(result);
         const resultData = result.data;
         items = resultData.map((d)=>{
           //
@@ -67,6 +67,7 @@ export default function DepositItemSelectGrouping(props) {
             deposit_group_name: d.deposit_group_key.deposit_group_name,
             depositItem_key : d.depositItem_key,
             depositItem_name: d.depositItem_name,
+            moneyType_name: d.moneyType_key.moneyType_name,
           }
           return ({
             group_id : d.deposit_group_key.deposit_group_key.toString(),
@@ -127,14 +128,14 @@ export default function DepositItemSelectGrouping(props) {
 
     // 変更された値(depositItem_key)から全データを保持しているselectItemsから対象のデータオブジェクトを抽出し
     // 設定する。
-    console.debug(selectItems);
+    //console.debug(selectItems);
     const selectItem = selectItems.find( r => r.deposit_item_obj.depositItem_key === event.target.value);
     if (!selectItem){
       console.log('へんなところクリックしたん？');
       return;
     }
-    console.log('SelectItem');
-    console.log(selectItem);
+    //console.log('SelectItem');
+    //console.log(selectItem);
     //
     // 親のハンドル呼出してオブジェクトを設定
     let newSelectItem = selectItem.deposit_item_obj;

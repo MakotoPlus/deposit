@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-async function apiUpdateDeposit(savings_key, data, user){
+async function apiUpdateSavings(savings_key, data, user){
   console.debug("/api/savings/--------------------------");
   axios.defaults.headers.common["Authorization"] = user.Authorization.Authorization;
   axios.defaults.baseURL = prj_const.ServerUrl + "/api";
@@ -103,7 +103,7 @@ export default function PlunUpdateDialog(props) {
         update_date : new Date().toISOString()
       }
       
-      apiUpdateDeposit(savings_key, data, user).then(response =>{
+      apiUpdateSavings(savings_key, data, user).then(response =>{
         // 親の一覧データ更新処理
         //
         console.log(response);
@@ -140,7 +140,7 @@ export default function PlunUpdateDialog(props) {
         update_date : new Date().toISOString()
       }
       
-      apiUpdateDeposit(savings_key, data, user).then(response =>{
+      apiUpdateSavings(savings_key, data, user).then(response =>{
         // 親の一覧データ更新処理
         //
         console.log(response);

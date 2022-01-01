@@ -17,6 +17,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DatePicker01(props) {
   // The first commit of Material-UI
+  console.debug("DatePicker01");
+  console.debug(`yyyymmdd=${props.yyyymmdd}`);
+  console.debug(props);
+  const [labelName, ] = React.useState(props.labelName);
   const [selectedDate, setSelectedDate] = React.useState(props.yyyymmdd);
   const classes = useStyles();
   const handleDateChange = (dt) => {
@@ -32,10 +36,12 @@ export default function DatePicker01(props) {
           <KeyboardDatePicker
             margin="normal"
             id="date-picker-dialog"
-            label={props.labelName}
+            label={labelName}
             format="yyyy/MM/dd"
+            mask={"____/__/__"}   
             value={selectedDate}
             onChange={handleDateChange}
+            disableMaskedInput={true} 
             KeyboardButtonProps={{
               'aria-label': 'change date',
             }}

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import DepositGroupSelect from '../DepositGroupSelect';
-import DepositItemSelect from '../DepositItemSelect';
+//import DepositGroupSelect from '../DepositGroupSelect';
+//import DepositItemSelect from '../DepositItemSelect';
 import TextField from '@mui/material/TextField';
 import DateRangePicker from '@mui/lab/DateRangePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -55,11 +55,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ResultSearchForm(){
     const classes = useStyles();
-    const {user} = useUserContext();
-    const {resultDatas, setResultDatas, 
-        resultAllCount, setResultAllCount,
-        resultSearch, setResultSearch,
-    } = useResultDatasContext();
+    //const {user} = useUserContext();
+    const {setResultSearch} = useResultDatasContext();
     const [fromtoDatevalue, setFromtoDateValue] = React.useState([null, null]);
     const [isDelete, setIsDelete] = React.useState(false);
     const handleClickSearch = () => {
@@ -125,6 +122,7 @@ export default function ResultSearchForm(){
                             endText="日付 TO"
                             value={fromtoDatevalue}
                             inputFormat="yyyy/MM/dd"
+                            mask={"____/__/__"}
                             onChange={(value) => setFromtoDateValue(value)}
                             renderInput={(startProps, endProps) => (
                             <React.Fragment>
