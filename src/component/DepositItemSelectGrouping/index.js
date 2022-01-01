@@ -33,88 +33,93 @@ export default function DepositItemSelectGrouping(props) {
   //console.debug(`funcstart depositItemkey=${props_depositItemkey}`);
   console.debug(props);
   useEffect(()=>{
-    async function fetchData(){
+    function fetchData(){
       let headers = {
         headers : user.Authorization
       };
       let groups = {}; // 全てのgropid, groupname を格納(重複なし)
       let items = [];
-      let result = await axios.get(prj_const.ServerUrl + "/api/deposit_item_list/?no_page", headers);
-
-      //
-      // 1. 一度、表示すべきグループと項目をリストに別々に格納する
-      // 2. １の情報を利用しリストボックス出力用のXSLTを生成する
-      // 3. useStateに設定する
-      //
-      console.debug("DepositItemSelectGrouping.userEfect");
-      console.debug(result);
-      result.data.map((result)=>{
-        let deposit_item_obj = {
-          deposit_group_key : result.deposit_group_key.deposit_group_key,
-          deposit_group_name: result.deposit_group_key.deposit_group_name,
-          depositItem_key : result.depositItem_key,
-          depositItem_name: result.depositItem_name,
-        }
-        items.push({
-          group_id : result.deposit_group_key.deposit_group_key.toString(),
-          deposit_item_obj : deposit_item_obj,
-        });
-        if (false === (result.deposit_group_key.deposit_group_key.toString() in groups )){
-          let menu_group_value = result.deposit_group_key.deposit_group_key.toString() + "," +
-          result.deposit_group_key.deposit_group_name;
-          // group keyが存在しなかったら新規なので追加する
-          groups[result.deposit_group_key.deposit_group_key.toString()] = {
-            group_id : result.deposit_group_key.deposit_group_key.toString(),
-            group_name : result.deposit_group_key.deposit_group_name,
-            menu_group_value : menu_group_value,
+      axios.get(prj_const.ServerUrl + "/api/deposit_item_list/?no_page", headers).then((result)=>{
+        //
+        // 1. 一度、表示すべきグループと項目をリストに別々に格納する
+        // 2. １の情報を利用しリストボックス出力用のXSLTを生成する
+        // 3. useStateに設定する
+        //
+        console.debug("DepositItemSelectGrouping.userEfect");
+        console.debug(result);
+        const resultData = result.data;
+        items = resultData.map((d)=>{
+          //
+          // Group情報の設定
+          if (false === (d.deposit_group_key.deposit_group_key.toString() in groups )){
+            let menu_group_value = d.deposit_group_key.deposit_group_key.toString() + "," +
+            d.deposit_group_key.deposit_group_name;
+            // group keyが存在しなかったら新規なので追加する
+            groups[d.deposit_group_key.deposit_group_key.toString()] = {
+              group_id : d.deposit_group_key.deposit_group_key.toString(),
+              group_name : d.deposit_group_key.deposit_group_name,
+              menu_group_value : menu_group_value,
+            }
           }
-        }
-      });
-      // groups は object なので 配列に変える。
-      let grouplist = [];
-      Object.keys(groups).forEach((key)=>{
-        let groupItem = {
-          group_id : groups[key].group_id,
-          group_name : groups[key].group_name
-        }
-        grouplist.push(groupItem);
-      });
-
-      //
-      // 2. １の情報を利用しリストボックス出力用のXSLTを生成する
-      //    全てのItemをここで格納する・・
-      let menuItems = [];
-      //
-      // 空白は不要なため生成しない
-      menuItems.push(
-        <MenuItem value="">
-          <em>None</em>
-        </MenuItem>
-      );
-      Object.keys(groups).forEach((key, i)=>{
-        let groupkey = key + "-" + i
-        menuItems.push(
-          <ListSubheader key={groupkey}>{groups[key].group_name}</ListSubheader>
-        )
-        // 同一のGroup_idのみ追加して抽出
-        const additems = items.filter(item => item.group_id === groups[key].group_id );
-        additems.map((item) =>{
-          console.debug(`deposit_item_obj=${item.deposit_item_obj}`)
-          menuItems.push(
-            <MenuItem key={item.depositItem_key} value={item.deposit_item_obj.depositItem_key}>{item.deposit_item_obj.depositItem_name}</MenuItem>
-          );
+          // 警告がうるさいからReturnにしてみる
+          let deposit_item_obj = {
+            deposit_group_key : d.deposit_group_key.deposit_group_key,
+            deposit_group_name: d.deposit_group_key.deposit_group_name,
+            depositItem_key : d.depositItem_key,
+            depositItem_name: d.depositItem_name,
+          }
+          return ({
+            group_id : d.deposit_group_key.deposit_group_key.toString(),
+            deposit_item_obj : deposit_item_obj,
+          });
         });
-      });
-      //
-      // 3. useStateに設定する
-      //    console.log(menuItems);
-      setSelectMenuItems(menuItems);
-      //
-      // Select Listの全データリストを保持
-      setSelectItems(items);
+        // groups は object なので 配列に変える。
+        let grouplist = [];
+        Object.keys(groups).forEach((key)=>{
+          let groupItem = {
+            group_id : groups[key].group_id,
+            group_name : groups[key].group_name
+          }
+          grouplist.push(groupItem);
+        });
+
+        //
+        // 2. １の情報を利用しリストボックス出力用のXSLTを生成する
+        //    全てのItemをここで格納する・・
+        let menuItems = [];
+        //
+        // 空白は不要なため生成しない
+        menuItems.push(
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+        );
+        Object.keys(groups).forEach((key, i)=>{
+          let groupkey = key + "-" + i
+          menuItems.push(
+            <ListSubheader key={groupkey}>{groups[key].group_name}</ListSubheader>
+          )
+          // 同一のGroup_idのみ追加して抽出
+          const additems = items.filter(item => item.group_id === groups[key].group_id );
+          let menuAddItem = additems.map((item) =>{
+            console.debug(`deposit_item_obj=${item.deposit_item_obj}`)
+            return (
+              <MenuItem key={item.depositItem_key} value={item.deposit_item_obj.depositItem_key}>{item.deposit_item_obj.depositItem_name}</MenuItem>
+            )
+          });
+          menuItems = [...menuItems, ...menuAddItem];
+        });
+        //
+        // 3. useStateに設定する
+        //    console.log(menuItems);
+        setSelectMenuItems(menuItems);
+        //
+        // Select Listの全データリストを保持
+        setSelectItems(items);
+      }).catch( error => console.error(error))
     }
     fetchData();
-  },[]);
+  },[user]);
 
   const handleChange = (event) =>{
     console.debug(event.target.value);

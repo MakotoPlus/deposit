@@ -35,7 +35,7 @@ export default function PlanTotal() {
     }).catch(error=>{
       console.error(error);
     })
-  },[plan]);
+  },[plan,user]);
 
   return (
     <React.Fragment>

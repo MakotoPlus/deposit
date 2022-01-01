@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -9,6 +9,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import ResultUpdateDialog from '../ResultUpdateDialog';
+import {useUserContext} from '../../context/userContext';
+import {useResultDatasContext} from '../../context/resultDatasContext';
+import axios from 'axios';
+
+const prj_const = require('./../prj_const.js')
 
 //
 //
@@ -19,158 +24,197 @@ const columns = [
     ,{ id : 'insert_yyyymmdd', label: 'Insert Date', minWidth:100 }
     ,{ id : 'deposit_group_name', label: 'Group', minWidth:100 }
     ,{ id : 'depositItem_name', label: 'Name', minWidth:100 }
-    ,{ id : 'deposit_type', label: 'Type', minWidth:100 }
-    ,{ id : 'deposit_value', label: 'Value', minWidth:100, align: 'right', format:(value) => value.toLocaleString(), }
+    ,{ id : 'moneyType_name', label: '種', minWidth:100 }
+    ,{ id : 'deposit_type_str', label: 'Type', minWidth:100 }
+    ,{ id : 'deposit_value', label: 'Value', minWidth:100, align: 'right', format:(value) => value.toLocaleString()}
+    ,{ id : 'memo', label : 'Memo', minWidth:100 }
     //,{ id : 'deposit_key', label: 'Key', minWidth:100 }
 ]
 
-function createData(id, insert_yyyymmdd, deposit_group_name, depositItem_name, 
-    deposit_type, deposit_value, deposit_key) {
-    return { 
-        id : id,
-        insert_yyyymmdd : insert_yyyymmdd, 
-        deposit_group_name : deposit_group_name, 
-        depositItem_name : depositItem_name, 
-        deposit_type : deposit_type, 
-        deposit_value : deposit_value, 
-        deposit_key : deposit_key
-    };
+async function getDepositList(user, urlParameters, urlPath){
+  //
+  // parameters : URLパラメータ (未設定の場合はURLを有効にする)
+  // url: アクセスURLパス
+  let path ="";
+  if (!urlParameters){
+    path = urlPath;
+  }else{
+    path = prj_const.ServerUrl + "/api/deposit_list/?" + urlParameters;
   }
-  const rows = [
-    createData(
-      1,
-      '2021/11/01',
-      '貯金グループ',
-      '住宅',
-      '貯金',
-      '123,222',
-      'KEY_001'
-    ),
-    createData(
-      2,
-      '2021/11/02',
-      '貯金グループ',
-      '車',
-      '貯金',
-      '23,222',
-      'KEY_002'
-    ),
-    createData(
-      3,
-      '2021/11/03',
-      '貯金グループ',
-      '旅行',
-      '貯金',
-      '123,222',
-      'KEY_003'
-    ),
-    createData(
-      4,
-      '2021/11/03',
-      '貯金グループ',
-      '旅行',
-      '貯金',
-      '123,222',
-      'KEY_003'
-    ),
-    createData(
-      5,
-      '2021/11/03',
-      '貯金グループ',
-      '旅行',
-      '貯金',
-      '123,222',
-      'KEY_003'
-    ),
-    createData(
-      6,
-      '2021/11/03',
-      '貯金グループ',
-      '旅行',
-      '貯金',
-      '123,222',
-      'KEY_003'
-    ),
-    createData(
-      7,
-      '2021/11/03',
-      '貯金グループ',
-      '旅行',
-      '貯金',
-      '123,222',
-      'KEY_003'
-    ),
-    createData(
-      8,
-      '2021/11/03',
-      '貯金グループ',
-      '旅行',
-      '貯金',
-      '123,222',
-      'KEY_003'
-    ),
-    createData(
-      9,
-      '2021/11/03',
-      '貯金グループ',
-      '旅行',
-      '貯金',
-      '123,222',
-      'KEY_003'
-    ),
-    createData(
-      10,
-      '2021/11/03',
-      '貯金グループ',
-      '旅行',
-      '貯金',
-      '123,222',
-      'KEY_003'
-    ),
-    createData(
-      11,
-      '2021/11/03',
-      '貯金グループ',
-      '旅行',
-      '貯金',
-      '123,222',
-      'KEY_003'
-    ),
-  ];
+  let headers = {
+    headers : user.Authorization
+  };
+  return await axios.get(path, headers);
+}
 
-  const useStyles = makeStyles({
-    root: {
-      width: '100%',
-      // color: 'red',
-    },
-    container: {
-      maxHeight: 495,
-      // color: 'blue',
-    },
-    table: {
-      width: '100%',
-      //maxHeight: 500,
-      // color: 'red',
-    },
-    tableCell: {
-      // color: 'red',
-    },
+function createObj(record, index, rowPage, page ){
+  return {
+    id : (index + 1) + (rowPage * page),
+    deposit_key : record.deposit_key,
+    delete_flag : record.delete_flag,
+    deposit_type : record.deposit_type,
+    deposit_type_str : (record.deposit_type === prj_const.TYPE_DEPOSIT) 
+    ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR,
+    deposit_value : record.deposit_value,
+    memo : record.memo,    
+    insert_yyyymmdd : record.insert_yyyymmdd,
+    deposit_itemkey : record.depositItem_key,
+    depositItem_name : record.depositItem_key.depositItem_name,
+    deposit_group_name : record.depositItem_key.deposit_group_name,
+    moneyType_name : record.depositItem_key.moneyType_name,
+  }
+}
 
-  });
+const useStyles = makeStyles({
+  root: {
+    width: '100%',
+    // color: 'red',
+  },
+  container: {
+    maxHeight: 495,
+    // color: 'blue',
+  },
+  table: {
+    width: '100%',
+    //maxHeight: 500,
+    // color: 'red',
+  },
+  tableCell: {
+    // color: 'red',
+  },
+
+});
 
 export default function ResultTable() {
   const classes = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [page, setPage] = React.useState(0);  // 現在のページ位置（開始0）
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);  //現在のクライアント1ページ表示件数
+  const {user} = useUserContext();
+  const {resultDatas, setResultDatas, 
+      resultAllCount, setResultAllCount,
+      resultSearch, setResultSearch,} = useResultDatasContext();
+  //const [serverPage, setServerPage] = React.useState(1);  //現在のサーバ側ページ位置
+  const [prevUrl, setPrevUrl] = React.useState("");   // 前ページURL
+  const [nextUrl, setNextUrl] = React.useState("");   // 次ページURL
+  const [maxData, setMaxData] = React.useState(0);    // 全データ件数
+  const [thisUrl, setThisUrl] = React.useState("");   // 今回アクセスすべきURL
+    /*
+  useEffect(()=>{
+    // 検索条件からURL生成
+    //resultSearch
+  }*/
 
+  //次ページ・前ページ移動
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+    console.debug(`handleChangePage::newPage=${newPage}`);
+    //現在のページから次ページなのか、前ページなのか判定する
+    let url = "";
+    if ( newPage > page ){
+      url = nextUrl;
+    }else{
+      url = prevUrl;
+    }
+    getDepositList(user, undefined, url).then(result=>{
+      console.debug(result);
+      //前ページURL・次ページURL・データ件数設定
+      const data = result.data;
+      setPrevUrl(data.previous);
+      setNextUrl(data.next);
+      setMaxData(data.count);
+      setResultAllCount(data.count);
+      let rowsObj = data.results.map((record, index) => createObj(record, index, rowsPerPage, newPage));
+      setResultDatas(rowsObj);
+      setPage(newPage);
+    }).catch(error => console.error(error))
   };
 
+  // 1ページの表示件数変更イベント
+  // 先頭ページでデータ取得しなおし
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
+    let newPage = +event.target.value;
+    console.debug(`handleChangeRowsPerPage::newPage=${newPage}`);
+    setRowsPerPage(newPage);
     setPage(0);
-  };
+    /*
+    getDepositList(user, thisUrl, undefined).then(result=>{
+      console.debug(result);
+      //前ページURL・次ページURL・データ件数設定
+      const data = result.data;
+      setPrevUrl(data.previous);
+      setNextUrl(data.next);
+      setMaxData(data.count);
+      setResultAllCount(data.count);
+      let rowsObj = data.results.map((record, index) => createObj(record, index, newPage, 0));
+      setResultDatas([...rowsObj]);
+      setPage(0);
+      setRowsPerPage(newPage);
+    }).catch(error => console.error(error))
+    */
+  }
+
+  useEffect(()=>{
+    //
+    // 検索条件変更時 -> 検索実行
+    console.debug('ResultTable::ResultTable');
+    console.debug(resultSearch);
+    //
+    // 検索パラメータURL再構築
+    let paramDepositItemKeys = "";
+    // 預金項目
+    let depositItemkeys = resultSearch.select_items;
+    depositItemkeys.forEach(keys=>{
+      const value = "depositItem_key=" + keys;
+      console.log(value);
+      if (paramDepositItemKeys){
+        paramDepositItemKeys = paramDepositItemKeys + "&";
+      }
+      paramDepositItemKeys = paramDepositItemKeys + value;
+    });
+    //削除フラグ
+    let paramIsDelete = "delete_flag=false";
+    if (resultSearch.select_delete){
+      paramIsDelete = "delete_flag=true&delete_flag=false";
+    }
+    console.log(paramIsDelete);
+    //日付(gte=以上 lte=以下)
+    let paramTodate = "insert_yyyymmdd__gte=" + (resultSearch.select_fromto_date[0]) ? resultSearch.select_fromto_date[0] : "";
+    let paramFromdate = "insert_yyyymmdd__lte=" + (resultSearch.select_fromto_date[0]) ? resultSearch.select_fromto_date[1] : "";
+    let paramLimit = "limit=" + rowsPerPage;
+    let paramOffset = "offset=0";
+    console.log(paramTodate);
+    console.log(paramFromdate);
+    const params = [
+      paramDepositItemKeys
+      , paramIsDelete
+      , paramFromdate
+      , paramTodate
+      , paramLimit
+      , paramOffset
+    ];
+    let searchParameters = "";
+    params.forEach( p =>{
+      if ((searchParameters) && (p)){
+        searchParameters = searchParameters + "&";
+      }
+      if (p){
+        searchParameters = searchParameters + p;
+      }
+    });
+    setThisUrl(searchParameters);
+    getDepositList(user, searchParameters, undefined).then(result =>{
+      console.debug(result);
+      //前ページURL・次ページURL・データ件数設定
+      const data = result.data;
+      setPrevUrl(data.previous);
+      setNextUrl(data.next);
+      setMaxData(data.count);
+      setResultAllCount(data.count);
+      let rowsObj = data.results.map((record, index) => createObj(record, index, rowsPerPage, page));
+      setPage(0);
+      setResultDatas(rowsObj);
+    }).catch(error=>console.error(error))
+
+  },[resultSearch,rowsPerPage]);
 
   return (
     <Paper className={classes.root}>
@@ -190,7 +234,7 @@ export default function ResultTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+            {resultDatas.slice(0 * rowsPerPage, 0 * rowsPerPage + rowsPerPage).map((row) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                   {columns.map((column, index) => {
@@ -213,7 +257,7 @@ export default function ResultTable() {
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={rows.length}
+        count={maxData}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

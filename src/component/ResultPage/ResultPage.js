@@ -31,7 +31,7 @@ function ResultPage(){
           <Grid item xs={12}>
             <Paper
                   sx={{
-                    p: 1,
+                    p: 0,
                     display: 'flex',
                     flexDirection: 'column',
                     height: 150,

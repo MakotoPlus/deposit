@@ -82,7 +82,7 @@ export default function PlanGroupSumary() {
       })
     }
     fetchData();
-  },[plan]);
+  },[plan,user]);
 
 
   const handleChangePage = (event, newPage) => {

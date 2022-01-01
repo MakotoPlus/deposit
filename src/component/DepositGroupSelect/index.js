@@ -48,6 +48,7 @@ export default function DepositGroupSelect() {
   const classes = useStyles();
   const [depositGroups, setDepositGroup] = useState([space_data]);
   const [selectedAccountId, setSelectedAccountId] = useState(-1);
+  //const {user} = useState(useUserContext());
   const {user} = useUserContext();
   //const [age, setAge] = React.useState('');
   //const [selectedValue, setSelectedValue ] = useState({value : 0});
@@ -58,6 +59,9 @@ export default function DepositGroupSelect() {
 
   useEffect(() => {
     async function fetchData(){
+      if ((!user) || (false === user.isAutenticated)){
+        return;
+      }
       let headers = {
         headers : user.Authorization
       };
@@ -75,7 +79,7 @@ export default function DepositGroupSelect() {
       setDepositGroup(data);
     }
     fetchData();
-  },[]);
+  },[user]);
 
   return (
       <FormControl className={classes.formControl}>

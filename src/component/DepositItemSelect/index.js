@@ -59,7 +59,7 @@ export default function DepositItemSelect() {
       setDepositItems(data);
     }
     fetchData();
-  },[]);
+  },[user]);
 
   return (
       <FormControl className={classes.formControl}>

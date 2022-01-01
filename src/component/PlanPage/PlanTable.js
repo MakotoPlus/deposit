@@ -100,10 +100,10 @@ export default function PlanTable() {
       getList(user, nRunApiCount, serverPage, page, true);
     }
     fetchData();
-  },[]);
+  },[user]);
 
   useEffect(()=>{
-    if (maxData == planAllCount.count){
+    if (maxData === planAllCount.count){
       return;
     }
     console.debug(planAllCount);

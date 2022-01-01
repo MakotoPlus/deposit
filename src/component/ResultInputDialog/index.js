@@ -8,6 +8,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DatePicker01 from '../DatePicker01'
 import DepositItemSelectGrouping from '../DepositItemSelectGrouping';
+//import DepositItemMultiSelect from './../DepositItemMultiSelect';
 import DepositTypeSelect from '../DepositTypeSelect';
 import DepositValueText from '../DepositValueText';
 import { makeStyles } from '@material-ui/core/styles';
@@ -15,6 +16,7 @@ import { TYPE_DEPOSIT } from '../prj_const';
 import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
+import InputMemoText from '../InputMemoText';
 const prj_const = require('./../prj_const.js')
 
 //
@@ -49,7 +51,6 @@ export default function ResultInputDialog({subtitle}) {
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
   const [fullWidth, ] = React.useState(true);
-
   let dt = new Date();
   let LocalDate = dt.getFullYear() + "/" + ("00" + (dt.getMonth()+1)).slice(-2) + "/" +  ("00" + dt.getDate()).slice(-2);
 
@@ -71,6 +72,14 @@ export default function ResultInputDialog({subtitle}) {
     console.debug(value);
     setDepositType(value);
   }
+
+  const [memo, setMemo] = React.useState("");
+  const handleMemo = (event) =>{
+    console.debug('handleMemo');
+    console.debug(event.target.value);
+    setMemo(event.target.value);
+  } 
+  
 
   //
   // 預金項目Select
@@ -100,6 +109,7 @@ export default function ResultInputDialog({subtitle}) {
       deposit_type : depositType,
       deposit_value : depositValue,
       insert_yyyymmdd : insertYyyymmdd,
+      memo: memo,
       delete_flag : false,
       u_user : userid,
       update_date : new Date().toISOString(),
@@ -120,6 +130,7 @@ export default function ResultInputDialog({subtitle}) {
           ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR,
         deposit_value: Number(response.data.deposit_value).toLocaleString(),
         deposit_item_obj : depositItemObj,
+        memo: memo,
         insert_yyyymmdd : response.data.insert_yyyymmdd,
       }
     //
@@ -158,6 +169,7 @@ return (
           <DepositItemSelectGrouping handle={handleDepositItemkey} />
           <DepositTypeSelect handle={handleDepositType} value={depositType}/>
           <DepositValueText handle={handleDepositUpdate} value={0} />
+          <InputMemoText handle={handleMemo} value={memo} />
         </form>
       </DialogContent>
       <DialogActions>
