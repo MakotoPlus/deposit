@@ -40,11 +40,14 @@ const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
     PaperProps: {
-    style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 120,
+      style: {
+          maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+          width: 120,
+      },
     },
-    },
+    getContentAnchorEl:null,  // anchorOrigin, transformOrigin が変更可能になるように元々ポップオーバーの基準となっている要素を解除
+    anchorOrigin: { vertical: "bottom", horizontal: "left" }, // ポップオーバーの表示起点
+    transformOrigin: { vertical: "top", horizontal: "left" }, // 表示時の transform の起点
 };
 
 function getStyles(name, personName, theme) {
@@ -199,7 +202,7 @@ export default function DepositItemMultiSelect(props) {
                 outputChip(selected)
             )}
             MenuProps={MenuProps}
-        >
+              >
         {selectMenuItems}
         </Select>
         </FormControl>

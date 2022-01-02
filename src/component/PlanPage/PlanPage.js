@@ -1,15 +1,38 @@
 import React from "react";
 import Box from '@mui/material/Box';
+import { makeStyles } from '@material-ui/core/styles';
 import Container from '@mui/material/Container';
 import Toolbar from '@mui/material/Toolbar';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import PlanFixedHeader from "./PlanTable";
+import PlanTable from "./PlanTable";
 import PlanInputDialog from "./../PlanInputDialog";
 import PlanGroupSumary from "./PlanGroupSumary";
 import PlanTotal from "./PlanTotal";
+import PlanBatchInputDialog from "./PlanBatchInputDialog";
+
+const useStyles = makeStyles((theme) => ({
+  Box: {
+      height: 85,
+      display: "flex",
+      border: "0px solid black",
+      padding: 0,
+  },
+  ItemBox: {
+      height: 85,
+      display: "flex",
+      border: "0px solid black",
+      padding: 0,
+  },
+  Dialog:{
+    padding: 0,
+    m: 0
+  }
+}));
+
 
 function PlanPage(){
+  const classes = useStyles();
   return (
     <Box
       component="main"
@@ -57,14 +80,21 @@ function PlanPage(){
           <Grid item xs={12}>
             <Paper
                   sx={{
-                    p: 1,
+                    p: 0,
                     display: 'flex',
                     flexDirection: 'column',
                     height: 430,
                   }}
                 >
-              <PlanInputDialog subtitle="New Data"/>
-              <PlanFixedHeader />              
+                <Box
+                    component="span"
+                    m={0} //margin
+                    className={`${classes.Box} ${classes.ItemBox}`}
+                    >
+                  <PlanInputDialog subtitle="New Data" className={`${classes.Dialog}`}/>
+                  <PlanBatchInputDialog subtitle="Batch" className={`${classes.Dialog}`} />
+                </Box>
+              <PlanTable />              
             </Paper>
           </Grid>
         </Grid>

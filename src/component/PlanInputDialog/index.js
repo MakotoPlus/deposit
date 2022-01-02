@@ -41,6 +41,9 @@ const useStyles = makeStyles((theme) => ({
   inilineBlock: {
       display: "inline-block",
   },
+  Button:{
+    margin : 5,
+  },
   
 }));
 
@@ -135,7 +138,7 @@ export default function PlanInputDialog({subtitle}) {
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+      <Button className={classes.Button} variant="outlined" color="primary" onClick={handleClickOpen}>
         New Data
       </Button>
       <Dialog 
