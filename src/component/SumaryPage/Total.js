@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
-import {usePlanContext} from '../../context/planContext';
+import {useResultDatasContext} from '../../context/resultDatasContext';
 
 const prj_const = require('./../prj_const.js')
 
@@ -11,13 +11,13 @@ const prj_const = require('./../prj_const.js')
 //}
 
 //
-// 全データ取得
-async function getSavingsTotal(user){
+// 預金全データ取得
+async function getDepositTotal(user){
   let headers = {
     headers : user.Authorization
   };
   let result;
-  let urlpath = prj_const.ServerUrl + "/api/savings_total/";
+  let urlpath = prj_const.ServerUrl + "/api/deposit_total/";
   result = await axios.get(urlpath, headers);
   return result;
 }
@@ -25,25 +25,27 @@ async function getSavingsTotal(user){
 
 export default function PlanTotal() {
   const {user} = useUserContext();
-  const {plan} = usePlanContext();  
-  const [savingTotal, setSavingTotal] = React.useState("0");
+  const {resultDatas, setResultDatas, 
+    resultAllCount, setResultAllCount,
+  } = useResultDatasContext();
+  const [depositTotal, setDepositTotal] = React.useState("0");
   useEffect(()=>{
-    getSavingsTotal(user).then(result=>{
+    getDepositTotal(user).then(result=>{
       //console.debug(result);
       let value = result.data.value ? result.data.value : 0;
-      setSavingTotal(value.toLocaleString('ja-JP', { style: 'currency', currency: 'JPY' }));
+      setDepositTotal(value.toLocaleString('ja-JP', { style: 'currency', currency: 'JPY' }));
     }).catch(error=>{
       console.error(error);
     })
-  },[plan,user]);
+  },[resultDatas,resultAllCount,user]);
 
   return (
     <React.Fragment>
       <Typography color="text.secondary" >
-        総貯金金額
+        総額預金額
       </Typography>
       <Typography component="p" variant="h4">
-        {savingTotal}
+        {depositTotal}
       </Typography>
     </React.Fragment>
   );

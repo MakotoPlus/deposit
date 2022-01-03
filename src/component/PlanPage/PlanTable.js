@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import Grid from '@mui/material/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -21,7 +22,7 @@ const columns = [
     { id : 'id', label: 'No', minWidth: 50 }
     ,{ id : 'deposit_group_name', label: 'Group', minWidth:100 }
     ,{ id : 'depositItem_name', label: '預金項目', minWidth:100 }
-    ,{ id : 'deposit_type_str', label: 'Type', minWidth:100 }
+    ,{ id : 'deposit_type_str', label: 'Type', maxWidth:70 }
     ,{ id : 'deposit_value', label: 'Value', minWidth:100, align: 'right', format:(value) => value.toLocaleString(), }
 ]
 
@@ -76,7 +77,27 @@ const useStyles = makeStyles({
   TableRow : {
     backgroundColor : 'whilte',
     color : 'black',
-  }
+  },
+  DepositPaper : {
+    backgroundColor : '#98fb98',
+    color : 'black',
+    height : '30px',
+    textAlign : 'center',
+    paddingTop: 5,
+    width : 70,
+    
+  },
+  ExpensesPaper : {
+    backgroundColor : '#fa8072',
+    color : 'white',
+    height : '30px',
+    textAlign : 'center',
+    paddingTop: 5,
+    width : 70,
+  },
+  grid : {
+    backgroundColor : '#0000',
+  },
 });
 
 
@@ -193,11 +214,24 @@ export default function PlanTable() {
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.id} className={rowClassName}>
                   {columns.map((column, index) => {
                     const value = row[column.id];                    
+                    const paperClass = row.deposit_type === prj_const.TYPE_DEPOSIT ?
+                      classes.DepositPaper : classes.ExpensesPaper;              
                       return (
                         <TableCell key={column.id} align={column.align}>
                           { (index === 2) ?
                             <PlunUpdateDialog subtitle={value} record={row} />
-                            : column.format && typeof value === 'number' ? column.format(value) : value
+                            : (index === 3 ) ? 
+                            <Grid container spacing={1}
+                            container
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="stretch"
+                            >
+                              <Grid item xs className={classes.grid}>
+                                <Paper elevation={2} className={paperClass}>{value}</Paper>
+                              </Grid>
+                            </Grid>
+                            :column.format && typeof value === 'number' ? column.format(value) : value
                           }
                         </TableCell>
                       )

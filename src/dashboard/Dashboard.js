@@ -32,6 +32,7 @@ import PlanPage from '../component/PlanPage/PlanPage';
 import ResultPage from '../component/ResultPage/ResultPage';
 import MainPage from './../component/MainPage';
 import GraphPage from './../component/GraphPage';
+import SumaryPage from './../component/SumaryPage/SumaryPage';
 
 /*
 function Copyright(props) {
@@ -191,6 +192,7 @@ function DashboardContent(props) {
             <Route exact path="/" element={<MainPage/>}/>
             <Route exact path="/plan" element={<PlanPage/>}/>
             <Route exact path="/result" element={<ResultPage/>}/>
+            <Route exact path="/sumary" element={<SumaryPage/>}/>
             <Route exact path="/graph" element={<GraphPage/>}/>
           </Routes>
         </Box>

@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import Grid from '@mui/material/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -89,7 +90,26 @@ const useStyles = makeStyles({
   TableRow : {
     backgroundColor : 'whilte',
     color : 'black',
-  }
+  },
+  DepositPaper : {
+    backgroundColor : '#98fb98',
+    color : 'black',
+    height : '30px',
+    textAlign : 'center',
+    paddingTop: 5,
+    
+  },
+  ExpensesPaper : {
+    backgroundColor : '#fa8072',
+    color : 'white',
+    height : '30px',
+    textAlign : 'center',
+    paddingTop: 5,
+  },
+  grid : {
+    backgroundColor : '#0000',
+  },
+
 
 });
 
@@ -156,12 +176,14 @@ export default function ResultTable() {
     // 預金項目
     let depositItemkeys = resultSearch.select_items;
     depositItemkeys.forEach(keys=>{
-      const value = "depositItem_key=" + keys;
-      console.log(value);
-      if (paramDepositItemKeys){
-        paramDepositItemKeys = paramDepositItemKeys + "&";
+      if (keys){
+        const value = "depositItem_key=" + keys;
+        console.log(value);
+        if (paramDepositItemKeys){
+          paramDepositItemKeys = paramDepositItemKeys + "&";
+        }
+        paramDepositItemKeys = paramDepositItemKeys + value;
       }
-      paramDepositItemKeys = paramDepositItemKeys + value;
     });
     //削除フラグ
     let paramIsDelete = "delete_flag=false";
@@ -205,13 +227,13 @@ export default function ResultTable() {
       console.debug(result);
       //前ページURL・次ページURL・データ件数設定
       const data = result.data;
+      let rowsObj = data.results.map((record, index) => createObj(record, index, rowsPerPage, page));
+      setResultDatas(rowsObj);
+      setPage(0);
       setPrevUrl(data.previous);
       setNextUrl(data.next);
       setMaxData(data.count);
       setResultAllCount(data.count);
-      let rowsObj = data.results.map((record, index) => createObj(record, index, rowsPerPage, page));
-      setPage(0);
-      setResultDatas(rowsObj);
     }).catch(error=>console.error(error))
 
   },[resultSearch,rowsPerPage]);
@@ -240,11 +262,23 @@ export default function ResultTable() {
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.id} className={rowClassName}>
                   {columns.map((column, index) => {
                     const value = row[column.id];
+                    const paperClass = row.deposit_type === prj_const.TYPE_DEPOSIT ?
+                      classes.DepositPaper : classes.ExpensesPaper;
                     return (
                       <TableCell key={column.id} align={column.align} className={classes.tableCell}>
                         { (index === 1) ?
                           <ResultUpdateDialog subtitle={value} record={row} />
-                          : column.format && typeof value === 'number' ? column.format(value) : value
+                          : (index === 5) ? 
+                          <Grid container spacing={1}
+                            container
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="stretch"
+                          >
+                            <Grid item xs className={classes.grid}><Paper elevation={2} className={paperClass}>{value}</Paper>
+                            </Grid>
+                          </Grid>
+                           : column.format && typeof value === 'number' ? column.format(value) : value
                         }
                       </TableCell>
                     );

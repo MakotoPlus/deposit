@@ -8,6 +8,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import SummarizeIcon from '@mui/icons-material/Summarize';
 //import LayersIcon from '@mui/icons-material/Layers';
 //import AssignmentIcon from '@mui/icons-material/Assignment';
 import { Link } from "react-router-dom";
@@ -36,6 +37,14 @@ export const mainListItems = (
           <PeopleIcon />
         </ListItemIcon>
         <ListItemText primary="実績" />
+      </ListItem>
+    </Link>
+    <Link to="/sumary">
+      <ListItem button>
+        <ListItemIcon>
+          <SummarizeIcon />
+        </ListItemIcon>
+        <ListItemText primary="サマリ" />
       </ListItem>
     </Link>
     <Link to="/graph">

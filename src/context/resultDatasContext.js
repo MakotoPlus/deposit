@@ -18,10 +18,14 @@ export function ResultDatasProvider({children}){
     });
     // 全データ件数
     const [resultAllCount, setResultAllCount] = useState({count: 0})
+    // グループサマリーデータ
+    const [groupSumaryDatas, setGroupSumaryDatas] = useState([]);
+
     const value ={
         resultDatas, setResultDatas,
         resultAllCount, setResultAllCount,
         resultSearch, setResultSearch,
+        groupSumaryDatas, setGroupSumaryDatas,
     };
     return (
         <ResultDatasContext.Provider value={value}>

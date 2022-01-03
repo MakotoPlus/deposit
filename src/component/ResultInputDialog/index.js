@@ -109,6 +109,7 @@ export default function ResultInputDialog({subtitle}) {
       deposit_type : depositType,
       deposit_value : depositValue,
       insert_yyyymmdd : insertYyyymmdd,
+      insert_yyyymm: insertYyyymmdd.substr(0, 7),
       memo: memo,
       delete_flag : false,
       u_user : userid,

@@ -85,6 +85,7 @@ export default function PlanBatchInputDialog(props) {
     console.log(`PlanBatchInputDialog.memo[${memo}]`);
     const data ={
       insert_yyyymmdd : insertYyyymmdd,
+      insert_yyyymm : insertYyyymmdd.substring(0,7),
       memo: memo,
     };
     //Post実行

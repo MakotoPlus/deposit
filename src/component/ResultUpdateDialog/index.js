@@ -93,7 +93,14 @@ export default function ResultUpdateDialog(props) {
   const handleDepositType = value => setDepositType(value);
   //
   // 金額入力Text
-  const [depositValue, setDepositValue] = React.useState(props.record.deposit_value.replace(/,/g, ''));
+  const [depositValue, setDepositValue] = React.useState(()=>{
+      let value = props.record.deposit_value;
+      if ('string' === typeof(value)){
+        value = value.replace(/,/g, '');
+      }
+      return value;
+    }
+  )
   const handleDepositUpdate = value => setDepositValue(value);
 
   const [memo, setMemo] = React.useState(props.record.memo);
@@ -131,6 +138,7 @@ export default function ResultUpdateDialog(props) {
         deposit_type : depositType,
         deposit_value : depositValue,
         insert_yyyymmdd : insert_yyyymmdd,
+        insert_yyyymm: insert_yyyymmdd.substr(0, 7),
         memo : memo,
         delete_flag : false,
         u_user : user.userid,
@@ -147,14 +155,14 @@ export default function ResultUpdateDialog(props) {
         newRow.deposit_type = depositType;
         newRow.deposit_type_str = (depositType === prj_const.TYPE_DEPOSIT)
         ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR;
-        newRow.deposit_value = depositValue;
+        newRow.deposit_value = Number(depositValue).toLocaleString();
         newRow.memo = memo;
         newRow.insert_yyyymmdd = insert_yyyymmdd;
         newRow.depositItem_key = depositItemObj;
         newRow.depositItem_name = depositItemObj.depositItem_name;
         newRow.deposit_group_name = depositItemObj.deposit_group_name;
         newRow.moneyType_name = depositItemObj.moneyType_name;
-        console.debug('new row----------------');
+        console.debug('update row----------------');
         console.debug(newRow);
         setResultDatas(newRows);
         setRecord(newRow);
