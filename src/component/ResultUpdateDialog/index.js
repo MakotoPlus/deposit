@@ -93,14 +93,18 @@ export default function ResultUpdateDialog(props) {
   const handleDepositType = value => setDepositType(value);
   //
   // 金額入力Text
+  const [depositValue, setDepositValue] = React.useState(props.record.deposit_value);
+    /*
   const [depositValue, setDepositValue] = React.useState(()=>{
+      console.log("ResultUpdateDialog::金額入力Text");
+      console.log(props.record.deposit_value);
       let value = props.record.deposit_value;
       if ('string' === typeof(value)){
         value = value.replace(/,/g, '');
       }
       return value;
     }
-  )
+  )*/
   const handleDepositUpdate = value => setDepositValue(value);
 
   const [memo, setMemo] = React.useState(props.record.memo);

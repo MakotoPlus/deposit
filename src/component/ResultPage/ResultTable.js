@@ -126,6 +126,8 @@ export default function ResultTable() {
   const [nextUrl, setNextUrl] = React.useState("");   // 次ページURL
   const [maxData, setMaxData] = React.useState(0);    // 全データ件数
   const [thisUrl, setThisUrl] = React.useState("");   // 今回アクセスすべきURL
+  //console.log( "-------------------------");
+  //console.log( resultDatas);
     /*
   useEffect(()=>{
     // 検索条件からURL生成

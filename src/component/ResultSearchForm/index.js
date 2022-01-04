@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
 //import DepositGroupSelect from '../DepositGroupSelect';
 //import DepositItemSelect from '../DepositItemSelect';
 import TextField from '@mui/material/TextField';
@@ -56,8 +56,10 @@ const useStyles = makeStyles((theme) => ({
 export default function ResultSearchForm(){
     const classes = useStyles();
     //const {user} = useUserContext();
-    const {setResultSearch} = useResultDatasContext();
     const [fromtoDatevalue, setFromtoDateValue] = React.useState([null, null]);
+    const {resultDatas, setResultDatas, 
+        resultAllCount, setResultAllCount,
+        resultSearch, setResultSearch,} = useResultDatasContext();  
     const [isDelete, setIsDelete] = React.useState(false);
     const handleClickSearch = () => {
         console.debug("Search");
@@ -96,6 +98,12 @@ export default function ResultSearchForm(){
     const handleClickIsDelete = event =>{
         setIsDelete(event.target.checked);
     }
+    useEffect(()=>{
+        console.debug("Data Clean-----");
+        //この画面から実績画面へ移動すると1ページ目のオブジェクトが空になってしまう
+        //仕方がないのでここで実績画面で監視しているオブジェクトを更新する
+        setResultDatas([]);
+    },[]);
 
     return (
         <React.Fragment>
