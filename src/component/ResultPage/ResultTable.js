@@ -25,9 +25,9 @@ const columns = [
     ,{ id : 'insert_yyyymmdd', label: 'Insert Date', minWidth:100 }
     ,{ id : 'deposit_group_name', label: 'Group', minWidth:100 }
     ,{ id : 'depositItem_name', label: 'Name', minWidth:100 }
-    ,{ id : 'moneyType_name', label: '種', minWidth:100 }
     ,{ id : 'deposit_type_str', label: 'Type', minWidth:100 }
     ,{ id : 'deposit_value', label: 'Value', minWidth:100, align: 'right', format:(value) => value.toLocaleString()}
+    ,{ id : 'moneyType_name', label: '種', minWidth:100 }
     ,{ id : 'memo', label : 'Memo', minWidth:100 }
     //,{ id : 'deposit_key', label: 'Key', minWidth:100 }
 ]
@@ -268,7 +268,7 @@ export default function ResultTable() {
                       <TableCell key={column.id} align={column.align} className={classes.tableCell}>
                         { (index === 1) ?
                           <ResultUpdateDialog subtitle={value} record={row} />
-                          : (index === 5) ? 
+                          : (index === 4) ? 
                           <Grid container spacing={1}
                             container
                             direction="row"

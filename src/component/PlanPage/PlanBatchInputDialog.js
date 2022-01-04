@@ -7,12 +7,12 @@ import DialogContent from '@material-ui/core/DialogContent';
 //import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DatePicker01 from '../DatePicker01'
-import DepositItemSelectGrouping from '../DepositItemSelectGrouping';
+//import DepositItemSelectGrouping from '../DepositItemSelectGrouping';
 //import DepositItemMultiSelect from './../DepositItemMultiSelect';
-import DepositTypeSelect from '../DepositTypeSelect';
-import DepositValueText from '../DepositValueText';
+//import DepositTypeSelect from '../DepositTypeSelect';
+//import DepositValueText from '../DepositValueText';
 import { makeStyles } from '@material-ui/core/styles';
-import { TYPE_DEPOSIT } from '../prj_const';
+//import { TYPE_DEPOSIT } from '../prj_const';
 import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
@@ -51,8 +51,8 @@ const useStyles = makeStyles((theme) => ({
   
 export default function PlanBatchInputDialog(props) {
   const {user} = useUserContext();
-  const {resultDatas, setResultDatas, resultAllCount, setResultAllCount} = useResultDatasContext();  
-  const userid = user.userid;
+  //const {resultDatas, setResultDatas, resultAllCount, setResultAllCount} = useResultDatasContext();  
+  //const userid = user.userid;
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
   const [fullWidth, ] = React.useState(true);

@@ -64,7 +64,7 @@ export default function DepositItemMultiSelect(props) {
     const theme = useTheme();
     const {user} = useUserContext();
     const [selectMenuItems, setSelectMenuItems] = useState([]);
-    const [depositItem_key, setDepositItem_key] = useState([]);
+    //const [depositItem_key, setDepositItem_key] = useState([]);
     const [selectItems, setSelectItems] = useState([]);
     //const [userSelectItems, setUserSelectItems] = React.useState([]);
     const userSelectItems = props.userSelectItems;
@@ -172,7 +172,7 @@ export default function DepositItemMultiSelect(props) {
         //console.debug(value);
         if (!value) return;
         //console.debug(selectItems);
-        return selectItems.find( r => r.depositItem_key == value).deposit_item_obj.depositItem_name;
+        return selectItems.find( r => r.depositItem_key === value).deposit_item_obj.depositItem_name;
     }
 
     const outputChip = (selected) =>{

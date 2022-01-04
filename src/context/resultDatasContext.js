@@ -16,6 +16,10 @@ export function ResultDatasProvider({children}){
         select_items : [],
         select_fromto_date : [null,null],
     });
+    // Graph表示選択情報
+    const [graphSearch, setGraphSearch] = useState({
+        select_items : [],
+    });
     // 全データ件数
     const [resultAllCount, setResultAllCount] = useState({count: 0})
     // グループサマリーデータ
@@ -26,6 +30,7 @@ export function ResultDatasProvider({children}){
         resultAllCount, setResultAllCount,
         resultSearch, setResultSearch,
         groupSumaryDatas, setGroupSumaryDatas,
+        graphSearch, setGraphSearch,
     };
     return (
         <ResultDatasContext.Provider value={value}>

@@ -42,7 +42,7 @@ export default function PlanTotal() {
   return (
     <React.Fragment>
       <Typography color="text.secondary" >
-        総額預金額
+        総預金額
       </Typography>
       <Typography component="p" variant="h4">
         {depositTotal}

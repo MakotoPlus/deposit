@@ -40,7 +40,7 @@ export default function PlanTotal() {
   return (
     <React.Fragment>
       <Typography color="text.secondary" >
-        総貯金金額
+        一括貯金額
       </Typography>
       <Typography component="p" variant="h4">
         {savingTotal}

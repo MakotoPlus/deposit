@@ -7,27 +7,27 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 //import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import DatePicker01 from '../DatePicker01'
-import DepositItemSelectGrouping from '../DepositItemSelectGrouping';
+//import DatePicker01 from '../DatePicker01'
+//import DepositItemSelectGrouping from '../DepositItemSelectGrouping';
 //import DepositItemMultiSelect from './../DepositItemMultiSelect';
-import DepositTypeSelect from '../DepositTypeSelect';
+//import DepositTypeSelect from '../DepositTypeSelect';
 import CalcValueText from './CalcValueText';
 import { makeStyles } from '@material-ui/core/styles';
 //import { TYPE_DEPOSIT } from '../prj_const';
 //import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
-import InputMemoText from '../InputMemoText';
+//import InputMemoText from '../InputMemoText';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 
-const prj_const = require('../prj_const.js')
+//const prj_const = require('../prj_const.js')
 
-const columns = [
+/*const columns = [
   { id : 'id', label: 'No', minWidth: 50 }
   ,{ id : 'deposit_group_name', label: 'Group', minWidth:100 }
   ,{ id : 'sum_value', label: 'Value', minWidth:100, align: 'right', format:(value) => value.toLocaleString(), }
-]
+]*/
 
 //
 // 差額チェックダイアログ
@@ -80,7 +80,7 @@ export default function CalcDialog({subtitle}) {
   const [open, setOpen] = React.useState(false);
   const {user} = useUserContext();
   const {groupSumaryDatas} = useResultDatasContext();  
-  const userid = user.userid;
+  //const userid = user.userid;
   const [fullWidth, ] = React.useState(true);
   //const [rowRecord, setRowRecord] = React.useState([]);
   const [items, setItems] = React.useState([]);

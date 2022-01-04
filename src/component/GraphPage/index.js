@@ -4,7 +4,8 @@ import Container from '@mui/material/Container';
 import Toolbar from '@mui/material/Toolbar';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import GraphResult from '../GraphResult';
+import GraphResult from './GraphResult';
+import GraphSearchForm from './GraphShowForm';
 
 //
 // グラフページ
@@ -25,6 +26,22 @@ function GraphPage(){
       }}
     >
       <Toolbar />
+      <Container maxWidth="100%" sx={{ mt: 2, mb: 1 }}>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <Paper
+                  sx={{
+                    p: 0,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: 100,
+                  }}
+                >
+              <GraphSearchForm />
+            </Paper>
+          </Grid>
+        </Grid>
+      </Container>
       <Container maxWidth="100%" sx={{ mt: 2, mb: 1 }}>
         <Grid container spacing={1}>
           <Grid item xs={12}>
