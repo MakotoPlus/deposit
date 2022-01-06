@@ -11,7 +11,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Switch from '@material-ui/core/Switch';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { TYPE_EXPENSES, TYPE_DEPOSIT } from '../prj_const';
+import { TYPE_EXPENSES, TYPE_DEPOSIT } from './prj_const';
 
 /**
  * 貯金/支出 選択コントロール

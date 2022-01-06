@@ -6,7 +6,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import PlanTable from "./PlanTable";
-import PlanInputDialog from "./../PlanInputDialog";
+import PlanInputDialog from "./PlanInputDialog";
 import PlanGroupSumary from "./PlanGroupSumary";
 import PlanTotal from "./PlanTotal";
 import PlanBatchInputDialog from "./PlanBatchInputDialog";

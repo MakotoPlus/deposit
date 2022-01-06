@@ -8,8 +8,8 @@ import Paper from '@mui/material/Paper';
 //import FlexLayoutGrid from "./ResultDataGrid";
 //import ResultList from "./ResultList_err";
 import ResultTable from "./ResultTable";
-import ResultInputDialog from "./../ResultInputDialog";
-import ResultSearchForm from "./../ResultSearchForm";
+import ResultInputDialog from "../PlanPage/ResultInputDialog";
+import ResultSearchForm from "./ResultSearchForm";
 
 function ResultPage(){
   return (

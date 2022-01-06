@@ -6,7 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 //import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import DatePicker01 from '../DatePicker01'
+import DatePicker from '../common/DatePicker'
 //import DepositItemSelectGrouping from '../DepositItemSelectGrouping';
 //import DepositItemMultiSelect from './../DepositItemMultiSelect';
 //import DepositTypeSelect from '../DepositTypeSelect';
@@ -16,8 +16,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
-import InputMemoText from '../InputMemoText';
-const prj_const = require('./../prj_const.js')
+import InputMemoText from '../common/InputMemoText';
+const prj_const = require('../common/prj_const.js')
 
 //
 // 計画情報一括登録画面
@@ -114,7 +114,7 @@ export default function PlanBatchInputDialog(props) {
         <DialogTitle id="form-dialog-title">{props.subtitle}</DialogTitle>
         <DialogContent>
           <form className={classes.root} noValidate autoComplete="off">
-            <DatePicker01 labelName="登録年月日" yyyymmdd={insertYyyymmdd} setYyyymmdd={handleInsertYyyymmdd} />
+            <DatePicker labelName="登録年月日" yyyymmdd={insertYyyymmdd} setYyyymmdd={handleInsertYyyymmdd} />
             <InputMemoText handle={handleMemo} value={memo} />
           </form>
         </DialogContent>

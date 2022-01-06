@@ -6,18 +6,18 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 //import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import DatePicker01 from '../DatePicker01'
-import DepositItemSelectGrouping from '../DepositItemSelectGrouping';
+import DatePicker from '../common/DatePicker'
+import DepositItemSelectGrouping from '../common/DepositItemSelectGrouping';
 //import DepositItemMultiSelect from './../DepositItemMultiSelect';
-import DepositTypeSelect from '../DepositTypeSelect';
-import DepositValueText from '../DepositValueText';
+import DepositTypeSelect from '../common/DepositTypeSelect';
+import DepositValueText from '../common/DepositValueText';
 import { makeStyles } from '@material-ui/core/styles';
-import { TYPE_DEPOSIT } from '../prj_const';
+import { TYPE_DEPOSIT } from '../common/prj_const';
 import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
-import InputMemoText from '../InputMemoText';
-const prj_const = require('./../prj_const.js')
+import InputMemoText from '../common/InputMemoText';
+const prj_const = require('../common/prj_const.js')
 
 //
 // 実績データ登録ダイアログ
@@ -166,7 +166,7 @@ return (
       <DialogTitle id="form-dialog-title">{subtitle}</DialogTitle>
       <DialogContent>
         <form className={classes.root} noValidate autoComplete="off">
-          <DatePicker01 labelName="登録年月日" yyyymmdd={insertYyyymmdd} setYyyymmdd={handleInsertYyyymmdd} />
+          <DatePicker labelName="登録年月日" yyyymmdd={insertYyyymmdd} setYyyymmdd={handleInsertYyyymmdd} />
           <DepositItemSelectGrouping handle={handleDepositItemkey} />
           <DepositTypeSelect handle={handleDepositType} value={depositType}/>
           <DepositValueText handle={handleDepositUpdate} value={0} />

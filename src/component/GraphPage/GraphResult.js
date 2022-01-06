@@ -6,7 +6,7 @@ import Title from '../../dashboard/Title';
 import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
-const prj_const = require('../prj_const.js')
+const prj_const = require('../common/prj_const.js')
 
 /*const useStyles = makeStyles((theme) => ({
 

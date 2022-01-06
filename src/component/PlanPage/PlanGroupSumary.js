@@ -12,7 +12,7 @@ import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {usePlanContext} from '../../context/planContext';
 
-const prj_const = require('./../prj_const.js')
+const prj_const = require('../common/prj_const.js')
 
 //
 // PlanGroupSumary

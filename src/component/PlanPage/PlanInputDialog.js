@@ -6,15 +6,15 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 //import DepositGroupSelect from '../DepositGroupSelect';
 //import DepositItemSelect from '../DepositItemSelect';
-import DepositItemSelectGrouping from '../DepositItemSelectGrouping'
-import DepositTypeSelect from '../DepositTypeSelect';
-import DepositValueText from '../DepositValueText';
+import DepositItemSelectGrouping from '../common/DepositItemSelectGrouping'
+import DepositTypeSelect from '../common/DepositTypeSelect';
+import DepositValueText from '../common/DepositValueText';
 import { makeStyles } from '@material-ui/core/styles';
-import { TYPE_DEPOSIT } from '../prj_const';
+import { TYPE_DEPOSIT } from '../common/prj_const';
 import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {usePlanContext} from '../../context/planContext';
-const prj_const = require('./../prj_const.js')
+const prj_const = require('../common/prj_const.js')
 
 //
 // 貯金計画データ登録ダイアログ

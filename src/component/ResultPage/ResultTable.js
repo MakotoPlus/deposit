@@ -9,12 +9,12 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import ResultUpdateDialog from '../ResultUpdateDialog';
+import ResultUpdateDialog from './ResultUpdateDialog';
 import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
 import axios from 'axios';
 
-const prj_const = require('./../prj_const.js')
+const prj_const = require('../common/prj_const.js')
 
 //
 //

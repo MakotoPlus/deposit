@@ -8,7 +8,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import {useUserContext} from '../../context/userContext';
 
-const prj_const = require('./../prj_const.js')
+const prj_const = require('./prj_const.js')
 
 /**
  * 預金項目 選択コントロール

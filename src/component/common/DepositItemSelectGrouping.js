@@ -8,7 +8,7 @@ import ListSubheader from '@mui/material/ListSubheader';
 import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 
-const prj_const = require('./../prj_const.js')
+const prj_const = require('./prj_const.js')
 
 
 /**

@@ -12,7 +12,7 @@ import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
 
-const prj_const = require('../prj_const.js')
+const prj_const = require('../common/prj_const.js')
 
 //
 // ItemSumary
@@ -135,10 +135,7 @@ export default function ItemSumary() {
       setResultAllCount(data.count);
       let rowsObj = data.results.map((record, index) => createObj(record, index, rowsPerPage, page));
       setPage(0);
-      setResultDatas(rowsObj);
-      //この画面から実績画面へ移動すると1ページ目のオブジェクトが空になってしまう
-      //仕方がないのでここで実績画面で監視しているオブジェクトを更新する
-      
+      setResultDatas(rowsObj);      
     }).catch(error=>console.error(error))
 
   },[rowsPerPage]);

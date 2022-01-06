@@ -2,7 +2,7 @@
 // USER Context
 //
 import { createContext, useState, useContext } from 'react';
-const prj_const = require('./../component/prj_const.js')
+const prj_const = require('../component/common/prj_const.js')
 
 export const UserContext = createContext();
 

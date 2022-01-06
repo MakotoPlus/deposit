@@ -6,19 +6,19 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 //import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import DatePicker01 from '../DatePicker01'
+import DatePicker from '../common/DatePicker'
 //import DepositGroupSelect from '../DepositGroupSelect';
 //import DepositItemSelect from '../DepositItemSelect';
-import DepositItemSelectGrouping from '../DepositItemSelectGrouping'
-import DepositTypeSelect from '../DepositTypeSelect';
-import DepositValueText from '../DepositValueText';
-import InputMemoText from '../InputMemoText';
+import DepositItemSelectGrouping from '../common/DepositItemSelectGrouping'
+import DepositTypeSelect from '../common/DepositTypeSelect';
+import DepositValueText from '../common/DepositValueText';
+import InputMemoText from '../common/InputMemoText';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from '@mui/material/Link';
 import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
-const prj_const = require('./../prj_const.js');
+const prj_const = require('../common/prj_const.js');
 
 
 async function apiUpdateDeposit(deposit_key, data, user){
@@ -93,18 +93,12 @@ export default function ResultUpdateDialog(props) {
   const handleDepositType = value => setDepositType(value);
   //
   // 金額入力Text
-  const [depositValue, setDepositValue] = React.useState(props.record.deposit_value);
-    /*
-  const [depositValue, setDepositValue] = React.useState(()=>{
-      console.log("ResultUpdateDialog::金額入力Text");
-      console.log(props.record.deposit_value);
-      let value = props.record.deposit_value;
-      if ('string' === typeof(value)){
-        value = value.replace(/,/g, '');
-      }
-      return value;
-    }
-  )*/
+  //const [depositValue, setDepositValue] = React.useState(props.record.deposit_value);
+  const [depositValue, setDepositValue] = React.useState(
+    ('string' === typeof(props.record.deposit_value) ?
+    props.record.deposit_value.replace(/,/g, '')
+    : props.record.deposit_value
+  ));
   const handleDepositUpdate = value => setDepositValue(value);
 
   const [memo, setMemo] = React.useState(props.record.memo);
@@ -214,7 +208,7 @@ export default function ResultUpdateDialog(props) {
         <DialogTitle id="form-dialog-title">{props.subtitle}</DialogTitle>
         <DialogContent>
           <form className={classes.root} noValidate autoComplete="off">
-            <DatePicker01 labelName="登録年月日" yyyymmdd={insert_yyyymmdd} setYyyymmdd={handleInsertYyyymmdd} />
+            <DatePicker labelName="登録年月日" yyyymmdd={insert_yyyymmdd} setYyyymmdd={handleInsertYyyymmdd} />
             <DepositItemSelectGrouping handle={handleDepositItemObj} depositItem_key={depositItemkey}/>
             <DepositTypeSelect handle={handleDepositType} value={depositType} />
             <DepositValueText handle={handleDepositUpdate} value={depositValue} />

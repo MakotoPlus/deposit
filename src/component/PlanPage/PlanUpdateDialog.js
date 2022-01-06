@@ -9,9 +9,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 //import DatePicker01 from '../DatePicker01'
 //import DepositGroupSelect from '../DepositGroupSelect';
 //import DepositItemSelect from '../DepositItemSelect';
-import DepositItemSelectGrouping from '../DepositItemSelectGrouping'
-import DepositTypeSelect from '../DepositTypeSelect';
-import DepositValueText from '../DepositValueText';
+import DepositItemSelectGrouping from '../common/DepositItemSelectGrouping'
+import DepositTypeSelect from '../common/DepositTypeSelect';
+import DepositValueText from '../common/DepositValueText';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from '@mui/material/Link';
 //import { TYPE_DEPOSIT } from '../prj_const';
@@ -19,7 +19,7 @@ import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {usePlanContext} from '../../context/planContext';
 
-const prj_const = require('./../prj_const.js')
+const prj_const = require('../common/prj_const.js')
 
 
 const useStyles = makeStyles((theme) => ({
@@ -63,7 +63,11 @@ export default function PlunUpdateDialog(props) {
   const [fullWidth, ] = React.useState(true);
   //
   // 金額入力Text
-  const [depositValue, setDepositValue] = React.useState(props.record.deposit_value.replace(/,/g, ''));
+  const [depositValue, setDepositValue] = React.useState(
+    ('string' === typeof(props.record.deposit_value) ?
+    props.record.deposit_value.replace(/,/g, '')
+    : props.record.deposit_value
+  ));
   const handleDepositUpdate = value => setDepositValue(value);
 
   //
@@ -156,6 +160,7 @@ export default function PlunUpdateDialog(props) {
         console.error(error);
       })
     }
+    
     fetchData();  }
 
   return (

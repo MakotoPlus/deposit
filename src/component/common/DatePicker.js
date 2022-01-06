@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DatePicker01(props) {
+export default function DatePicker(props) {
   // The first commit of Material-UI
   console.debug("DatePicker01");
   console.debug(`yyyymmdd=${props.yyyymmdd}`);

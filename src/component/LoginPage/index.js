@@ -18,7 +18,7 @@ import {useUserContext} from '../../context/userContext';
 
 
 import axios from 'axios';
-const prj_const = require('../prj_const.js')
+const prj_const = require('../common/prj_const.js')
 
 
 

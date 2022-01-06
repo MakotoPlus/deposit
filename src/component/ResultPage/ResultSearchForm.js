@@ -7,7 +7,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import Box from '@mui/material/Box';
 import { makeStyles } from '@material-ui/core/styles';
-import DepositItemMultiSelect from '../DepositItemMultiSelect';
+import DepositItemMultiSelect from '../common/DepositItemMultiSelect';
 //import Typography from '@mui/material/Typography';
 import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';

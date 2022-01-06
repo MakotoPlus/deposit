@@ -1,5 +1,5 @@
 import {UserProvider} from './context/userContext';
-import AuthRouter from './component/AuthRouter';
+import AuthRouter from './component/common/AuthRouter';
 import {PlanProvider} from './context/planContext';
 import {ResultDatasProvider} from './context/resultDatasContext';
 

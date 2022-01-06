@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { makeStyles } from '@material-ui/core/styles';
-import DepositItemMultiSelect from '../DepositItemMultiSelect';
+import DepositItemMultiSelect from '../common/DepositItemMultiSelect';
 //import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
 import Button from '@material-ui/core/Button';
