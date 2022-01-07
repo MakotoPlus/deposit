@@ -20,6 +20,10 @@ import {useResultDatasContext} from '../../context/resultDatasContext';
 //import InputMemoText from '../InputMemoText';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import DragHandleOutlinedIcon from '@mui/icons-material/DragHandleOutlined';
+import ListItemIcon from '@mui/material/ListItemIcon';
+//import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
+import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
 
 //const prj_const = require('../prj_const.js')
 
@@ -55,19 +59,49 @@ const useStyles = makeStyles((theme) => ({
     height: 85,
     width: "800px",
     display: "flex",
-    border: "0px solid black",
-    padding: 0,
+    border: "1px solid black",
+    backgroundColor: "#C2EEFF",
+    padding: 1,
   },
   ItemBox: {
-    height: 85,
-    width: "800px",
+    height: 55,
+    width: "300px",
     display: "flex",
     border: "0px solid black",
-    padding: 0,
+    padding: 1,
+  },
+  ItemLabelBox: {
+    height: 65,
+    width: "300px",
+    display: "flex",
+    border: "0px solid black",
+    padding: 20,
+  },
+  ValueLabelBox : {
+    height: 65,
+    width: "200px",
+    display: "flex",
+    border: "0px solid black",
+    padding: 1,
+    lineHeight: "65px",
+    textAlign: "center",
+    justifyContent: "right",
+  },
+  IconBox: {
+    height: 65,
+    width: "30px",
+    display: "flex",
+    border: "0px solid black",
+    padding: 20,
+  },
+  ItemTextBox : {
+    height: 56,
+    border: "0px solid black",
+    backgroundColor: "#FFFFFF",
   },
   ItemText: {
-    height: 120,
-    width: "600px",
+    height: 100,
+    width: "400px",
     display: "flex",
     border: "0px solid black",
     paddingTop: 5,
@@ -98,32 +132,43 @@ export default function CalcDialog({subtitle}) {
           m={1} //margin
         >
           <Box
-            className={`${classes.ItemBox} `}
+            className={`${classes.ItemLabelBox} `}
             component="span"
             m={1} //margin
           >
             {item.deposit_group_name}
           </Box>
           <Box
-            className={`${classes.ItemBox} `}
+            className={`${classes.ValueLabelBox} `}
             component="span"
             m={1} //margin
           >
-            {item.sum_value.toLocaleString()} -
+            {item.sum_value.toLocaleString()} 
           </Box>
           <Box
-            className={`${classes.ItemBox} `}
+            className={`${classes.IconBox} `}
+            component="span"
+            m={1} //margin
+          >
+            <RemoveOutlinedIcon />
+          </Box>
+          <Box
+            className={`${classes.ItemTextBox} `}
             component="span"
             m={1} //margin
           >
             <CalcValueText className={`${classes.ItemText} `} index={item.id} handle={handleValue} value={item.changeValue} />
           </Box>
           <Box
-            className={`${classes.ItemBox} `}
+            className={`${classes.ItemLabelBox} `}
             component="span"
             m={1} //margin
           >
-            = {item.calValue.toLocaleString()}
+          <ListItemIcon>
+            <DragHandleOutlinedIcon />
+          </ListItemIcon>
+
+            {item.calValue.toLocaleString()}
           </Box>
         </Box>
       </Grid>      
