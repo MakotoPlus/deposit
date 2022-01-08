@@ -129,8 +129,8 @@ export default function PlanTable() {
 
   const [prevUrl, setPrevUrl] = React.useState("");   // 前ページURL
   const [nextUrl, setNextUrl] = React.useState("");   // 次ページURL
-  const [maxData, setMaxData] = React.useState(0);    // 全データ件数
-  const [thisUrl, setThisUrl] = React.useState("");   // 今回アクセスすべきURL
+  //const [maxData, setMaxData] = React.useState(0);    // 全データ件数
+  //const [thisUrl, setThisUrl] = React.useState("");   // 今回アクセスすべきURL
 
   useEffect(()=>{
     console.debug('PlanTable');
@@ -139,20 +139,20 @@ export default function PlanTable() {
     let paramLimit = "limit=" + rowsPerPage;
     let paramOffset = "offset=0";
     let searchParameters = paramLimit + "&" + paramOffset;
-    setThisUrl(searchParameters);
+    //setThisUrl(searchParameters);
     getSavingsList(user, searchParameters, undefined).then(result =>{
       console.debug(result);
       //前ページURL・次ページURL・データ件数設定
       const data = result.data;
       setPrevUrl(data.previous);
       setNextUrl(data.next);
-      setMaxData(data.count);
+      //setMaxData(data.count);
       setPlanAllCount(data.count);
       let rowsObj = data.results.map((record, index) => createObj(record, index, rowsPerPage, page));
       setPage(0);
       setPlan(rowsObj);
     }).catch(error=>console.error(error))
-  },[rowsPerPage]);
+  },[rowsPerPage,user]);
 
   //次ページ・前ページ移動
   const handleChangePage = (event, newPage) => {
@@ -169,7 +169,7 @@ export default function PlanTable() {
       const data = result.data;
       setPrevUrl(data.previous);
       setNextUrl(data.next);
-      setMaxData(data.count);
+      //setMaxData(data.count);
       setPlanAllCount(data.count);
       let rowsObj = data.results.map((record, index) => 
         createObj(record, index, rowsPerPage, newPage));
@@ -208,7 +208,7 @@ export default function PlanTable() {
           </TableHead>
           <TableBody>
             {
-              plan.slice(0 * rowsPerPage, 0 * rowsPerPage + rowsPerPage).map((row) => {
+              plan.slice(0, rowsPerPage).map((row) => {
               const rowClassName = (row.delete_flag) ? classes.DelTableRow : classes.TableRow;
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.id} className={rowClassName}>
@@ -222,7 +222,6 @@ export default function PlanTable() {
                             <PlunUpdateDialog subtitle={value} record={row} />
                             : (index === 3 ) ? 
                             <Grid container spacing={1}
-                            container
                             direction="row"
                             justifyContent="center"
                             alignItems="stretch"

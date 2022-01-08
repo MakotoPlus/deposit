@@ -15,7 +15,7 @@ import CalcValueText from './CalcValueText';
 import { makeStyles } from '@material-ui/core/styles';
 //import { TYPE_DEPOSIT } from '../prj_const';
 //import axios from 'axios';
-import {useUserContext} from '../../context/userContext';
+//import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
 //import InputMemoText from '../InputMemoText';
 import Grid from '@mui/material/Grid';
@@ -112,7 +112,7 @@ const useStyles = makeStyles((theme) => ({
 export default function CalcDialog({subtitle}) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const {user} = useUserContext();
+  //const {user} = useUserContext();
   const {groupSumaryDatas} = useResultDatasContext();  
   //const userid = user.userid;
   const [fullWidth, ] = React.useState(true);

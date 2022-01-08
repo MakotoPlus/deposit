@@ -4,9 +4,9 @@ import Link from '@mui/material/Link';
 import { Link as RouterLink } from "react-router-dom";
 import Total from '../component/SumaryPage/Total';
 
-function preventDefault(event) {
-  event.preventDefault();
-}
+//function preventDefault(event) {
+//  event.preventDefault();
+//}
 
 export default function Results() {
   return (

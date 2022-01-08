@@ -25,7 +25,7 @@ const columns = [
 
 //
 // 全データ取得
-async function getSavingSumaryList(user, nRunApiCount = 1, page = 1){
+async function getSavingSumaryList(user){
   let headers = {
     headers : user.Authorization
   };
@@ -62,11 +62,10 @@ export default function PlanGroupSumary() {
   const {plan} = usePlanContext();  
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [rows, setRows] = React.useState([]);
-  const [serverPage, setServerPage] = React.useState(1);
 
   useEffect(()=>{
     function fetchData(){
-      getSavingSumaryList(user, 1, serverPage).then(result=>{
+      getSavingSumaryList(user).then(result=>{
         let results = result.data;
         let rowsObj = results.map(( record, index ) => 
           createData( index + 1, 
@@ -78,7 +77,6 @@ export default function PlanGroupSumary() {
         console.debug(results.length);
         setMaxData(results.length);
         setRows(rowsObj);
-        setServerPage(1 + serverPage);
       })
     }
     fetchData();

@@ -18,18 +18,19 @@ async function getDepositDateSumaryList(user){
   let headers = {
     headers : user.Authorization
   };
-  let urlpath = prj_const.ServerUrl + "/api/deposit_date_sumary_list/?no_page";
+  let urlpath = prj_const.ServerUrl + "/api/deposit_item_date_sumary_list/?no_page";
   return await axios.get(urlpath, headers);
 }
 
+const coloers = [
+  "red",
+  "#006400",
+  "#ffff00",
+  "#0000cd",
+  "#00ffff",
+]
+
 export default function GraphResult() {
-  const coloers = [
-    "red",
-    "#006400",
-    "#ffff00",
-    "#0000cd",
-    "#00ffff",
-  ]
   const theme = useTheme();
   //const classes = useStyles();
   const {user} = useUserContext();  

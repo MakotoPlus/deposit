@@ -25,9 +25,7 @@ async function getDepositTotal(user){
 
 export default function Total() {
   const {user} = useUserContext();
-  const {resultDatas, setResultDatas, 
-    resultAllCount, setResultAllCount,
-  } = useResultDatasContext();
+  const {resultDatas,  resultAllCount, } = useResultDatasContext();
   const [depositTotal, setDepositTotal] = React.useState("0");
   useEffect(()=>{
     getDepositTotal(user).then(result=>{

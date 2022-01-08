@@ -4,9 +4,9 @@ import Link from '@mui/material/Link';
 import PlanTotal from "../component/PlanPage/PlanTotal";
 import { Link as RouterLink } from "react-router-dom";
 
-function preventDefault(event) {
-  event.preventDefault();
-}
+//function preventDefault(event) {
+//  event.preventDefault();
+//}
 
 export default function Deposits() {
   return (

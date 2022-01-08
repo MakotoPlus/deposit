@@ -15,7 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 //import { TYPE_DEPOSIT } from '../prj_const';
 import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
-import {useResultDatasContext} from '../../context/resultDatasContext';
+//import {useResultDatasContext} from '../../context/resultDatasContext';
 import InputMemoText from '../common/InputMemoText';
 const prj_const = require('../common/prj_const.js')
 

@@ -119,13 +119,13 @@ export default function ResultTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);  //現在のクライアント1ページ表示件数
   const {user} = useUserContext();
   const {resultDatas, setResultDatas, 
-      resultAllCount, setResultAllCount,
-      resultSearch, setResultSearch,} = useResultDatasContext();
+      setResultAllCount,
+      resultSearch, } = useResultDatasContext();
   //const [serverPage, setServerPage] = React.useState(1);  //現在のサーバ側ページ位置
   const [prevUrl, setPrevUrl] = React.useState("");   // 前ページURL
   const [nextUrl, setNextUrl] = React.useState("");   // 次ページURL
   const [maxData, setMaxData] = React.useState(0);    // 全データ件数
-  const [thisUrl, setThisUrl] = React.useState("");   // 今回アクセスすべきURL
+  //const [thisUrl, setThisUrl] = React.useState("");   // 今回アクセスすべきURL
   //console.log( "-------------------------");
   //console.log( resultDatas);
     /*
@@ -224,7 +224,7 @@ export default function ResultTable() {
         searchParameters = searchParameters + p;
       }
     });
-    setThisUrl(searchParameters);
+    //setThisUrl(searchParameters);
     getDepositList(user, searchParameters, undefined).then(result =>{
       console.debug(result);
       //前ページURL・次ページURL・データ件数設定
@@ -272,7 +272,6 @@ export default function ResultTable() {
                           <ResultUpdateDialog subtitle={value} record={row} />
                           : (index === 4) ? 
                           <Grid container spacing={1}
-                            container
                             direction="row"
                             justifyContent="center"
                             alignItems="stretch"

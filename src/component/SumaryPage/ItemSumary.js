@@ -67,14 +67,12 @@ export default function ItemSumary() {
   const [page, setPage] = React.useState(0);  // 現在のページ位置（開始0）
   const [rowsPerPage, setRowsPerPage] = React.useState(10);  //現在のクライアント1ページ表示件数
   const {user} = useUserContext();
-  const {resultDatas, setResultDatas, 
-      resultAllCount, setResultAllCount,
-      resultSearch, setResultSearch,} = useResultDatasContext();
+  const {resultDatas, setResultDatas, setResultAllCount,} = useResultDatasContext();
   //const [serverPage, setServerPage] = React.useState(1);  //現在のサーバ側ページ位置
   const [prevUrl, setPrevUrl] = React.useState("");   // 前ページURL
   const [nextUrl, setNextUrl] = React.useState("");   // 次ページURL
   const [maxData, setMaxData] = React.useState(0);    // 全データ件数
-  const [thisUrl, setThisUrl] = React.useState("");   // 今回アクセスすべきURL
+  //const [thisUrl, setThisUrl] = React.useState("");   // 今回アクセスすべきURL
 
   //次ページ・前ページ移動
   const handleChangePage = (event, newPage) => {
@@ -124,7 +122,7 @@ export default function ItemSumary() {
         searchParameters = searchParameters + p;
       }
     });
-    setThisUrl(searchParameters);
+    //setThisUrl(searchParameters);
     getItemSumaryList(user, searchParameters, undefined).then(result =>{
       console.debug(result);
       //前ページURL・次ページURL・データ件数設定

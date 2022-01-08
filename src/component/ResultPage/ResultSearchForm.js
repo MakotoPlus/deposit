@@ -9,7 +9,7 @@ import Box from '@mui/material/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import DepositItemMultiSelect from '../common/DepositItemMultiSelect';
 //import Typography from '@mui/material/Typography';
-import {useUserContext} from '../../context/userContext';
+//import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -57,9 +57,7 @@ export default function ResultSearchForm(){
     const classes = useStyles();
     //const {user} = useUserContext();
     const [fromtoDatevalue, setFromtoDateValue] = React.useState([null, null]);
-    const {resultDatas, setResultDatas, 
-        resultAllCount, setResultAllCount,
-        resultSearch, setResultSearch,} = useResultDatasContext();  
+    const { setResultDatas, setResultSearch,} = useResultDatasContext();  
     const [isDelete, setIsDelete] = React.useState(false);
     const handleClickSearch = () => {
         console.debug("Search");

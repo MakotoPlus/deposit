@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Link from '@mui/material/Link';
+//import Link from '@mui/material/Link';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -8,11 +8,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@mui/material/Grid';
-import Title from './Title';
-import { Link as RouterLink } from "react-router-dom";
-import ResultUpdateDialog from './../component/ResultPage/ResultUpdateDialog';
+//import Title from './Title';
+//import { Link as RouterLink } from "react-router-dom";
+//import ResultUpdateDialog from './../component/ResultPage/ResultUpdateDialog';
 import {useUserContext} from './../context/userContext';
-import {useResultDatasContext} from './../context/resultDatasContext';
+//import {useResultDatasContext} from './../context/resultDatasContext';
 import TableContainer from '@material-ui/core/TableContainer';
 import axios from 'axios';
 
@@ -79,9 +79,9 @@ const columns = [
   //,{ id : 'deposit_key', label: 'Key', minWidth:100 }
 ]
 
-function preventDefault(event) {
-  event.preventDefault();
-}
+//function preventDefault(event) {
+//  event.preventDefault();
+//}
 
 async function getDepositList(user, urlParameters, urlPath){
   //
@@ -121,15 +121,15 @@ function createObj(record, index, rowPage, page ){
 
 export default function Orders() {
   const classes = useStyles();
-  const [page, setPage] = React.useState(0);  // 現在のページ位置（開始0）
-  const [rowsPerPage, setRowsPerPage] = React.useState(3);  //現在のクライアント1ページ表示件数
+  const page=0;  // 現在のページ位置（開始0）
+  const rowsPerPage=3;  //現在のクライアント1ページ表示件数
   const {user} = useUserContext();
   const [resultDatas, setResultDatas] = React.useState([]);
   //const [serverPage, setServerPage] = React.useState(1);  //現在のサーバ側ページ位置
-  const [prevUrl, setPrevUrl] = React.useState("");   // 前ページURL
-  const [nextUrl, setNextUrl] = React.useState("");   // 次ページURL
-  const [maxData, setMaxData] = React.useState(0);    // 全データ件数
-  const [thisUrl, setThisUrl] = React.useState("");   // 今回アクセスすべきURL
+  //const [prevUrl, setPrevUrl] = React.useState("");   // 前ページURL
+  //const [nextUrl, setNextUrl] = React.useState("");   // 次ページURL
+  //const [maxData, setMaxData] = React.useState(0);    // 全データ件数
+  //const [thisUrl, setThisUrl] = React.useState("");   // 今回アクセスすべきURL
 
   useEffect(()=>{
     //
@@ -139,7 +139,7 @@ export default function Orders() {
     // 検索パラメータURL再構築
     let paramDepositItemKeys = "";
     // 預金項目
-    let depositItemkeys = "depositItem_key=";
+    //let depositItemkeys = "depositItem_key=";
     //削除フラグ
     let paramIsDelete = "delete_flag=false";
     console.log(paramIsDelete);
@@ -167,14 +167,14 @@ export default function Orders() {
         searchParameters = searchParameters + p;
       }
     });
-    setThisUrl(searchParameters);
+    //setThisUrl(searchParameters);
     getDepositList(user, searchParameters, undefined).then(result =>{
       console.debug(result);
       const data = result.data;
       let rowsObj = data.results.map((record, index) => createObj(record, index, rowsPerPage, page));
       setResultDatas(rowsObj);
     }).catch(error=>console.error(error))
-  },[]);
+  },[user]);
 
 
   return (
@@ -207,7 +207,6 @@ export default function Orders() {
                       <TableCell key={column.id} align={column.align} className={classes.tableCell}>
                         { (index === 4) ? 
                           <Grid container spacing={1}
-                            container
                             direction="row"
                             justifyContent="center"
                             alignItems="stretch"

@@ -1,34 +1,86 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
 import { useTheme } from '@mui/material/styles';
 import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
-import Title from './Title';
+//import Title from './Title';
+import axios from 'axios';
+import {useUserContext} from '../context/userContext';
+import { Link as RouterLink } from "react-router-dom";
+import Link from '@mui/material/Link';
 
-// Generate Sales Data
-function createData(time, amount) {
-  return { time, amount };
+const prj_const = require('../component/common/prj_const.js')
+
+
+// 全データ取得
+async function getDepositDateSumaryList(user){
+  let headers = {
+    headers : user.Authorization
+  };
+  let urlpath = prj_const.ServerUrl + "/api/deposit_date_sumary_list/?no_page";
+  return await axios.get(urlpath, headers);
 }
 
-const data = [
-  createData('00:00', 0),
-  createData('03:00', 300),
-  createData('06:00', 600),
-  createData('09:00', 800),
-  createData('12:00', 1500),
-  createData('15:00', 2000),
-  createData('18:00', 2400),
-  createData('21:00', 2400),
-  createData('24:00', undefined),
-];
+const coloers = [
+  "red",
+  "#006400",
+  "#ffff00",
+  "#0000cd",
+  "#00ffff",
+]
 
 export default function Chart() {
+
   const theme = useTheme();
+ //const classes = useStyles();
+  const {user} = useUserContext();
+  const [grafDatas, setGrafDatas] = React.useState([])
+  const [lines, setLines] = React.useState([])
+  useEffect(()=>{
+    function fetchData(){
+      getDepositDateSumaryList(user).then(result =>{
+        let data = result.data;
+        console.debug("GraphResult");
+        console.debug(data);
+        console.debug("data");
+
+        let outLines = [];
+        outLines.push(
+          <Line key="1"
+          isAnimationActive={false}
+          type="monotone"
+          dataKey="total"
+          stroke={coloers[0]}
+          //stroke={theme.palette.primary.light}
+          dot={false}
+          activeDot={{ r: 8 }}
+        />
+        )
+        setLines(outLines);
+        let graf = data.map(datas => createDatas(datas))
+        setGrafDatas(graf)
+        console.debug("graf");
+        console.debug(graf);
+      }).catch(error=>console.error(error))
+    }
+    fetchData();
+  },[user]);
+
+  function createDatas(datas){
+    let resultObj = {
+      name : datas.insert_yyyymm,
+      total: datas.value,
+    }
+    return resultObj;
+  }
+
 
   return (
     <React.Fragment>
-      <Title>Today</Title>
+      <Link component={RouterLink} color="primary" to="/graph" >
+        Graph
+      </Link>
       <ResponsiveContainer>
         <LineChart
-          data={data}
+          data={grafDatas}
           margin={{
             top: 16,
             right: 16,
@@ -37,7 +89,7 @@ export default function Chart() {
           }}
         >
           <XAxis
-            dataKey="time"
+            dataKey="name"
             stroke={theme.palette.text.secondary}
             style={theme.typography.body2}
           />
@@ -54,9 +106,15 @@ export default function Chart() {
                 ...theme.typography.body1,
               }}
             >
-              Sales ($)
             </Label>
           </YAxis>
+          {lines}
+        </LineChart>
+      </ResponsiveContainer>
+    </React.Fragment>
+  );
+}
+/*
           <Line
             isAnimationActive={false}
             type="monotone"
@@ -64,8 +122,5 @@ export default function Chart() {
             stroke={theme.palette.primary.main}
             dot={false}
           />
-        </LineChart>
-      </ResponsiveContainer>
-    </React.Fragment>
-  );
-}
+
+*/
