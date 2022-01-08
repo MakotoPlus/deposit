@@ -1,5 +1,4 @@
-
-export const ServerUrl = "http://127.0.0.1:8082";
+export const ServerUrl = "http://localhost:8082";
 
 export const APP_IDKEY = "deposit-app"
 export const TYPE_DEPOSIT = 1;      // 貯金

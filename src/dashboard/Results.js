@@ -1,20 +1,20 @@
 import * as React from 'react';
 import Link from '@mui/material/Link';
 //import Typography from '@mui/material/Typography';
-import PlanTotal from "../component/PlanPage/PlanTotal";
 import { Link as RouterLink } from "react-router-dom";
+import Total from '../component/SumaryPage/Total';
 
 function preventDefault(event) {
   event.preventDefault();
 }
 
-export default function Deposits() {
+export default function Results() {
   return (
     <React.Fragment>
-      <PlanTotal />
+      <Total />
       <div>
-        <Link component={RouterLink} color="primary" to="/plan" >
-          計画
+        <Link component={RouterLink} color="primary" to="/sumary" >
+          サマリ
         </Link>
       </div>
     </React.Fragment>

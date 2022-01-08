@@ -23,7 +23,7 @@ async function getDepositTotal(user){
 }
 
 
-export default function PlanTotal() {
+export default function Total() {
   const {user} = useUserContext();
   const {resultDatas, setResultDatas, 
     resultAllCount, setResultAllCount,
