@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Button from '@material-ui/core/Button';
 //import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -53,32 +53,71 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function ResultUpdateDialog(props) {
-  const [open, setOpen] = React.useState(false);
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const {user} = useUserContext();
+  const {resultDatas, setResultDatas, } = useResultDatasContext();
   const [fullWidth, ] = React.useState(true);
   const [record, setRecord] = React.useState(props.record);
-  const {user} = useUserContext();
-  //const [deposit_key, ] = React.useState(props.record.deposit_key);
-  const deposit_key = props.record.deposit_key;
-  const {resultDatas, setResultDatas, } = useResultDatasContext();
-
-  //console.debug(`ResultUpdateDialog--props`);
-  //console.debug(props);
-  //console.debug(`ResultUpdateDialog--props-yyyymmdd=${props.record.insert_yyyymmdd}`);
+  const [deposit_key, setDeposit_key] = React.useState(props.record.deposit_key);
+  //
+  // 預金項目Select
+  // DepositItemSelectGrouping
+  const [depositItemObj, setDepositItemObj] = React.useState(props.record.depositItem_key);
+  const [depositItemkey, setDepositItemkey] = React.useState(props.record.depositItem_key.depositItem_key);
   //
   //登録日
   const [insert_yyyymmdd, setInsert_yyyymmdd] = React.useState(props.record.insert_yyyymmdd);
+  //
+  // 預金/支出
+  const [depositType, setDepositType] = React.useState(props.record.deposit_type);
+  //
+  // 金額入力Text
+  //const [depositValue, setDepositValue] = React.useState(props.record.deposit_value);
+  const [depositValue, setDepositValue] = React.useState(
+    ('string' === typeof(props.record.deposit_value) ?
+      props.record.deposit_value.replace(/,/g, '')
+      : props.record.deposit_value
+    )
+  );
+  //
+  // メモ
+  const [memo, setMemo] = React.useState(props.record.memo);
+
+
+  // 登録日設定
   const handleInsertYyyymmdd = value =>{
     console.debug(value);
     setInsert_yyyymmdd(value);
   }
 
+  useEffect(()=>{
+    setRecord(props.record);
+    setDeposit_key(props.record.deposit_key);
+    //
+    // 預金項目Select
+    // DepositItemSelectGrouping
+    setDepositItemObj(props.record.depositItem_key);
+    setDepositItemkey(props.record.depositItem_key.depositItem_key);
+    //
+    //登録日
+    setInsert_yyyymmdd(props.record.insert_yyyymmdd);
+    //
+    // 預金/支出
+    setDepositType(props.record.deposit_type);
+    //
+    // 金額入力Text
+    setDepositValue(
+      ('string' === typeof(props.record.deposit_value) ?
+        props.record.deposit_value.replace(/,/g, '')
+        : props.record.deposit_value
+      )
+    );
+    //
+    // メモ
+    setMemo(props.record.memo);
+  },[props.record]);
 
-  //
-  // 預金項目Select
-  // DepositItemSelectGrouping
-  const [depositItemObj, setDepositItemObj] = React.useState(record.depositItem_key);
-  const [depositItemkey, setDepositItemkey] = React.useState(record.depositItem_key.depositItem_key);
   //const [depositItemkey, setDepositItemkey] = React.useState(record.depositItem_key);
   //depositItem_key
   const handleDepositItemObj = value => {
@@ -89,19 +128,9 @@ export default function ResultUpdateDialog(props) {
   }
   //
   // 預金/支出
-  const [depositType, setDepositType] = React.useState(props.record.deposit_type);
   const handleDepositType = value => setDepositType(value);
-  //
-  // 金額入力Text
-  //const [depositValue, setDepositValue] = React.useState(props.record.deposit_value);
-  const [depositValue, setDepositValue] = React.useState(
-    ('string' === typeof(props.record.deposit_value) ?
-    props.record.deposit_value.replace(/,/g, '')
-    : props.record.deposit_value
-  ));
   const handleDepositUpdate = value => setDepositValue(value);
 
-  const [memo, setMemo] = React.useState(props.record.memo);
   const handleMemo = (event) =>{
     console.debug('handleMemo');
     console.debug(event.target.value);
@@ -113,6 +142,28 @@ export default function ResultUpdateDialog(props) {
   };
 
   const handleClose = () => {
+    //
+    // 値を変更した場合、オブジェクトが更新されてしまっているので元に戻す
+    //
+    // あいにく record オブジェクトの値は変更されていないのでそれを利用する
+
+    // 登録日
+    setInsert_yyyymmdd(record.insert_yyyymmdd);
+    //
+    // 預金項目Select
+    setDepositItemObj(record.depositItem_key);
+    setDepositItemkey(record.depositItem_key.depositItem_key);
+    //
+    // 預金/支出
+    setDepositType(record.deposit_type);
+    //
+    // 金額入力Text
+    setDepositValue(('string' === typeof(record.deposit_value) ?
+        record.deposit_value.replace(/,/g, '') : record.deposit_value));
+    //
+    // MemoText
+    setMemo(record.memo);
+    console.debug(record);
     setOpen(false);
   };
 
@@ -149,22 +200,31 @@ export default function ResultUpdateDialog(props) {
         console.log(response);
         let newRows = [...resultDatas];
         let newRow = newRows.find( r => r.deposit_key === deposit_key);
-        newRow.delete_flag = false;
-        newRow.deposit_type = depositType;
-        newRow.deposit_type_str = (depositType === prj_const.TYPE_DEPOSIT)
-        ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR;
-        newRow.deposit_value = Number(depositValue).toLocaleString();
-        newRow.memo = memo;
-        newRow.insert_yyyymmdd = insert_yyyymmdd;
-        newRow.depositItem_key = depositItemObj;
-        newRow.depositItem_name = depositItemObj.depositItem_name;
-        newRow.deposit_group_name = depositItemObj.deposit_group_name;
-        newRow.moneyType_name = depositItemObj.moneyType_name;
-        console.debug('update row----------------');
-        console.debug(newRow);
-        setResultDatas(newRows);
-        setRecord(newRow);
-        setOpen(false);
+        if (newRow){
+          newRow.delete_flag = false;
+          newRow.deposit_type = depositType;
+          newRow.deposit_type_str = (depositType === prj_const.TYPE_DEPOSIT)
+          ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR;
+          newRow.deposit_value = Number(depositValue).toLocaleString();
+          newRow.memo = memo;
+          newRow.insert_yyyymmdd = insert_yyyymmdd;
+          newRow.depositItem_key = depositItemObj;
+          newRow.depositItem_name = depositItemObj.depositItem_name;
+          newRow.deposit_group_name = depositItemObj.deposit_group_name;
+          newRow.moneyType_name = depositItemObj.moneyType_name;
+          console.debug('update row----------------');
+          console.debug(newRow);
+          setResultDatas(newRows);
+          setRecord(newRow);
+          setOpen(false);
+        }else{
+          console.error('----------')
+          console.error(`deposit_key:${deposit_key}がデータ一覧に存在しません。`);
+          console.error('更新実行情報------')
+          console.error(data)
+          console.error('一覧情報------')
+          console.error(newRows)
+        }
       }).catch(error => console.error(error));
     }
     fetchData();
@@ -184,11 +244,21 @@ export default function ResultUpdateDialog(props) {
         console.log(response);
         let newRows = [...resultDatas];
         let newRow = newRows.find( r => r.deposit_key === deposit_key );
-        newRow.delete_flag = true;
-        console.debug('new row----------------');
-        setResultDatas(newRows);
-        setRecord(newRow);
-        setOpen(false);
+        if (newRow){
+          newRow.delete_flag = true;
+          console.debug('new row----------------');
+          setResultDatas(newRows);
+          setRecord(newRow);
+          setOpen(false);
+        }
+        else{
+          console.error('----------')
+          console.error(`deposit_key:${deposit_key}がデータ一覧に存在しません。`);
+          console.error('更新実行情報------')
+          console.error(data)
+          console.error('一覧情報------')
+          console.error(newRows)
+        }
       }).catch(error => console.error(error));
     }
     fetchData();

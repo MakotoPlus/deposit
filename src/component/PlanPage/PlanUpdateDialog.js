@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Button from '@material-ui/core/Button';
 //import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -55,7 +55,7 @@ async function apiUpdateSavings(savings_key, data, user){
 export default function PlunUpdateDialog(props) {
   const [subtitle, setSubtitle] = React.useState(props.subtitle);
   const [record, setRecord] = React.useState(props.record);
-  const savings_key = record.savings_key;
+  const [savings_key, setSavings_key] = React.useState(props.record.savings_key);
   const [open, setOpen] = React.useState(false);
   const {user} = useUserContext();
   const {plan, setPlan} = usePlanContext();  
@@ -68,13 +68,37 @@ export default function PlunUpdateDialog(props) {
     props.record.deposit_value.replace(/,/g, '')
     : props.record.deposit_value
   ));
-  const handleDepositUpdate = value => setDepositValue(value);
-
   //
   // 預金項目Select
   // DepositItemSelectGrouping
-  const [depositItemObj, setDepositItemObj] = React.useState(record.deposit_item_obj);
-  const [depositItemkey, setDepositItemkey] = React.useState(record.deposit_item_obj.depositItem_key);
+  const [depositItemObj, setDepositItemObj] = React.useState(props.record.deposit_item_obj);
+  const [depositItemkey, setDepositItemkey] = React.useState(props.record.deposit_item_obj.depositItem_key);
+  //
+  // 預金/支出
+  const [depositType, setDepositType] = React.useState(props.record.deposit_type);
+
+  useEffect(()=>{
+    setSubtitle(props.subtitle);
+    setRecord(props.record);
+    setSavings_key(props.record.savings_key);
+    // 金額入力Text
+    setDepositValue(
+      ('string' === typeof(props.record.deposit_value) ?
+      props.record.deposit_value.replace(/,/g, '')
+      : props.record.deposit_value
+    ));
+    // 預金項目Select
+    setDepositItemObj(props.record.deposit_item_obj);
+    setDepositItemkey(props.record.deposit_item_obj.depositItem_key);
+    // 預金/支出
+    setDepositType(props.record.deposit_type);
+  },[props.record]);
+
+  //
+  // 金額入力Text
+  const handleDepositUpdate = value => setDepositValue(value);
+  //
+  // 預金項目Select
   const handleDepositItemObj = value => {
     console.debug("handleDepositItemObj");
     console.debug(value);
@@ -84,13 +108,28 @@ export default function PlunUpdateDialog(props) {
 
   //
   // 預金/支出
-  const [depositType, setDepositType] = React.useState(props.record.deposit_type);
   const handleDepositType = value => setDepositType(value);
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
+    //
+    // 値を変更した場合、オブジェクトが更新されてしまっているので元に戻す
+    //
+    // あいにく record オブジェクトの値は変更されていないのでそれを利用する
+    setSavings_key(record.savings_key);
+    // 金額入力Text
+    setDepositValue(
+      ('string' === typeof(record.deposit_value) ?
+      record.deposit_value.replace(/,/g, '')
+      : record.deposit_value
+    ));
+    // 預金項目Select
+    setDepositItemObj(record.deposit_item_obj);
+    setDepositItemkey(record.deposit_item_obj.depositItem_key);
+    // 預金/支出
+    setDepositType(record.deposit_type);
     setOpen(false);
   };
 
@@ -113,21 +152,30 @@ export default function PlunUpdateDialog(props) {
         console.log(response);
         let newRows = [...plan];
         let newRow = newRows.find( r => r.savings_key === savings_key );
-        newRow.deposit_item_obj = {...depositItemObj};
-        newRow.deposit_group_name = newRow.deposit_item_obj.deposit_group_name;
-        newRow.depositItem_name = newRow.deposit_item_obj.depositItem_name;
-        newRow.deposit_type = depositType;
-        newRow.deposit_type_str = depositType === prj_const.TYPE_DEPOSIT 
-          ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR;
-        newRow.deposit_value = Number(depositValue).toLocaleString();
-        newRow.delete_flag = false;
-        console.debug('new row----------------');
-        console.debug(newRow);
-        //setRows(newRows);
-        setPlan(newRows);
-        setSubtitle(newRow.depositItem_name);
-        setRecord(newRow);
-        setOpen(false);
+        if (newRow){
+          newRow.deposit_item_obj = {...depositItemObj};
+          newRow.deposit_group_name = newRow.deposit_item_obj.deposit_group_name;
+          newRow.depositItem_name = newRow.deposit_item_obj.depositItem_name;
+          newRow.deposit_type = depositType;
+          newRow.deposit_type_str = depositType === prj_const.TYPE_DEPOSIT 
+            ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR;
+          newRow.deposit_value = Number(depositValue).toLocaleString();
+          newRow.delete_flag = false;
+          console.debug('new row----------------');
+          console.debug(newRow);
+          //setRows(newRows);
+          setPlan(newRows);
+          setSubtitle(newRow.depositItem_name);
+          setRecord(newRow);
+          setOpen(false);
+        }else{
+          console.error('----------')
+          console.error(`savings_key:${savings_key}がデータ一覧に存在しません。`);
+          console.error('更新実行情報------')
+          console.error(data)
+          console.error('一覧情報------')
+          console.error(newRows)
+        }
       }).catch(error=>{
         console.error(error);
       })
@@ -150,12 +198,21 @@ export default function PlunUpdateDialog(props) {
         console.log(response);
         let newRows = [...plan];
         let newRow = newRows.find( r => r.savings_key === savings_key );
-        newRow.delete_flag = true;
-        console.debug('new row----------------');
-        console.debug(newRow);
-        setPlan(newRows);
-        setRecord(newRow);
-        setOpen(false);
+        if (newRow){
+          newRow.delete_flag = true;
+          console.debug('new row----------------');
+          console.debug(newRow);
+          setPlan(newRows);
+          setRecord(newRow);
+          setOpen(false);  
+        }else{
+          console.error('----------')
+          console.error(`savings_key:${savings_key}がデータ一覧に存在しません。`);
+          console.error('更新実行情報------')
+          console.error(data)
+          console.error('一覧情報------')
+          console.error(newRows)
+        }
       }).catch(error=>{
         console.error(error);
       })

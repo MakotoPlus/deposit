@@ -31,7 +31,7 @@ async function getSavingSumaryList(user){
   };
   let urlpath = prj_const.ServerUrl + "/api/saving_sumary_list/?no_page";
   let result = await axios.get(urlpath, headers);
-  console.log(result);
+  console.debug(result);
   return result;
 }
 

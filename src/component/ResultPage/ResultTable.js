@@ -119,7 +119,7 @@ export default function ResultTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);  //現在のクライアント1ページ表示件数
   const {user} = useUserContext();
   const {resultDatas, setResultDatas, 
-      setResultAllCount,
+      setResultAllCount, resultAllCount,
       resultSearch, } = useResultDatasContext();
   //const [serverPage, setServerPage] = React.useState(1);  //現在のサーバ側ページ位置
   const [prevUrl, setPrevUrl] = React.useState("");   // 前ページURL
@@ -180,7 +180,7 @@ export default function ResultTable() {
     depositItemkeys.forEach(keys=>{
       if (keys){
         const value = "depositItem_key=" + keys;
-        console.log(value);
+        console.debug(value);
         if (paramDepositItemKeys){
           paramDepositItemKeys = paramDepositItemKeys + "&";
         }
@@ -205,8 +205,8 @@ export default function ResultTable() {
     }
     let paramLimit = "limit=" + rowsPerPage;
     let paramOffset = "offset=0";
-    console.log(paramTodate);
-    console.log(paramFromdate);
+    console.debug(paramTodate);
+    console.debug(paramFromdate);
     const params = [
       paramDepositItemKeys
       , paramIsDelete
@@ -238,7 +238,7 @@ export default function ResultTable() {
       setResultAllCount(data.count);
     }).catch(error=>console.error(error))
 
-  },[resultSearch,rowsPerPage]);
+  },[resultSearch,rowsPerPage,resultAllCount]);
 
   return (
     <Paper className={classes.root}>

@@ -17,9 +17,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DatePicker(props) {
   // The first commit of Material-UI
-  console.debug("DatePicker01");
-  console.debug(`yyyymmdd=${props.yyyymmdd}`);
-  console.debug(props);
+  //console.debug("DatePicker01");
+  //console.debug(`yyyymmdd=${props.yyyymmdd}`);
+  //console.debug(props);
   const [labelName, ] = React.useState(props.labelName);
   const [selectedDate, setSelectedDate] = React.useState(props.yyyymmdd);
   const classes = useStyles();

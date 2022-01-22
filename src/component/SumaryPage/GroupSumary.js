@@ -31,7 +31,7 @@ async function getDepositSumaryList(user, nRunApiCount = 1, page = 1){
   };
   let urlpath = prj_const.ServerUrl + "/api/deposit_groupsumary_list/?no_page";
   let result = await axios.get(urlpath, headers);
-  console.log(result);
+  console.debug(result);
   return result;
 }
 
