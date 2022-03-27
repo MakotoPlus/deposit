@@ -2,8 +2,8 @@
 // Plan Data Context
 //
 //
+import React from 'react'
 import { createContext, useState, useContext } from 'react';
-//const prj_const = require('./../component/prj_const.js')
 
 export const PlanContext = createContext();
 

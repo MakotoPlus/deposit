@@ -131,3 +131,12 @@ export default function PlanBatchInputDialog(props) {
     );
   }
   
+/*
+        <DialogContent>
+          <form className={classes.root} noValidate autoComplete="off">
+            <DatePicker labelName="登録年月日" yyyymmdd={insertYyyymmdd} setYyyymmdd={handleInsertYyyymmdd} />
+            <InputMemoText handle={handleMemo} value={memo} />
+          </form>
+        </DialogContent>
+
+*/
