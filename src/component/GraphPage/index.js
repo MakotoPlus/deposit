@@ -5,7 +5,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import GraphResult from './GraphResult';
-import GraphSearchForm from './GraphShowForm';
+import GraphTable from './GraphTable';
+import GraphSearchForm from './GraphSearchForm';
 
 //
 // グラフページ
@@ -50,7 +51,7 @@ function GraphPage(){
                     p: 1,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 600,
+                    height: 300,
                   }}
                 >
                 <GraphResult />
@@ -66,9 +67,10 @@ function GraphPage(){
                     p: 1,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 100,
+                    height: 500,
                   }}
                 >
+              <GraphTable />
             </Paper>
           </Grid>
         </Grid>

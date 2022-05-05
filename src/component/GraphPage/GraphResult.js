@@ -14,11 +14,39 @@ const prj_const = require('../common/prj_const.js')
 */
 
 // 全データ取得
-async function getDepositDateSumaryList(user){
+async function getDepositGraph(user, graphSearch){
   let headers = {
     headers : user.Authorization
   };
-  let urlpath = prj_const.ServerUrl + "/api/deposit_item_date_sumary_list/?no_page";
+  let parameters = "";
+  
+  graphSearch.select_items.map(depositItem_key =>{
+    if (parameters !== ""){
+      parameters += "&"
+    }
+    parameters += `depositItem_key=${depositItem_key}`
+  });
+  
+  const from_date = graphSearch.select_fromto_date[0];
+  const to_date = graphSearch.select_fromto_date[1];
+  if ((from_date !== undefined) && (from_date !== '')){
+    if (parameters !== ""){
+      parameters += "&"
+    }
+    parameters += `insert_yyyymm_from=${from_date.substr(0,7)}`
+  }
+  if ((to_date !== undefined) && (to_date !== '')){
+    if (parameters !== ""){
+      parameters += "&"
+    }
+    parameters += `insert_yyyymm_to=${to_date.substr(0,7)}`
+  }
+  let url = "/api/deposit_item_date_sumary_list/?no_page";
+  if (parameters !== ""){
+    url += "&" + parameters;
+  }
+  let urlpath = prj_const.ServerUrl + url;
+  console.debug(`urlpath=[${urlpath}]`);
   return await axios.get(urlpath, headers);
 }
 
@@ -34,32 +62,23 @@ export default function GraphResult() {
   const theme = useTheme();
   //const classes = useStyles();
   const {user} = useUserContext();  
-  const {graphSearch, groupSumaryDatas,} 
-    = useResultDatasContext();
+  const {graphSearch, setGraphDatas} = useResultDatasContext();
   const [grafDatas, setGrafDatas] = React.useState([])
   const [lines, setLines] = React.useState([])
   useEffect(()=>{
     function fetchData(){
-      getDepositDateSumaryList(user).then(result =>{
+      getDepositGraph(user, graphSearch).then(result =>{
         let data = result.data;
-        console.debug("GraphResult");
-        // 絞込選択されている場合はそれだけにする
-        if (graphSearch.select_items.length){
-          data = graphSearch.select_items.map(item =>
-            data.filter( record => record.depositItem_key === item )
-          );
-          // この結果は二次元配列となってしまうため一次元配列へ変換する
-          data = [].concat(...data);          
-          console.debug("data");
-          console.debug(data);
-        }
+        console.debug("GraphResult----------------");
+        //console.debug(data);        
+        //data = dataFilter(data);
         // 全ての項目名を取得する
         console.debug("全項目名");
         let lineUnique = {}
         console.debug(data);
         data.map(record=>{
-          console.debug(`ItemName=${record.depositItem_name}`);
-          console.debug(record);
+          //console.debug(`ItemName=${record.depositItem_name}`);
+          //console.debug(record);
           lineUnique[record.depositItem_name] = record.depositItem_name;
         })
         let outLines = [];
@@ -67,6 +86,7 @@ export default function GraphResult() {
           let i = coloers.length % index
           outLines.push(
             <Line
+            key={index}
             isAnimationActive={false}
             type="monotone"
             dataKey={line}
@@ -83,6 +103,8 @@ export default function GraphResult() {
         data.map(record=>{
           dateUnique[record.insert_yyyymm] = record.insert_yyyymm;
         })
+        console.debug('dateUnique');
+        console.debug(dateUnique);
         // 日付毎に存在するレコードを抽出する
         let dateDatas = Object.keys(dateUnique).map(key=>
           data.filter( d => d.insert_yyyymm===key))
@@ -97,12 +119,42 @@ export default function GraphResult() {
         setGrafDatas(graf)
         console.debug("graf");
         console.debug(graf);
-      }
-      ).catch(error=>console.error(error))
+        
+        setGraphDatas(data);
+      }).catch(error=>console.error(error))
     }
     fetchData();
-  },[graphSearch, groupSumaryDatas, user]);
-    
+  },[graphSearch, user]);
+  
+  //
+  //受信データを絞込条件に一致したデータのみにして返す
+  function dataFilter(resultData){
+    let data = resultData;
+    // 絞込選択されている場合はそれだけにする
+    if (graphSearch.select_items.length){
+      data = graphSearch.select_items.map(item =>
+        data.filter( record => record.depositItem_key === item )
+      );
+      // この結果は二次元配列となってしまうため一次元配列へ変換する
+      data = [].concat(...data);
+      //console.debug("filter item data");
+      //console.debug(data);
+    }
+    // 日付の絞込みがされている場合は対象外は除去する
+    const from_date = graphSearch.select_fromto_date[0];
+    const to_date = graphSearch.select_fromto_date[1];
+    if (from_date !== '' && from_date !== undefined ){
+      data = data.filter( record => record.insert_yyyymm >= from_date );
+      //console.debug("filter fromdate data");
+      //console.debug(data);
+    }
+    if (to_date !== '' && to_date !== undefined ){
+      data = data.filter( record => record.insert_yyyymm <= to_date );
+      //console.debug("filter todate data");
+      //console.debug(data);
+    }
+    return data;
+  }
   function createDatas(datas){
     let resultObj = {
       name : datas[0].insert_yyyymm
