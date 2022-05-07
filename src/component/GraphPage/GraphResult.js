@@ -7,6 +7,7 @@ import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
 const prj_const = require('../common/prj_const.js')
+const prj_func = require('./../common/prj_func');
 
 /*const useStyles = makeStyles((theme) => ({
 
@@ -29,10 +30,16 @@ async function getDepositGraph(user, graphSearch){
     }
   });
   
-  const from_date = graphSearch.select_fromto_date[0];
-  const to_date = graphSearch.select_fromto_date[1];
+  console.debug("from_date");
+  console.debug(graphSearch.select_fromto_date[0]);
+  console.debug(typeof(graphSearch.select_fromto_date[0]));
+  const from_date = prj_func.date2StringYyyymmdd(graphSearch.select_fromto_date[0], undefined);
+  const to_date = prj_func.date2StringYyyymmdd(graphSearch.select_fromto_date[1], undefined);
+  //const from_date = graphSearch.select_fromto_date[0];
+  //const to_date = graphSearch.select_fromto_date[1];
   console.debug("from_date");
   console.debug(from_date);
+  console.debug(typeof(from_date));
   if ((from_date !== undefined) && (from_date !== '') && (from_date !== null)){
     if (parameters !== ""){
       parameters += "&"
@@ -128,7 +135,7 @@ export default function GraphResult() {
       }).catch(error=>console.error(error))
     }
     fetchData();
-  },[user]);
+  },[user, graphSearch]);
 
   /***
   // サーバに機能を移管したため不要となった

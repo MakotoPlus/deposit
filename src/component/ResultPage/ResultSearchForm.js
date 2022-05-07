@@ -84,16 +84,19 @@ export default function ResultSearchForm(){
         console.debug("handleClickReset-----");
         setUserSelectItems([]);
         setIsDelete(false);
+        // 日付がクリア出来ないため リセットを押してもクリアしないよう変更
         setResultSearch({
             select_items : userSelectItems,
             select_fromto_date : [
-                prj_func.date2StringYyyymmdd(null, 1), 
-                prj_func.date2StringYyyymmdd(null, 99)
+                prj_func.date2StringYyyymmdd(from_yyyymmdd, 1), 
+                prj_func.date2StringYyyymmdd(to_yyyymmdd, 99)
+                //prj_func.date2StringYyyymmdd(null, 1), 
+                //prj_func.date2StringYyyymmdd(null, 99)
             ],
             select_delete : false,
         });    
-        setFrom_yyyymmdd(null);
-        setTo_yyyymmdd(null);
+        setFrom_yyyymmdd(from_yyyymmdd);
+        setTo_yyyymmdd(to_yyyymmdd);
     }
 
     const handleClickIsDelete = event =>{

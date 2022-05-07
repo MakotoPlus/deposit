@@ -60,32 +60,29 @@ export default function GraphSearchForm(){
     const handleClickShow = () => {
         console.debug("handleClickShow");
         console.debug(userSelectItems); 
-        setGraphSearch({
+        let setObj = {
             select_items : userSelectItems,
             select_fromto_date : [
-                prj_func.date2StringYyyymmdd(from_yyyymmdd, 1), 
-                prj_func.date2StringYyyymmdd(to_yyyymmdd, 99)
+                from_yyyymmdd, 
+                to_yyyymmdd,
             ],
-        });    
+        };
+        setGraphSearch(setObj);
     };
 
-    /*
-    useEffect(()=>{
-
-    },[from_yyyymmdd, to_yyyymmdd]);
-    */
 
     const handleClickReset = () =>{
+        // 日付が空白にならないため削除しない。
         console.debug("handleClickReset");
         console.debug(from_yyyymmdd);
         console.debug(to_yyyymmdd);
         setUserSelectItems([]);
         setGraphSearch({
             select_items : [],
-            select_fromto_date : [undefined, undefined]
+            select_fromto_date : [from_yyyymmdd, to_yyyymmdd]
         });
-        setFrom_yyyymmdd(undefined);
-        setTo_yyyymmdd(undefined);
+        //setFrom_yyyymmdd(undefined);
+        //setTo_yyyymmdd(undefined);
     }
 
 
@@ -131,24 +128,3 @@ export default function GraphSearchForm(){
         </React.Fragment>
     );
 }
-
-/*
-                    <LocalizationProvider dateAdapter={AdapterDateFns} > 
-                        <DateRangePicker
-                            startText="日付 FROM"
-                            endText="日付 TO"
-                            value={fromtoDatevalue}
-                            inputFormat="yyyy/MM/dd"
-                            mask={"____/__/__"}
-                            onChange={(value) => setFromtoDateValue(value)}
-                            renderInput={(startProps, endProps) => (
-                            <React.Fragment>
-                                <TextField {...startProps} />
-                                <Box sx={{ mx: 2 }}> to </Box>
-                                <TextField {...endProps} />
-                            </React.Fragment>
-                            )}
-                        />
-                    </LocalizationProvider>
-
-*/

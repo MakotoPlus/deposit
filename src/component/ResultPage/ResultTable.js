@@ -237,8 +237,7 @@ export default function ResultTable() {
       setMaxData(data.count);
       setResultAllCount(data.count);
     }).catch(error=>console.error(error))
-
-  },[resultSearch,rowsPerPage,resultAllCount]);
+  },[resultSearch, rowsPerPage, resultAllCount]);
 
   return (
     <Paper className={classes.root}>
