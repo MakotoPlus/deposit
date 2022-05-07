@@ -16,7 +16,7 @@ export default function DatePickerYearMonth(props) {
   const [selectedDate, setSelectedDate] = React.useState(props.yyyymmdd);
   const classes = useStyles();
   const handleDateChange = (dt) => {
-    console.log(dt);
+    console.debug(dt);
     props.setYyyymmdd(dt);
     setSelectedDate(dt);
   };

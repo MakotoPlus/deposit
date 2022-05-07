@@ -197,7 +197,7 @@ export default function ResultUpdateDialog(props) {
       apiUpdateDeposit(deposit_key, data, user).then(response =>{
         //
         // 親の一覧データ更新処理
-        console.log(response);
+        console.debug(response);
         let newRows = [...resultDatas];
         let newRow = newRows.find( r => r.deposit_key === deposit_key);
         if (newRow){
@@ -231,7 +231,7 @@ export default function ResultUpdateDialog(props) {
   }
 
   const handleDelete = () => {
-    console.log("Delete");
+    console.debug("Delete");
     function fetchData(){
       const data = {
         delete_flag : true,
@@ -241,7 +241,7 @@ export default function ResultUpdateDialog(props) {
       apiUpdateDeposit(deposit_key, data, user).then(response =>{
         // 親の一覧データ更新処理
         //
-        console.log(response);
+        console.debug(response);
         let newRows = [...resultDatas];
         let newRow = newRows.find( r => r.deposit_key === deposit_key );
         if (newRow){

@@ -66,16 +66,16 @@ export default function LoginPage() {
 
   function handleSubmit(e){
     e.preventDefault();
-    //console.log(`userid=${userid} password=${password}`);
+    //console.debug(`userid=${userid} password=${password}`);
     //fetchData();
     const body = {
         username : userid,
         password : password
     };
     axios.post(prj_const.ServerUrl + "/api-auth/", body).then((result) =>{
-        console.log("login OK");
-        // console.log(result);
-        // console.log(result.data.token);
+        console.debug("login OK");
+        // console.debug(result);
+        // console.debug(result.data.token);
         setMessage("Success");
         //
         // ログイン情報を設定

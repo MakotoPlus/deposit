@@ -149,7 +149,7 @@ export default function PlunUpdateDialog(props) {
       apiUpdateSavings(savings_key, data, user).then(response =>{
         // 親の一覧データ更新処理
         //
-        console.log(response);
+        console.debug(response);
         let newRows = [...plan];
         let newRow = newRows.find( r => r.savings_key === savings_key );
         if (newRow){
@@ -184,7 +184,7 @@ export default function PlunUpdateDialog(props) {
   }
 
   const handleDelete = () => {
-    console.log("Delete");
+    console.debug("Delete");
     function fetchData(){
       const data = {
         delete_flag : true,
@@ -195,7 +195,7 @@ export default function PlunUpdateDialog(props) {
       apiUpdateSavings(savings_key, data, user).then(response =>{
         // 親の一覧データ更新処理
         //
-        console.log(response);
+        console.debug(response);
         let newRows = [...plan];
         let newRow = newRows.find( r => r.savings_key === savings_key );
         if (newRow){

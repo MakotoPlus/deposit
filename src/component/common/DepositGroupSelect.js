@@ -66,7 +66,7 @@ export default function DepositGroupSelect() {
         headers : user.Authorization
       };
       let result = await axios.get(prj_const.ServerUrl + "/api/deposit_group/", headers);
-      console.log(result.data);
+      console.debug(result.data);
       // 空白データ先頭に追加
       let data = [space_data];
       result.data.results.map(result =>(
@@ -75,7 +75,7 @@ export default function DepositGroupSelect() {
           label: result.deposit_group_name
         })
       ));
-      console.log(data);    
+      console.debug(data);    
       setDepositGroup(data);
     }
     fetchData();

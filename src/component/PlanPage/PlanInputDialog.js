@@ -88,10 +88,10 @@ export default function PlanInputDialog({subtitle}) {
   };
 
   const handleCreate = () => {
-    console.log("Create");
-    console.log(`PlaninputDialog.depositValue=[${depositValue}]`);
-    console.log(`DepositItemSelectGrouping.depositItemkey=[${depositItemkey}]`);
-    console.log(`PlaninputDialog.depositType=[${depositType}]`);
+    console.debug("Create");
+    console.debug(`PlaninputDialog.depositValue=[${depositValue}]`);
+    console.debug(`DepositItemSelectGrouping.depositItemkey=[${depositItemkey}]`);
+    console.debug(`PlaninputDialog.depositType=[${depositType}]`);
     const data ={
         depositItem_key : depositItemkey,
         deposit_type : depositType,
@@ -102,14 +102,14 @@ export default function PlanInputDialog({subtitle}) {
     }
     // Post実行
     //
-    //console.log(user);
-    //console.log(`JWT ${token}`);
+    //console.debug(user);
+    //console.debug(`JWT ${token}`);
     //axios.defaults.headers.common["Authorization"] = `JWT ${token}`;
     axios.defaults.headers.common["Authorization"] = user.Authorization.Authorization;
     axios.defaults.baseURL = prj_const.ServerUrl + "/api";
     axios.post(prj_const.ServerUrl + "/api/savings/", data 
       ).then(response =>{
-        console.log(response);
+        console.debug(response);
         let newRow = {
           savings_key: response.data.savings_key,
           deposit_group_name: depositItemObj.deposit_group_name,
@@ -126,7 +126,7 @@ export default function PlanInputDialog({subtitle}) {
         // ここにデータ件数追加された事によりPlanTableの最大件数を1件増やすイベントを追加する
         //
         //
-        console.log(newRow);
+        console.debug(newRow);
         let newRows = [...plan];
         setPlan(newRows);
         setPlanAllCount(planAllCount+1);

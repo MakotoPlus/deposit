@@ -154,7 +154,7 @@ export default function DepositItemMultiSelect(props) {
         });
         //
         // 3. useStateに設定する
-        //    console.log(menuItems);
+        //    console.debug(menuItems);
         setSelectMenuItems(menuItems);
         //
         // Select Listの全データリストを保持

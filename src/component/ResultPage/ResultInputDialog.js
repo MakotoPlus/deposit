@@ -99,11 +99,11 @@ export default function ResultInputDialog({subtitle}) {
   };
   
   const handleCreate = () => {
-    console.log("Create");
-    console.log(`ResultInputDialog.depositValue=[${depositValue}]`);
-    console.log(`ResultInputDialog.depositItemkey=[${depositItemkey}]`);
-    console.log(`ResultInputDialog.depositType=[${depositType}]`);
-    console.log(`ResultInputDialog.insertYyyymmdd[${insertYyyymmdd}]`);
+    console.debug("Create");
+    console.debug(`ResultInputDialog.depositValue=[${depositValue}]`);
+    console.debug(`ResultInputDialog.depositItemkey=[${depositItemkey}]`);
+    console.debug(`ResultInputDialog.depositType=[${depositType}]`);
+    console.debug(`ResultInputDialog.insertYyyymmdd[${insertYyyymmdd}]`);
     const data ={
       depositItem_key : depositItemkey,
       deposit_type : depositType,
@@ -121,7 +121,7 @@ export default function ResultInputDialog({subtitle}) {
     axios.defaults.baseURL = prj_const.ServerUrl + "/api";
     axios.post(prj_const.ServerUrl + "/api/deposit/", data 
     ).then(response =>{
-      console.log(response);
+      console.debug(response);
       let newRow = {
         deposit_key: response.data.deposit_key,
         deposit_group_name: depositItemObj.deposit_group_name,
@@ -140,7 +140,7 @@ export default function ResultInputDialog({subtitle}) {
       // ここにデータ件数追加された事によりPlanTableの最大件数を1件増やすイベントを追加する
       //
       //
-      console.log(newRow);
+      console.debug(newRow);
       let newRows = [...resultDatas];
       setResultDatas(newRows);
       setResultAllCount({count: resultAllCount.count+1});

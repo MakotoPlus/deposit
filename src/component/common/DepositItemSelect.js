@@ -47,7 +47,7 @@ export default function DepositItemSelect() {
         headers : user.Authorization
       };
       let result = await axios.get(prj_const.ServerUrl + "/api/deposit_item/", headers);
-      //console.log(result);
+      //console.debug(result);
       // 空白データ先頭に追加
       let data = [space_data];
       result.data.results.map(result =>(

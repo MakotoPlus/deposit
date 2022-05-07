@@ -77,8 +77,8 @@ export default function GraphTable() {
   useEffect(()=>{
     function fetchData(){
 
-      console.log('-*----------graphDatas');
-      console.log(graphDatas);
+      console.debug('-*----------graphDatas');
+      console.debug(graphDatas);
       //
       // グラフ対応のテーブル情報表示
 
@@ -101,7 +101,7 @@ export default function GraphTable() {
         }
       }));
       grafColumns = [...grafColumns, ...grafDateColums];
-      console.log(grafColumns);
+      console.debug(grafColumns);
       setColums(grafColumns);
 
       //----------------------------------------------------------
@@ -119,8 +119,8 @@ export default function GraphTable() {
       //項目名の一覧を生成
       let depositItemNames = rowDataObjs.map(data=>data.depositItem_name);
       depositItemNames = [...new Set(depositItemNames)];
-      console.log('-*----------depositItemNames');
-      console.log(depositItemNames);
+      console.debug('-*----------depositItemNames');
+      console.debug(depositItemNames);
 
       //
       // 項目単位に全ての年月データを取得し行データを生成し配列へ格納
@@ -129,8 +129,8 @@ export default function GraphTable() {
         let items = rowDataObjs.filter(r => r.depositItem_name === itemname);
         return createRowData(items);
       });
-      console.log('-*----------rows');
-      console.log(rows);
+      console.debug('-*----------rows');
+      console.debug(rows);
       setRows(rows);
     }
     fetchData();

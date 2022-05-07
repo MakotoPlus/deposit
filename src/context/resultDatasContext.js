@@ -16,10 +16,18 @@ export function ResultDatasProvider({children}){
         select_items : [],
         select_fromto_date : [null,null],
     });
+    var startdt = new Date();
+    startdt.setMonth(0);
+    startdt.setDate(1);
+    startdt.setFullYear(startdt.getFullYear()-1);
+    var enddt = new Date();
+    enddt.setMonth(11);
+    enddt.setDate(31);
+
     // Graph表示選択情報
     const [graphSearch, setGraphSearch] = useState({
         select_items : [],
-        select_fromto_date : [null,null],
+        select_fromto_date : [startdt, enddt],
     });
     // Graph表示結果情報
     const [graphDatas, setGraphDatas] = useState([]);

@@ -112,7 +112,7 @@ export default function DepositItemSelectGrouping(props) {
         });
         //
         // 3. useStateに設定する
-        //    console.log(menuItems);
+        //    console.debug(menuItems);
         setSelectMenuItems(menuItems);
         //
         // Select Listの全データリストを保持
@@ -131,19 +131,19 @@ export default function DepositItemSelectGrouping(props) {
     //console.debug(selectItems);
     const selectItem = selectItems.find( r => r.deposit_item_obj.depositItem_key === event.target.value);
     if (!selectItem){
-      console.log('へんなところクリックしたん？');
+      console.debug('へんなところクリックしたん？');
       return;
     }
-    //console.log('SelectItem');
-    //console.log(selectItem);
+    //console.debug('SelectItem');
+    //console.debug(selectItem);
     //
     // 親のハンドル呼出してオブジェクトを設定
     let newSelectItem = selectItem.deposit_item_obj;
-    console.log('newSelectItem');
-    console.log(newSelectItem);    
+    console.debug('newSelectItem');
+    console.debug(newSelectItem);    
     parentHandle(newSelectItem);
     //parentHandle(event.target.value);
-    console.log('SelectItem-end');
+    console.debug('SelectItem-end');
   }
   return (
     <FormControl className={classes.formControl}>

@@ -80,9 +80,9 @@ export default function PlanBatchInputDialog(props) {
   };
   
   const handleCreate = () => {
-    console.log("Create");
-    console.log(`PlanBatchInputDialog.insertYyyymmdd[${insertYyyymmdd}]`);
-    console.log(`PlanBatchInputDialog.memo[${memo}]`);
+    console.debug("Create");
+    console.debug(`PlanBatchInputDialog.insertYyyymmdd[${insertYyyymmdd}]`);
+    console.debug(`PlanBatchInputDialog.memo[${memo}]`);
     const data ={
       insert_yyyymmdd : insertYyyymmdd,
       insert_yyyymm : insertYyyymmdd.substring(0,7),
@@ -93,7 +93,7 @@ export default function PlanBatchInputDialog(props) {
     axios.defaults.baseURL = prj_const.ServerUrl + "/api";
     axios.post(prj_const.ServerUrl + "/api/deposit_batch/", data 
     ).then(response =>{
-      console.log(response);
+      console.debug(response);
       setOpen(false);
     }).catch( error =>{
       console.error(error);

@@ -126,8 +126,8 @@ export default function ResultTable() {
   const [nextUrl, setNextUrl] = React.useState("");   // 次ページURL
   const [maxData, setMaxData] = React.useState(0);    // 全データ件数
   //const [thisUrl, setThisUrl] = React.useState("");   // 今回アクセスすべきURL
-  //console.log( "-------------------------");
-  //console.log( resultDatas);
+  //console.debug( "-------------------------");
+  //console.debug( resultDatas);
     /*
   useEffect(()=>{
     // 検索条件からURL生成
@@ -193,7 +193,7 @@ export default function ResultTable() {
       //paramIsDelete = "delete_flag=true&delete_flag=false";
       paramIsDelete = "";
     }
-    console.log(paramIsDelete);
+    console.debug(paramIsDelete);
     //日付(gte=以上 lte=以下)
     let paramTodate = "";
     if (resultSearch.select_fromto_date[0]){

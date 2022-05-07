@@ -142,14 +142,14 @@ export default function Orders() {
     //let depositItemkeys = "depositItem_key=";
     //削除フラグ
     let paramIsDelete = "delete_flag=false";
-    console.log(paramIsDelete);
+    console.debug(paramIsDelete);
     //日付(gte=以上 lte=以下)
     let paramTodate = "";
     let paramFromdate = "";
     let paramLimit = "limit=" + rowsPerPage;
     let paramOffset = "offset=0";
-    console.log(paramTodate);
-    console.log(paramFromdate);
+    console.debug(paramTodate);
+    console.debug(paramFromdate);
     const params = [
       paramDepositItemKeys
       , paramIsDelete

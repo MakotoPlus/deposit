@@ -12,7 +12,7 @@ export function useUserContext(){
 
 
 function loadStrage(){
-    //console.log("loadStrage");
+    //console.debug("loadStrage");
     let initState = {
         "userid" : "",
         "username" : "",
@@ -24,7 +24,7 @@ function loadStrage(){
     if (appState){
         initState = JSON.parse(appState);
     }
-    //console.log(initState);
+    //console.debug(initState);
     return initState;
 }
 
@@ -42,12 +42,12 @@ export function UserProvider({children}){
         //
         // ログインした時にローカルストレージに保存実施
         localStorage.setItem(prj_const.APP_KEY, JSON.stringify(data))
-        console.log("Logout");
-        //console.log(JSON.stringify(data));
+        console.debug("Logout");
+        //console.debug(JSON.stringify(data));
         setUser(data);
     }
     const Login = ((userid, username, token)=>{
-        //console.log(`LOGIN=TOKEN=>${token}`);
+        //console.debug(`LOGIN=TOKEN=>${token}`);
         let data = {
             "userid" : userid,
             "username" : username,
@@ -60,8 +60,8 @@ export function UserProvider({children}){
         //
         // ログインした時にローカルストレージに保存実施
         localStorage.setItem(prj_const.APP_KEY, JSON.stringify(data))
-        //console.log("Save Strage");
-        //console.log(JSON.stringify(data));
+        //console.debug("Save Strage");
+        //console.debug(JSON.stringify(data));
         setUser(data);
     });
 

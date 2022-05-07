@@ -43,18 +43,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function GraphSearchForm(){
 
-    var startdt = new Date();
-    startdt.setMonth(0);
-    startdt.setDate(1);
-    startdt.setFullYear(startdt.getFullYear()-1);
-    var enddt = new Date();
-    enddt.setMonth(11);
-    enddt.setDate(31);
-
     const classes = useStyles();
-    const {setGraphSearch} = useResultDatasContext();
-    const [from_yyyymmdd, setFrom_yyyymmdd] = React.useState(startdt);
-    const [to_yyyymmdd, setTo_yyyymmdd] = React.useState(enddt);
+    const {graphDatas, graphSearch, setGraphSearch} = useResultDatasContext();
+    const [from_yyyymmdd, setFrom_yyyymmdd] = React.useState(graphSearch.select_fromto_date[0]);
+    const [to_yyyymmdd, setTo_yyyymmdd] = React.useState(graphSearch.select_fromto_date[1]);
 
     const [userSelectItems, setUserSelectItems] = React.useState([]);
     const handleClickShow = () => {
