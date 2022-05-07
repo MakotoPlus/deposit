@@ -49,7 +49,7 @@ const tableIcons = {
 function createRowData(rowsObj) {
     let result = {}
     rowsObj.map(obj =>{
-      result[obj.insert_yyyymm] = obj.value
+      result[obj.insert_yyyymm] = obj.value.toLocaleString();
     })
     result['id'] = rowsObj[0]['depositItem_name'];
     console.debug("createRowData2");
