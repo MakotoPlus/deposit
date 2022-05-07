@@ -52,22 +52,3 @@ export default function DatePicker(props) {
     </div>
   );
 }
-/*
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Grid container justifyContent="start">
-          <KeyboardDatePicker
-            margin="normal"
-            id="date-picker-dialog"
-            label={labelName}
-            format="yyyy/MM/dd"
-            mask={"____/__/__"}   
-            value={selectedDate}
-            onChange={handleDateChange}
-            disableMaskedInput={true} 
-            KeyboardButtonProps={{
-              'aria-label': 'change date',
-            }}
-          />
-        </Grid>
-      </MuiPickersUtilsProvider>
-*/

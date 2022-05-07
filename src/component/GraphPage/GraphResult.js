@@ -24,18 +24,22 @@ async function getDepositGraph(user, graphSearch){
     if (parameters !== ""){
       parameters += "&"
     }
-    parameters += `depositItem_key=${depositItem_key}`
+    if (depositItem_key !== undefined){
+      parameters += `depositItem_key=${depositItem_key}`
+    }
   });
   
   const from_date = graphSearch.select_fromto_date[0];
   const to_date = graphSearch.select_fromto_date[1];
-  if ((from_date !== undefined) && (from_date !== '')){
+  console.debug("from_date");
+  console.debug(from_date);
+  if ((from_date !== undefined) && (from_date !== '') && (from_date !== null)){
     if (parameters !== ""){
       parameters += "&"
     }
     parameters += `insert_yyyymm_from=${from_date.substr(0,7)}`
   }
-  if ((to_date !== undefined) && (to_date !== '')){
+  if ((to_date !== undefined) && (to_date !== '') && (to_date !== null)){
     if (parameters !== ""){
       parameters += "&"
     }
@@ -124,10 +128,12 @@ export default function GraphResult() {
       }).catch(error=>console.error(error))
     }
     fetchData();
-  },[graphSearch, user]);
-  
+  },[user]);
+
+  /***
+  // サーバに機能を移管したため不要となった
   //
-  //受信データを絞込条件に一致したデータのみにして返す
+  // 受信データを絞込条件に一致したデータのみにして返す  
   function dataFilter(resultData){
     let data = resultData;
     // 絞込選択されている場合はそれだけにする
@@ -155,6 +161,7 @@ export default function GraphResult() {
     }
     return data;
   }
+*********/
   function createDatas(datas){
     let resultObj = {
       name : datas[0].insert_yyyymm

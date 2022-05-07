@@ -1,18 +1,49 @@
 import React, {useEffect} from 'react';
+import { forwardRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import axios from 'axios';
+import MaterialTable from 'material-table';
 import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
+import AddBox from '@material-ui/icons/AddBox';
+import ArrowDownward from '@material-ui/icons/ArrowDownward';
+import Check from '@material-ui/icons/Check';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
+import Clear from '@material-ui/icons/Clear';
+import DeleteOutline from '@material-ui/icons/DeleteOutline';
+import Edit from '@material-ui/icons/Edit';
+import FilterList from '@material-ui/icons/FilterList';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import Remove from '@material-ui/icons/Remove';
+import SaveAlt from '@material-ui/icons/SaveAlt';
+import Search from '@material-ui/icons/Search';
+import ViewColumn from '@material-ui/icons/ViewColumn';
+//const prj_const = require('../common/prj_const.js')
 
-const prj_const = require('../common/prj_const.js')
+const tableIcons = {
+    Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
+    Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+    Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+    Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+    DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+    Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
+    Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+    Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+    SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
+    ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
+    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
+  };
+
+
 
 
 function createRowData(rowsObj) {
@@ -21,6 +52,8 @@ function createRowData(rowsObj) {
       result[obj.insert_yyyymm] = obj.value
     })
     result['id'] = rowsObj[0]['depositItem_name'];
+    console.debug("createRowData2");
+    console.debug(result);
    return result;
 }
 
@@ -38,12 +71,8 @@ export default function GraphTable() {
   const classes = useStyles();
   const {user} = useUserContext();
   const {graphDatas} = useResultDatasContext();
-  const [page, setPage] = React.useState(0);
-  const [maxData, setMaxData] = React.useState(0);
   const [columns, setColums] = React.useState([]);
-  const [rowsPerPage, setRowsPerPage] = React.useState(1000);
   const [rows, setRows] = React.useState([]);
-  const [serverPage, setServerPage] = React.useState(1);
 
   useEffect(()=>{
     function fetchData(){
@@ -60,12 +89,14 @@ export default function GraphTable() {
       let yyyymms = graphDatas.map(data=>data.insert_yyyymm);
       yyyymms = [...new Set(yyyymms)];
       yyyymms = yyyymms.sort();
-      let grafColumns = [{id : 'id', label: 'Item', minWidth: 100 }]
+      let grafColumns = [{id : 'id', title:'Item', field:'id', width: 200 }]
       let grafDateColums = (yyyymms.map( yyyymm =>{
         return {
           id : yyyymm,
-          label : yyyymm,
+          title : yyyymm,
+          field: yyyymm,
           align: 'right',
+          width: 150,
           format:(value) => value.toLocaleString(),
         }
       }));
@@ -95,71 +126,42 @@ export default function GraphTable() {
       // 項目単位に全ての年月データを取得し行データを生成し配列へ格納
       let rows = depositItemNames.map((itemname, index) =>{
         //同じアイテム名を抽出
-        let items = rowDataObjs.filter(r => r.depositItem_name == itemname);
+        let items = rowDataObjs.filter(r => r.depositItem_name === itemname);
         return createRowData(items);
       });
       console.log('-*----------rows');
       console.log(rows);
       setRows(rows);
-      setMaxData(1);
     }
     fetchData();
   },[graphDatas, user]);
 
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
   return (
     <Paper className={classes.root}>
       <TableContainer className={classes.container}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => {
-              return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                  {columns.map((column) => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.format && typeof value === 'number' ? column.format(value) : value}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+        <MaterialTable
+          icons={tableIcons}
+          title="Table"
+          columns={columns}
+          data={rows}
+          options={{
+            fixedColumns: {left: 1, right: 0},
+            toolbar : false,
+            showTitle : true,
+          }}
+          localization={{
+            pagination: {
+              labelRowsSelect: 'linhas',
+              labelDisplayedRows: '{count} de {from}-{to}',
+              firstTooltip: 'Primeira página',
+              previousTooltip: 'Página anterior',
+              nextTooltip: 'Próxima página',
+              lastTooltip: 'Última página'
+            }
+          }}
+          />
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[]}
-        component="div"
-        count={maxData}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
     </Paper>
   );
 }

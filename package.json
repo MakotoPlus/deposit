@@ -5,14 +5,10 @@
   "dependencies": {
     "-": "^0.0.1",
     "@date-io/date-fns": "^1.3.13",
-    "@emotion/react": "^11.5.0",
-    "@emotion/styled": "^11.3.0",
-    "@material-ui/core": "^4.12.3",
-    "@material-ui/icons": "^4.11.2",
+    "@material-ui/icons": "^4.11.3",
     "@material-ui/pickers": "^3.3.10",
     "@mui/icons-material": "^5.5.1",
     "@mui/lab": "^5.0.0-alpha.74",
-    "@mui/material": "^5.2.1",
     "@mui/styles": "^5.1.0",
     "@mui/x-data-grid": "^4.0.2",
     "@mui/x-data-grid-generator": "^5.0.0",
@@ -24,12 +20,18 @@
     "@types/react-router-dom": "^5.3.2",
     "ansi-html": "^0.0.8",
     "axios": "^0.24.0",
+    "create-react-app": "^1.2.1",
     "css-select": "^4.2.1",
     "date-fns": "^2.0.0",
     "http-proxy-middleware": "^2.0.1",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.23",
     "lodash": "^4.17.21",
+    "material-table": "^1.63.0",
     "node-forge": "^1.3.0",
+    "npm-check-updates": "^12.5.11",
     "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-router-dom": "^6.0.2",
     "recharts": "^2.1.6",
     "select": "^1.1.2",
@@ -40,7 +42,7 @@
     "webpack-dev-server": "^4.7.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "GENERATE_SOURCEMAP=false react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -64,7 +66,7 @@
     ]
   },
   "devDependencies": {
-    "nth-check": "^2.0.1"
-    ,"react-scripts": "^5.0.0"
+    "nth-check": "^2.0.1",
+    "react-scripts": "^5.0.1"
   }
 }
