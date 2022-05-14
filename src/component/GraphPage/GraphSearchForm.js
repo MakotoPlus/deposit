@@ -7,7 +7,7 @@ import {useResultDatasContext} from '../../context/resultDatasContext';
 //import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import Button from '@material-ui/core/Button';
 import DatePickerYearMonth from '../common/DatePickerYearMonth';
-const prj_func = require('./../common/prj_func');
+// const prj_func = require('./../common/prj_func');
 
 const useStyles = makeStyles((theme) => ({
     Box: {
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 export default function GraphSearchForm(){
 
     const classes = useStyles();
-    const {graphDatas, graphSearch, setGraphSearch} = useResultDatasContext();
+    const {graphSearch, setGraphSearch} = useResultDatasContext();
     const [from_yyyymmdd, setFrom_yyyymmdd] = React.useState(graphSearch.select_fromto_date[0]);
     const [to_yyyymmdd, setTo_yyyymmdd] = React.useState(graphSearch.select_fromto_date[1]);
 

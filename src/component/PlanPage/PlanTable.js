@@ -108,7 +108,7 @@ async function getSavingsList(user, urlParameters, urlPath){
   // parameters : URLパラメータ (未設定の場合はURLを有効にする)
   // url: アクセスURLパス
   let path ="";
-  if (!urlParameters){
+  if (urlParameters == null){
     path = urlPath;
   }else{
     path = prj_const.ServerUrl + "/api/savings_list/?" + urlParameters;
@@ -116,12 +116,18 @@ async function getSavingsList(user, urlParameters, urlPath){
   let headers = {
     headers : user.Authorization
   };
+  if (path == null){
+    console.debug(`No Axios`);
+    return;
+  }
   return await axios.get(path, headers);
 }
+
 
 export default function PlanTable() {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);  // 現在のページ位置（開始0）
+  //let page = 0;
   const {user} = useUserContext();
   const {plan, setPlan, planAllCount, setPlanAllCount} = usePlanContext();  
   const [rowsPerPage, setRowsPerPage] = React.useState(10);  //現在のクライアント1ページ表示件数
@@ -132,6 +138,10 @@ export default function PlanTable() {
   //const [maxData, setMaxData] = React.useState(0);    // 全データ件数
   //const [thisUrl, setThisUrl] = React.useState("");   // 今回アクセスすべきURL
 
+  /*function setPage(newPage){
+    page = newPage;
+  }*/
+  
   useEffect(()=>{
     console.debug('PlanTable');
     //
@@ -164,6 +174,7 @@ export default function PlanTable() {
     }else{
       url = prevUrl;
     }
+    console.debug( `URL=${url}`);
     getSavingsList(user, undefined, url).then(result=>{
       //前ページURL・次ページURL・データ件数設定
       const data = result.data;
