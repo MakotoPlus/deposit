@@ -64,6 +64,7 @@ export default function DepositItemMultiSelect(props) {
     const theme = useTheme();
     const {user} = useUserContext();
     const [selectMenuItems, setSelectMenuItems] = useState([]);
+    const deposit_flag = props.deposit_flag;
     //const [depositItem_key, setDepositItem_key] = useState([]);
     const [selectItems, setSelectItems] = useState([]);
     //const [userSelectItems, setUserSelectItems] = React.useState([]);
@@ -77,7 +78,9 @@ export default function DepositItemMultiSelect(props) {
         };
         let groups = {}; // 全てのgropid, groupname を格納(重複なし)
         let items = [];
-        let result = await axios.get(prj_const.ServerUrl + "/api/deposit_item_list/?no_page", headers);
+        //let result = await axios.get(prj_const.ServerUrl + "/api/deposit_item_list/?no_page&deposit_flag=true", headers);
+        const url = `/api/deposit_item_list/?no_page&deposit_flag=${deposit_flag}`;
+        let result = await axios.get(prj_const.ServerUrl + url, headers);
   
         //
         // 1. 一度、表示すべきグループと項目をリストに別々に格納する

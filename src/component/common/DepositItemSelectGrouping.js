@@ -39,7 +39,7 @@ export default function DepositItemSelectGrouping(props) {
       };
       let groups = {}; // 全てのgropid, groupname を格納(重複なし)
       let items = [];
-      axios.get(prj_const.ServerUrl + "/api/deposit_item_list/?no_page", headers).then((result)=>{
+      axios.get(prj_const.ServerUrl + "/api/deposit_item_list/?no_page&delete_flag=&deposit_flag=true", headers).then((result)=>{
         //
         // 1. 一度、表示すべきグループと項目をリストに別々に格納する
         // 2. １の情報を利用しリストボックス出力用のXSLTを生成する

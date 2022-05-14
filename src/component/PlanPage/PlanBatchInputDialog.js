@@ -1,21 +1,13 @@
 import React,{useState} from 'react';
 import Button from '@material-ui/core/Button';
-//import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-//import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DatePicker from '../common/DatePicker'
-//import DepositItemSelectGrouping from '../DepositItemSelectGrouping';
-//import DepositItemMultiSelect from './../DepositItemMultiSelect';
-//import DepositTypeSelect from '../DepositTypeSelect';
-//import DepositValueText from '../DepositValueText';
 import { makeStyles } from '@material-ui/core/styles';
-//import { TYPE_DEPOSIT } from '../prj_const';
 import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
-//import {useResultDatasContext} from '../../context/resultDatasContext';
 import InputMemoText from '../common/InputMemoText';
 const prj_const = require('../common/prj_const.js')
 

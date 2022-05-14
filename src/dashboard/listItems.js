@@ -3,14 +3,14 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-//import ListSubheader from '@mui/material/ListSubheader';
+import ListSubheader from '@mui/material/ListSubheader';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 //import LayersIcon from '@mui/icons-material/Layers';
-//import AssignmentIcon from '@mui/icons-material/Assignment';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import { Link } from "react-router-dom";
 
 export const mainListItems = (
@@ -64,7 +64,17 @@ export const mainListItems = (
  * 
  * */
 export const secondaryListItems = (
-  <div></div>
+  <div>
+    <ListSubheader inset>Assets Page</ListSubheader>
+    <Link to="/assets">
+      <ListItem button>
+        <ListItemIcon>
+          <AssignmentIcon />
+        </ListItemIcon>
+        <ListItemText primary="資産登録" />
+      </ListItem>
+    </Link>
+  </div>
 );
 /*
 <div>

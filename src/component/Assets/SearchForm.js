@@ -19,7 +19,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 
-const prj_func = require('./../common/prj_func');
+const prj_func = require('../common/prj_func');
 
 
 const useStyles = makeStyles((theme) => ({
@@ -124,7 +124,7 @@ export default function ResultSearchForm(){
                     <DepositItemMultiSelect 
                         userSelectItems={userSelectItems} 
                         setUserSelectItems={setUserSelectItems}
-                        deposit_flag={true}
+                        deposit_flag={false}
                     />
                 </Box>
                 <Box
