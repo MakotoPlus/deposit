@@ -77,7 +77,7 @@ export default function DepositItemMultiSelect(props) {
         };
         let groups = {}; // 全てのgropid, groupname を格納(重複なし)
         let items = [];
-        let result = await axios.get(prj_const.ServerUrl + "/api/deposit_item_list/?no_page", headers);
+        let result = await axios.get(prj_const.ServerUrl + "/api/deposit_item_list/?no_page&deposit_flag=true", headers);
   
         //
         // 1. 一度、表示すべきグループと項目をリストに別々に格納する
