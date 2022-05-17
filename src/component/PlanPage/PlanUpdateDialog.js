@@ -1,25 +1,19 @@
 import React, {useEffect} from 'react';
 import Button from '@material-ui/core/Button';
-//import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-//import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-//import DatePicker01 from '../DatePicker01'
-//import DepositGroupSelect from '../DepositGroupSelect';
-//import DepositItemSelect from '../DepositItemSelect';
 import DepositItemSelectGrouping from '../common/DepositItemSelectGrouping'
 import DepositTypeSelect from '../common/DepositTypeSelect';
 import DepositValueText from '../common/DepositValueText';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from '@mui/material/Link';
-//import { TYPE_DEPOSIT } from '../prj_const';
-import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {usePlanContext} from '../../context/planContext';
+import {ApiUpdateSavings} from '../common/prj_url';
+import {TYPE_DEPOSIT, TYPE_DEPOSIT_STR, TYPE_EXPENSES_STR} from '../common/prj_const';
 
-const prj_const = require('../common/prj_const.js')
 
 
 const useStyles = makeStyles((theme) => ({
@@ -45,12 +39,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-async function apiUpdateSavings(savings_key, data, user){
-  console.debug("/api/savings/--------------------------");
-  axios.defaults.headers.common["Authorization"] = user.Authorization.Authorization;
-  axios.defaults.baseURL = prj_const.ServerUrl + "/api";
-  return await axios.patch(prj_const.ServerUrl + "/api/savings/" + savings_key + "/", data)
-}
 
 export default function PlunUpdateDialog(props) {
   const [subtitle, setSubtitle] = React.useState(props.subtitle);
@@ -146,7 +134,7 @@ export default function PlunUpdateDialog(props) {
         update_date : new Date().toISOString()
       }
       
-      apiUpdateSavings(savings_key, data, user).then(response =>{
+      ApiUpdateSavings(savings_key, data, user).then(response =>{
         // 親の一覧データ更新処理
         //
         console.debug(response);
@@ -157,8 +145,8 @@ export default function PlunUpdateDialog(props) {
           newRow.deposit_group_name = newRow.deposit_item_obj.deposit_group_name;
           newRow.depositItem_name = newRow.deposit_item_obj.depositItem_name;
           newRow.deposit_type = depositType;
-          newRow.deposit_type_str = depositType === prj_const.TYPE_DEPOSIT 
-            ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR;
+          newRow.deposit_type_str = depositType === TYPE_DEPOSIT 
+            ? TYPE_DEPOSIT_STR : TYPE_EXPENSES_STR;
           newRow.deposit_value = Number(depositValue).toLocaleString();
           newRow.delete_flag = false;
           console.debug('new row----------------');
@@ -192,7 +180,7 @@ export default function PlunUpdateDialog(props) {
         update_date : new Date().toISOString()
       }
       
-      apiUpdateSavings(savings_key, data, user).then(response =>{
+      ApiUpdateSavings(savings_key, data, user).then(response =>{
         // 親の一覧データ更新処理
         //
         console.debug(response);

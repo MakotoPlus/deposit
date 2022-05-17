@@ -15,11 +15,8 @@ import Container from '@material-ui/core/Container';
 //import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Dashboard from '../../dashboard/Dashboard';
 import {useUserContext} from '../../context/userContext';
-
-
-import axios from 'axios';
-const prj_const = require('../common/prj_const.js')
-
+import {MSG_ERROR_LOGIN_ERR} from '../common/prj_const';
+import {ApiAuth} from '../common/prj_url';
 
 
 function Copyright() {
@@ -72,7 +69,7 @@ export default function LoginPage() {
         username : userid,
         password : password
     };
-    axios.post(prj_const.ServerUrl + "/api-auth/", body).then((result) =>{
+    ApiAuth(userid, password).then(result => {
         console.debug("login OK");
         // console.debug(result);
         // console.debug(result.data.token);
@@ -82,7 +79,7 @@ export default function LoginPage() {
         Login(userid, userid, result.data.token);
     }).catch((error)=>{
         console.error(error);
-        setMessage(prj_const.MSG_ERROR_LOGIN_ERR)
+        setMessage(MSG_ERROR_LOGIN_ERR)
     });
 }
   const handleUseridChange = (event) =>{

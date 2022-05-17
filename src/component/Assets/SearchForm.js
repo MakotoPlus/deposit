@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function ResultSearchForm(){
+export default function SearchForm(){
     const classes = useStyles();
     //const {user} = useUserContext();
     const [from_yyyymmdd, setFrom_yyyymmdd] = React.useState(null);

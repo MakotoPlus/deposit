@@ -8,11 +8,11 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {usePlanContext} from '../../context/planContext';
+import {ApiGetSavingSumaryList} from '../common/prj_url';
 
-const prj_const = require('../common/prj_const.js')
+//const prj_const = require('../common/prj_const.js')
 
 //
 // PlanGroupSumary
@@ -23,17 +23,6 @@ const columns = [
     ,{ id : 'sum_value', label: 'Value', minWidth:100, align: 'right', format:(value) => value.toLocaleString(), }
 ]
 
-//
-// 全データ取得
-async function getSavingSumaryList(user){
-  let headers = {
-    headers : user.Authorization
-  };
-  let urlpath = prj_const.ServerUrl + "/api/saving_sumary_list/?no_page";
-  let result = await axios.get(urlpath, headers);
-  console.debug(result);
-  return result;
-}
 
 function createData(id, deposit_group_name, sum_value) {
     return { 
@@ -65,7 +54,7 @@ export default function PlanGroupSumary() {
 
   useEffect(()=>{
     function fetchData(){
-      getSavingSumaryList(user).then(result=>{
+      ApiGetSavingSumaryList(user).then(result=>{
         let results = result.data;
         let rowsObj = results.map(( record, index ) => 
           createData( index + 1, 

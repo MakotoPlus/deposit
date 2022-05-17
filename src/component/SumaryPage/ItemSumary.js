@@ -8,11 +8,11 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
+import {ApiGetItemSumaryList} from '../common/prj_url';
 
-const prj_const = require('../common/prj_const.js')
+
 
 //
 // ItemSumary
@@ -24,20 +24,6 @@ const columns = [
     ,{ id : 'sum_value', label: 'Value', minWidth:100, align: 'right', format:(value) => value.toLocaleString(), }
 ]
 
-//
-// 全データ取得
-async function getItemSumaryList(user, urlParameters, urlPath){
-  let path ="";
-  if (!urlParameters){
-    path = urlPath;
-  }else{
-    path = prj_const.ServerUrl + "/api/deposit_sumary_list/?" + urlParameters;
-  }
-  let headers = {
-    headers : user.Authorization
-  };
-  return await axios.get(path, headers);
-}
 
 function createObj(record, index, rowPage, page ){
   return {
@@ -84,7 +70,7 @@ export default function ItemSumary() {
     }else{
       url = prevUrl;
     }
-    getItemSumaryList(user, undefined, url).then(result=>{
+    ApiGetItemSumaryList(user, undefined, url).then(result=>{
       //console.debug(result);
       //前ページURL・次ページURL・データ件数設定
       const data = result.data;
@@ -123,7 +109,7 @@ export default function ItemSumary() {
       }
     });
     //setThisUrl(searchParameters);
-    getItemSumaryList(user, searchParameters, undefined).then(result =>{
+    ApiGetItemSumaryList(user, searchParameters, undefined).then(result =>{
       console.debug(result);
       //前ページURL・次ページURL・データ件数設定
       const data = result.data;

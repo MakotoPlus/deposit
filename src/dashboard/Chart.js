@@ -1,23 +1,11 @@
 import React, {useEffect} from 'react';
 import { useTheme } from '@mui/material/styles';
 import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
-//import Title from './Title';
-import axios from 'axios';
 import {useUserContext} from '../context/userContext';
 import { Link as RouterLink } from "react-router-dom";
 import Link from '@mui/material/Link';
+import {ApiGetDepositDateSumaryList} from '../component/common/prj_url';
 
-const prj_const = require('../component/common/prj_const.js')
-
-
-// 全データ取得
-async function getDepositDateSumaryList(user){
-  let headers = {
-    headers : user.Authorization
-  };
-  let urlpath = prj_const.ServerUrl + "/api/deposit_date_sumary_list/?no_page";
-  return await axios.get(urlpath, headers);
-}
 
 const coloers = [
   "red",
@@ -36,7 +24,7 @@ export default function Chart() {
   const [lines, setLines] = React.useState([])
   useEffect(()=>{
     function fetchData(){
-      getDepositDateSumaryList(user).then(result =>{
+      ApiGetDepositDateSumaryList(user).then(result =>{
         let data = result.data;
         console.debug("GraphResult");
         console.debug(data);

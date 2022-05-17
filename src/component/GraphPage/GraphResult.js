@@ -3,17 +3,16 @@ import React, {useEffect} from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Tooltip, CartesianGrid, LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
 import Title from '../../dashboard/Title';
-import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
-const prj_const = require('../common/prj_const.js')
-const prj_func = require('./../common/prj_func');
+import {ApiGetDepositItemDataSumaryList} from '../common/prj_url';
+
 
 /*const useStyles = makeStyles((theme) => ({
 
 }));
 */
-
+/*
 // 全データ取得
 async function getDepositGraph(user, graphSearch){
   let headers = {
@@ -60,6 +59,7 @@ async function getDepositGraph(user, graphSearch){
   console.debug(`urlpath=[${urlpath}]`);
   return await axios.get(urlpath, headers);
 }
+*******/
 
 const coloers = [
   "red",
@@ -78,7 +78,7 @@ export default function GraphResult() {
   const [lines, setLines] = React.useState([])
   useEffect(()=>{
     function fetchData(){
-      getDepositGraph(user, graphSearch).then(result =>{
+      ApiGetDepositItemDataSumaryList(user, graphSearch).then(result =>{
         let data = result.data;
         console.debug("GraphResult----------------");
         //console.debug(data);        

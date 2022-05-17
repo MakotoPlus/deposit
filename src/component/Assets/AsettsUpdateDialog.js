@@ -15,19 +15,10 @@ import DepositValueText from '../common/DepositValueText';
 import InputMemoText from '../common/InputMemoText';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from '@mui/material/Link';
-import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
-const prj_const = require('../common/prj_const.js');
-
-
-async function apiUpdateDeposit(deposit_key, data, user){
-  console.debug("/api/deposit/--------------------------");
-  axios.defaults.headers.common["Authorization"] = user.Authorization.Authorization;
-  axios.defaults.baseURL = prj_const.ServerUrl + "/api";
-  return await axios.patch(prj_const.ServerUrl + "/api/deposit/" + deposit_key + "/", data);
-}
-
+import {ApiUpdateDeposit} from '../common/prj_url';
+import {TYPE_DEPOSIT, TYPE_DEPOSIT_STR, TYPE_EXPENSES_STR} from '../common/prj_const';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -194,7 +185,7 @@ export default function AsettsUpdateDialog(props) {
         update_date : new Date().toISOString(),
       }
 
-      apiUpdateDeposit(deposit_key, data, user).then(response =>{
+      ApiUpdateDeposit(deposit_key, data, user).then(response =>{
         //
         // 親の一覧データ更新処理
         console.debug(response);
@@ -203,8 +194,8 @@ export default function AsettsUpdateDialog(props) {
         if (newRow){
           newRow.delete_flag = false;
           newRow.deposit_type = depositType;
-          newRow.deposit_type_str = (depositType === prj_const.TYPE_DEPOSIT)
-          ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR;
+          newRow.deposit_type_str = (depositType === TYPE_DEPOSIT)
+          ? TYPE_DEPOSIT_STR : TYPE_EXPENSES_STR;
           newRow.deposit_value = Number(depositValue).toLocaleString();
           newRow.memo = memo;
           newRow.insert_yyyymmdd = insert_yyyymmdd;
@@ -238,7 +229,7 @@ export default function AsettsUpdateDialog(props) {
         u_user : user.userid,
         update_date : new Date().toISOString()
       }
-      apiUpdateDeposit(deposit_key, data, user).then(response =>{
+      ApiUpdateDeposit(deposit_key, data, user).then(response =>{
         // 親の一覧データ更新処理
         //
         console.debug(response);
