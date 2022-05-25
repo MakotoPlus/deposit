@@ -12,9 +12,12 @@ import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
 import DatePickerYearMonth from '../common/DatePickerYearMonth';
 import {TYPE_DEPOSIT, TYPE_DEPOSIT_STR, TYPE_EXPENSES_STR} from '../common/prj_const';
-import {ApiPostDeposit} from '../common/prj_url';
+import {ApiGetDepositItemList, ApiPostAssets} from '../common/prj_url';
+import {date2StringYyyymmdd} from '../common/prj_func';
+import Alert from '@material-ui/lab/Alert';
+
 //
-// 実績データ登録ダイアログ
+// 資産データ登録ダイアログ
 const useStyles = makeStyles((theme) => ({
   root: {
     '& .MuiTextField-root': {
@@ -37,126 +40,76 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-//
-//
-// 実績テーブル
-//
-const columns = [
-  { id : '01', field:'01', title: 'USJ定期積立', minWidth:100}
-  ,{ id : '02', field:'02', title: 'SBI定期積立', minWidth:100}
-  ,{ id : '03', field:'03', title: '埼玉りそな', minWidth:100}
-  ,{ id : '04', field:'04', title: 'USJ普通口座', minWidth:100}
-  ,{ id : '05', field:'05', title: 'SBI自由額', minWidth:100}
-  ,{ id : '06', field:'06', title: 'SBIハイブリッド'}
-  ,{ id : '07', field:'07', title: '財布AAAAAAA', minWidth:100}
-  ,{ id : '08', field:'08', title: '財布BBBBBBB', minWidth:100}
-  ,{ id : '09', field:'09', title: '財布CCCCCCCC', minWidth:100}
-  ,{ id : '10', field:'10', title: '財布DDDDDDD', minWidth:100}
-  //,{ id : 'deposit_key', label: 'Key', minWidth:100 }
-]
-
 
 export default function InputDialog({subtitle}) {
-  const {user} = useUserContext();
-  const {resultDatas, setResultDatas, resultAllCount, setResultAllCount} = useResultDatasContext();  
-  const userid = user.userid;
-  const [open, setOpen] = React.useState(false);
   const classes = useStyles();
+  const {user} = useUserContext();
+  const [open, setOpen] = React.useState(false);
   const [fullWidth, ] = React.useState(true);
-  let dt = new Date();
-  let LocalDate = dt.getFullYear() + "/" + ("00" + (dt.getMonth()+1)).slice(-2) + "/" +  ("00" + dt.getDate()).slice(-2);
-  const [insertYyyymmdd, setInsertYyyymmdd] = useState(LocalDate);
+  const [columnRecords, setColumRecords] = React.useState([]);
+  const [message, setMessage] = React.useState("");
+  //let LocalDate = dt.getFullYear() + "/" + ("00" + (dt.getMonth()+1)).slice(-2) + "/" +  ("00" + dt.getDate()).slice(-2);
+  const [insertYyyymmdd, setInsertYyyymmdd] = useState(new Date());
 
   useEffect(()=>{
+    ApiGetDepositItemList(user, false).then(result=>{
+      console.debug("Assets InputDialog--ApiGetDepositItemList");
+      console.debug(result);
+      setColumRecords(result.data.map(record=>{
+        return {
+          id : record.depositItem_key,
+          field : record.depositItem_key, 
+          title : record.depositItem_name,
+          value : 0,
+          minWidth : 100,
+        }
+      }));
+    }).catch( error =>{
+      console.error(error);
+    });
   },[]);
 
-
-  //
-  // 金額入力Text
-  const [depositValue, setDepositValue] = React.useState(0);
-  const handleDepositUpdate = value => setDepositValue(value);
-
-  //
-  // 預金/支出
-  const [depositType, setDepositType] = React.useState(TYPE_DEPOSIT);
-  const handleDepositType = value => {    
-    console.debug('ResultInputDialog');
-    console.debug(value);
-    setDepositType(value);
-  }
-
-  const [memo, setMemo] = React.useState("");
-  const handleMemo = (event) =>{
-    console.debug('handleMemo');
-    console.debug(event.target.value);
-    setMemo(event.target.value);
-  } 
-  
-
-  //
-  // 預金項目Select
-  const [depositItemObj, setDepositItemObj] = React.useState({});
-  const [depositItemkey, setDepositItemkey] = React.useState(0);
-  const handleDepositItemkey = value => {
-    console.debug(value);
-    setDepositItemkey(value.depositItem_key);
-    setDepositItemObj(value);
-  }
-  
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handelValueChange = (index, event) =>{
+    console.debug(event.target.value);
+    console.debug(index);
+    // 入力された値に更新
+    columnRecords[index].value = event.target.value;
+    setColumRecords(columnRecords);
+  }
   
   const handleCreate = () => {
     console.debug("Create");
-    console.debug(`ResultInputDialog.depositValue=[${depositValue}]`);
-    console.debug(`ResultInputDialog.depositItemkey=[${depositItemkey}]`);
-    console.debug(`ResultInputDialog.depositType=[${depositType}]`);
     console.debug(`ResultInputDialog.insertYyyymmdd[${insertYyyymmdd}]`);
-    const data ={
-      depositItem_key : depositItemkey,
-      deposit_type : depositType,
-      deposit_value : depositValue,
-      insert_yyyymmdd : insertYyyymmdd,
-      insert_yyyymm: insertYyyymmdd.substr(0, 7),
-      memo: memo,
-      delete_flag : false,
-      u_user : userid,
-      update_date : new Date().toISOString(),
-    };
-
-
-    ApiPostDeposit(user, data).then(response=>{
-      console.debug(response);
-      let newRow = {
-        deposit_key: response.data.deposit_key,
-        deposit_group_name: depositItemObj.deposit_group_name,
-        deposit_type: response.data.deposit_type,
-        depositItem_name: depositItemObj.depositItem_name,
-        deposit_type_str: response.data.deposit_type === TYPE_DEPOSIT 
-          ? TYPE_DEPOSIT_STR : TYPE_EXPENSES_STR,
-        deposit_value: Number(response.data.deposit_value).toLocaleString(),
-        deposit_item_obj : depositItemObj,
-        memo: memo,
-        insert_yyyymmdd : response.data.insert_yyyymmdd,
-      }
-      //
-      // データ追加は行わないがトータル金額などの更新のためにデータを再設定する
-      //
-      // ここにデータ件数追加された事によりPlanTableの最大件数を1件増やすイベントを追加する
-      //
-      //
-      console.debug(newRow);
-      let newRows = [...resultDatas];
-      setResultDatas(newRows);
-      setResultAllCount({count: resultAllCount.count+1});
-      setOpen(false);
-    }).catch( error =>{
-      console.error(error);
+    let dt = new Date();
+    let yyyymmdd = date2StringYyyymmdd(insertYyyymmdd, 1);
+    let records = columnRecords.map(record=>{
+      return ({
+        depositItem_key : record.id,
+        deposit_type : TYPE_DEPOSIT,
+        deposit_value : record.value,
+        insert_yyyymmdd : yyyymmdd,
+        insert_yyyymm : yyyymmdd.slice(0,7),
+        delete_flag: false,
+        update_date : dt,
+      });
     });
+    console.debug(records);
+    ApiPostAssets(user, records).then(result=>{
+      console.debug("ApiPostAssets Success");
+      console.debug(result);
+      setMessage("");
+      setOpen(false);
+    }).catch(error =>{
+      console.debug(error);
+      setMessage("登録エラーが発生しました。もしかしたら既に登録されている年月の可能性がありますよ？");
+    });    
   };
 
   return (
@@ -173,21 +126,27 @@ export default function InputDialog({subtitle}) {
       >
         <DialogTitle id="form-dialog-title">{subtitle}</DialogTitle>
         <DialogContent>
+          {
+            (message) ?<Alert severity="error">{message}</Alert> : ""
+          }
           <form className={classes.root} noValidate autoComplete="off">
             <Paper elevation={3} >
-              <DatePickerYearMonth labelName={"登録年月"} yyyymmdd={insertYyyymmdd} setYyyymmdd={setInsertYyyymmdd} />
+              <DatePickerYearMonth labelName={"登録年月"} yyyymmdd={insertYyyymmdd} setYyyymmdd={setInsertYyyymmdd} />              
             </Paper>
             <Paper elevation={3} >
             {
-              columns.map((column, index)=>{
+              columnRecords.map((column, index)=>{
                 return(
                   <TextField
-                    id="outlined-number"
+                    required
+                    key={index}
                     label={column.title}
                     type="number"
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    defaultValue={column.value}
+                    onChange={(event) => handelValueChange(index, event)}
                   />
                 )})
             }

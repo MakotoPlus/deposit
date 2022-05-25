@@ -83,6 +83,8 @@ export default function ResultUpdateDialog(props) {
   }
 
   useEffect(()=>{
+    console.debug('-------------------------ResultUpdateDialog');
+    console.debug(props.record);
     setRecord(props.record);
     setDeposit_key(props.record.deposit_key);
     //

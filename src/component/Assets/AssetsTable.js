@@ -13,7 +13,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import AsettsUpdateDialog from './AsettsUpdateDialog';
 import {useUserContext} from '../../context/userContext';
-import {useResultDatasContext} from '../../context/resultDatasContext';
+import {useResultDatasContext, assetsRecords, setAssetsRecords} from '../../context/resultDatasContext';
 import axios from 'axios';
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -30,7 +30,8 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-//const prj_const = require('../common/prj_const.js')
+import {ApiGetAsstesPandas, ApiGetDepositItemList} from '../common/prj_url';
+import UpdateDialog from './updateDialog';
 
 const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -52,98 +53,10 @@ const tableIcons = {
     ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
   };
 
-const prj_const = require('../common/prj_const.js')
-
 //
 //
-// 実績テーブル
+// 資産テーブル
 //
-const columns = [
-    { id : 'id', field:'id', title: 'No', minWidth: 10 }
-    ,{ id : 'yyyymm', field:'yyyymm', title:'年月', minWidth: 20 }
-    ,{ id : '01', field:'01', title: 'USJ定期積立', minWidth:100}
-    ,{ id : '02', field:'02', title: 'SBI定期積立', minWidth:100}
-    ,{ id : '03', field:'03', title: '埼玉りそな', minWidth:100}
-    ,{ id : '04', field:'04', title: 'USJ普通口座', minWidth:100}
-    ,{ id : '05', field:'05', title: 'SBI自由額', minWidth:100}
-    ,{ id : '06', field:'06', title: 'SBIハイブリッド'}
-    ,{ id : '07', field:'07', title: '財布AAAAAAA', minWidth:100}
-    ,{ id : '08', field:'08', title: '財布BBBBBBB', minWidth:100}
-    ,{ id : '09', field:'09', title: '財布CCCCCCCC', minWidth:100}
-    ,{ id : '10', field:'10', title: '財布DDDDDDD', minWidth:100}
-    //,{ id : 'deposit_key', label: 'Key', minWidth:100 }
-]
-
-function getDepositList(){
-  return (
-    {'data' : {
-        'previous' : ''
-        ,'next' : ''
-        ,'count' : 1
-        , 'results' : [
-          {
-            'id': '1'
-            ,'yyyymm': '2021/01'
-            ,'01': 3214
-            ,'02': 123452
-            ,'03': 123435
-            ,'04': 123445
-            ,'05': 123455
-            ,'06': 123456
-            ,'07': 123457
-            ,'08': 123457
-            ,'09': 123457
-            ,'10': 123457
-          }
-        ]
-      }
-    }
-  );
-  //
-  // parameters : URLパラメータ (未設定の場合はURLを有効にする)
-  // url: アクセスURLパス
-  /*
-  let path ="";
-  if (!urlParameters){
-    path = urlPath;
-  }else{
-    path = prj_const.ServerUrl + "/api/deposit_list/?" + urlParameters;
-  }
-  let headers = {
-    headers : user.Authorization
-  };
-  return await axios.get(path, headers);
-  */
-
-}
-
-function createRowData(rowsObj) {
-  let result = {}
-  rowsObj.map(obj =>{
-    result[obj.insert_yyyymm] = obj.value.toLocaleString();
-  })
-  result['id'] = rowsObj[0]['depositItem_name'];
-  console.debug("createRowData2");
-  console.debug(result);
- return result;
-}
-
-function createObj(record, index, rowPage, page ){
-  return {
-    'id' : (index + 1) + (rowPage * page),
-    'yyyymm' : record['yyyymm'],
-    '01' : record['01'],
-    '02' : record['02'],
-    '03' : record['03'],
-    '04' : record['04'],
-    '05' : record['05'],
-    '06' : record['06'],
-    '07' : record['07'],
-    '08' : record['08'],
-    '09' : record['09'],
-    '10' : record['10'],
-  }
-}
 
 const useStyles = makeStyles({
   root: {
@@ -154,85 +67,181 @@ const useStyles = makeStyles({
   },
 });
 
+
+
+
 export default function AssetsTable() {
   const classes = useStyles();
   const {user} = useUserContext();
-  //const {graphDatas} = useResultDatasContext();
-  //const [columns, setColums] = React.useState([]);
-  const [rows, setRows] = React.useState([]);
+  //const [rows, setRows] = React.useState([]);
+  const {assetSearch, assetsRecords, assetSearchEvent, setAssetsRecords} = useResultDatasContext();
+  const [columns, setColumns] = React.useState([]);
 
   useEffect(()=>{
-    function fetchData(){
-
-      console.debug('-*----------graphDatas');
-      let retdata = getDepositList();
-      console.debug(retdata);
-      //data = data.results;
-
-      let rowsdata = retdata.data.results.map((r, i ) => createObj(r, i, 5, 0));
-      console.debug('-*----------rowsdata');
-      console.debug(rowsdata);
-      setRows(rowsdata);
-      //console.debug(graphDatas);
-      //
-      // グラフ対応のテーブル情報表示
-
-      //----------------------------------------------------------
-      // 列ヘッダ生成
-      //----------------------------------------------------------
-      // 重複なしの日付を取得する
-      /*
-      let yyyymms = graphDatas.map(data=>data.insert_yyyymm);
-      yyyymms = [...new Set(yyyymms)];
-      yyyymms = yyyymms.sort();
-      let grafColumns = [{id : 'id', title:'Item', field:'id', width: 200 }]
-      let grafDateColums = (yyyymms.map( yyyymm =>{
-        return {
-          id : yyyymm,
-          title : yyyymm,
-          field: yyyymm,
-          align: 'right',
-          width: 150,
-          format:(value) => value.toLocaleString(),
-        }
-      }));
-      grafColumns = [...grafColumns, ...grafDateColums];
-      console.debug(grafColumns);
-      setColums(grafColumns);
-      */
-      //----------------------------------------------------------
-      // 行データ生成
-      //----------------------------------------------------------
-      // depositItem_key Sort?
-      /*
-      let rowDataObjs = graphDatas.sort((a, b)=>{
-        if ( a.depositItem_key < b.depositItem_key){
-          return -1;
-        }else{
-          return 1;
-        }
-      })
-      //
-      //項目名の一覧を生成
-      let depositItemNames = rowDataObjs.map(data=>data.depositItem_name);
-      depositItemNames = [...new Set(depositItemNames)];
-      console.debug('-*----------depositItemNames');
-      console.debug(depositItemNames);
-
-      //
-      // 項目単位に全ての年月データを取得し行データを生成し配列へ格納
-      let rows = depositItemNames.map((itemname, index) =>{
-        //同じアイテム名を抽出
-        let items = rowDataObjs.filter(r => r.depositItem_name === itemname);
-        return createRowData(items);
-      });
-      console.debug('-*----------rows');
+    /*
+    const updateRow = (record, recordindex) =>{
+      // UPDATEされた情報を更新する
+      console.debug(columns);
       console.debug(rows);
-      setRows(rows);
-      */
+      rows[recordindex]['insert_yyyymm'] = 
+        <UpdateDialog id={recordindex} insert_yyyymm={record[0].insert_yyyymm}
+        datas={record} headers={columns.slice(2)} updateRow={updateRow} />
+      let newRows = [];
+      newRows = rows;
+      setRows(newRows);
     }
-    fetchData();
-  },[]);
+    */
+
+    async function getHeader(){
+      let newHeaderColums = [];
+      await ApiGetDepositItemList(user, false).then(result=>{
+        let headerColums = [
+          {
+            id : 'id', 
+            field:'id', 
+            title:'No', 
+            width:80
+          }
+          ,{
+            id : 'insert_yyyymm', 
+            field:'insert_yyyymm', 
+            title:'年月', width: 100 
+          }
+        ];
+        let headeradds = result.data.map(record=>{
+          return{
+            id : record.depositItem_key.toString(),
+            field: record.depositItem_key.toString(),
+            title: record.depositItem_name,
+            align: 'right',
+            width : 230,
+          }}
+          );
+        newHeaderColums = [...headerColums, ...headeradds];
+        //console.debug('-*----------ApiGetDepositItemList');
+        //console.debug(newHeaderColums);  
+        return newHeaderColums;
+      }).catch(error=>{
+        console.error("ApiGetDepositItemList");
+        console.error(error);
+        return;
+      });
+      return newHeaderColums;
+    }
+
+    function createAssetRecord(record){
+      let keys = Object.keys(record);      
+      let tableRecord = keys.map(key=>{
+        //console.debug(`key=${key}`);
+        let value = record[key];
+        //console.debug(`Value=${value}`);
+        if (key.indexOf('deposit_value') >= 0){
+          let deposit_key = key.split(",")[1];
+          deposit_key = deposit_key.replace(")","");
+          deposit_key = deposit_key.replace(" ","");
+          //tableRecord[[deposit_key]] = value.toLocaleString();
+          return {[deposit_key] : value.toLocaleString()};
+        }else if(key.indexOf('insert_yyyymm') >= 0){
+          return { insert_yyyymm : record[key]};
+        }}
+      )
+
+      //
+      // 全てのキー値を1つのオブジェクトに格納する
+      //
+      let merged = tableRecord.reduce((acc, obj, index)=>{
+        for (let key in obj){
+          acc[key] = obj[key];
+          //console.log(obj[key]);
+        }
+        return acc;
+      },{});
+      //console.log(merged);  
+      return merged;
+    }
+    // 表示レコード用に、オブジェクトを加工する
+    // キー情報が下記のようになっている
+    // @param result.data
+    //  [
+    //    {
+    //        '('deposit_value',28)' : 12322
+    //        '('deposit_value',29)' : 12312
+    //        '('deposit_value',30)' : 12334
+    //        '('deposit_value',31)' : 12344
+    //        '('insert_yyyymm','')' : '2022/04'
+    //    }
+    //  ]
+    //
+    // @return 
+    //  [{
+    //       id : index,
+    //       insert_yyyymm : 9999/99,
+    //       1(deposit_key) : 999(deposit_value),
+    //       2(deposit_key) : 1999(deposit_value),
+    //       datas : [{
+    //         列に投入したresult.data.resultsを格納(更新や削除時に利用予定)
+    //       }]
+    //   }]
+    //
+    function apiResult2Rowdata(result){
+      //
+      // 行単位となる年月を取得する
+      let resultDatas = result.data;
+      //console.debug('-*----------apiResult2Rowdata');
+      //console.debug(resultDatas);
+      // データの変更
+      // キー情報が下記のようになっているので整形する
+      //
+      // キー名: ('deposit_value',27)
+      // キー名: ('deposit_value',28)
+      // キー名: ('insert_yyyymm','')
+      let records = resultDatas.map(record=>createAssetRecord(record));
+      //
+      // サーバ側のUnpivotライブラリでは出来ないので日付降順でソートをクライアント側で実装
+      records = records.sort((a,b)=>{
+        if (a.insert_yyyymm < b.insert_yyyymm){
+          return 1;
+        }else{
+          return -1;
+        }
+      });
+      records = records.map((record, index)=>{
+        record['id'] = index + 1;
+        return record;
+      })
+      //console.debug("records-----------------");
+      //console.debug(records);
+      return records;
+    }
+    function getRowdata(resultColumn){
+      //console.debug('-*----------AssetsTable-useEffect');
+      ApiGetAsstesPandas(user, assetSearch).then(result=>{
+          let records = apiResult2Rowdata(result);
+          let rowdatas = records.map((record, index)=>{
+            record['insert_yyyymm'] = <UpdateDialog id={index} insert_yyyymm={record.insert_yyyymm}
+                                        datas={record} headers={resultColumn} />
+            return record;
+          })
+          //console.debug('-*----------apiResult2Rowdata');
+          //console.debug(rowdatas);
+          setAssetsRecords(rowdatas);
+      }).catch(error=>{
+        console.error(error);
+      });
+    }
+    getHeader().then(result=>{
+      //console.debug("getHeader");
+      //console.debug(result);
+      let headers = [];
+      if (result != undefined && result.length > 2){
+        headers = result.slice(2);
+      }
+      getRowdata(headers);
+      setColumns(result);
+    }).catch(error=>{
+      console.error(error);
+    });
+},[assetSearch, assetSearchEvent]);
 
 
   return (
@@ -242,7 +251,7 @@ export default function AssetsTable() {
           icons={tableIcons}
           title="Table"
           columns={columns}
-          data={rows}
+          data={assetsRecords}
           options={{
             fixedColumns: {left: 2, right: 0},
             toolbar : false,

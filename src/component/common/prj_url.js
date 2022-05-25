@@ -20,6 +20,12 @@ export async function ApiGetDepositSumaryList(user, nRunApiCount = 1, page = 1){
   return await axios.get(urlpath, {headers : user.Authorization});
 }
 
+/**
+ * 預金・資産項目取得関数
+ * @param {*} user 
+ * @param {*} deposit_flag true:=預金項目, false:=資産項目
+ * @returns 
+ */
 export async function ApiGetDepositItemList(user, deposit_flag){
   const url = `/api/deposit_item_list/?no_page&deposit_flag=${deposit_flag}`;
   return await axios.get(ServerUrl + url, {headers : user.Authorization});
@@ -198,5 +204,41 @@ export async function ApiGetDepositDateSumaryList(user){
   };
   let urlpath = ServerUrl + "/api/deposit_date_sumary_list/?no_page";
   return await axios.get(urlpath, headers);
+}
+
+//資産トラン取得
+export async function ApiGetAsstesPandas(user, assetSearch){
+  let urlpath = ServerUrl + "/api/assets_pandas/?format=json";
+  let headers = {
+    headers : user.Authorization
+  };
+  const from_date = assetSearch.select_fromto_date[0];
+  const to_date = assetSearch.select_fromto_date[1];
+
+  console.debug("from_date");
+  console.debug(from_date);
+  console.debug("to_date");
+  console.debug(to_date);
+  if ((from_date !== undefined) && (from_date !== '') && (from_date !== null)){
+    urlpath += `&insert_yyyymm_from=${from_date.substr(0,7)}`
+  }
+  if ((to_date !== undefined) && (to_date !== '') && (to_date !== null)){
+    urlpath += `&insert_yyyymm_to=${to_date.substr(0,7)}`
+  }
+  return await axios.get(urlpath, headers);
+}
+
+//資産トラン登録
+export async function ApiPostAssets(user, data){
+  axios.defaults.headers.common["Authorization"] = user.Authorization.Authorization;
+  axios.defaults.baseURL = ServerUrl + "/api";
+  return await axios.post(ServerUrl + "/api/assets_bulk/", data);
+}
+
+//資産トラン更新
+export async function ApiPutAssetsBulkUpdate(user, data){
+  axios.defaults.headers.common["Authorization"] = user.Authorization.Authorization;
+  axios.defaults.baseURL = ServerUrl + "/api";
+  return await axios.put(ServerUrl + "/api/assets_bulk_update/", data);
 }
 

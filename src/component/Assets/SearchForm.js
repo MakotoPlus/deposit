@@ -18,9 +18,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
-
-const prj_func = require('../common/prj_func');
-
+import {date2StringYyyymmdd} from '../common/prj_func';
 
 const useStyles = makeStyles((theme) => ({
     Box: {
@@ -60,53 +58,36 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchForm(){
     const classes = useStyles();
-    //const {user} = useUserContext();
     const [from_yyyymmdd, setFrom_yyyymmdd] = React.useState(null);
     const [to_yyyymmdd, setTo_yyyymmdd] = React.useState(null);
-
-    const { setResultDatas, setResultSearch,} = useResultDatasContext();
-
-    const [isDelete, setIsDelete] = React.useState(false);
+    const {setAssetSearch} = useResultDatasContext();
     const handleClickSearch = () => {
         console.debug("Search");
-        setResultSearch({
-            select_items : userSelectItems,
+        setAssetSearch({
             select_fromto_date : [
-                prj_func.date2StringYyyymmdd(from_yyyymmdd, 1), 
-                prj_func.date2StringYyyymmdd(to_yyyymmdd, 99)
+                date2StringYyyymmdd(from_yyyymmdd, 1), 
+                date2StringYyyymmdd(to_yyyymmdd, 99)
             ],
-            select_delete : isDelete,
         });    
     };
-    const [userSelectItems, setUserSelectItems] = React.useState([]);
-
     const handleClickReset = () =>{
         console.debug("handleClickReset-----");
-        setUserSelectItems([]);
-        setIsDelete(false);
         // 日付がクリア出来ないため リセットを押してもクリアしないよう変更
-        setResultSearch({
-            select_items : userSelectItems,
+        setAssetSearch({
             select_fromto_date : [
-                prj_func.date2StringYyyymmdd(from_yyyymmdd, 1), 
-                prj_func.date2StringYyyymmdd(to_yyyymmdd, 99)
-                //prj_func.date2StringYyyymmdd(null, 1), 
-                //prj_func.date2StringYyyymmdd(null, 99)
+                date2StringYyyymmdd(from_yyyymmdd, 1), 
+                date2StringYyyymmdd(to_yyyymmdd, 99)
             ],
-            select_delete : false,
         });    
         setFrom_yyyymmdd(from_yyyymmdd);
         setTo_yyyymmdd(to_yyyymmdd);
     }
 
-    const handleClickIsDelete = event =>{
-        setIsDelete(event.target.checked);
-    }
     useEffect(()=>{
         console.debug("Data Clean-----");
         //この画面から実績画面へ移動すると1ページ目のオブジェクトが空になってしまう
         //仕方がないのでここで実績画面で監視しているオブジェクトを更新する
-        setResultDatas([]);
+        //setResultDatas([]);
     },[]);
 
     return (
@@ -121,11 +102,6 @@ export default function SearchForm(){
                     m={0} //margin
                     className={`${classes.Box} ${classes.ItemBox}`}
                     >
-                    <DepositItemMultiSelect 
-                        userSelectItems={userSelectItems} 
-                        setUserSelectItems={setUserSelectItems}
-                        deposit_flag={false}
-                    />
                 </Box>
                 <Box
                 component="span"
@@ -140,26 +116,6 @@ export default function SearchForm(){
                     </Box>
                 </Box>
                 <Box
-                    component="span"
-                    m={2} //margin
-                    className={`${classes.Box} ${classes.ItemBox}`}
-                    >
-                    <FormControl component="fieldset">
-                        <FormLabel component="legend"></FormLabel>
-                        <FormGroup aria-label="position" row>
-                            <FormControlLabel 
-                            value={isDelete}
-                            control={<Checkbox color="primary" />}
-                            label="Delete"
-                            labelPlacement="top"
-                            className={`${classes.deleteCheckBok}`}
-                            onClick={handleClickIsDelete}
-                            />                    
-                        </FormGroup>
-                    </FormControl>    
-                </Box>
-            </Box>
-            <Box
                 component="span"
                 m={0} //margin
                 className={`${classes.SearchBox} ${classes.bottomLeftBox}`}
@@ -170,7 +126,8 @@ export default function SearchForm(){
                     <Button variant="outlined" color="primary"  onClick={handleClickSearch}>
                         search
                     </Button>
-                </Box>
+            </Box>
+            </Box>
         </React.Fragment>
     );
 }

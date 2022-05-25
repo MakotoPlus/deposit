@@ -36,7 +36,7 @@ function Index(){
                     p: 0,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 150,
+                    height: 100,
                   }}
                 >
               <SearchForm />
