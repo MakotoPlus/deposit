@@ -40,7 +40,13 @@ export function ResultDatasProvider({children}){
         select_fromto_date : [null,null],
     });
     // 資産検索結果
-    const [assetsRecords, setAssetsRecords] = useState([]);
+    const [assetsRecords, setAssetsRecords] = useState(
+        {
+            data :[], 
+            insert_yyyymms : [],
+            columns : []
+        }
+    );
     // 資産検索イベント
     const [assetSearchEvent, setAssetSearchEvent] = useState(0);
 

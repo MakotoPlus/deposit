@@ -71,7 +71,7 @@ export const secondaryListItems = (
         <ListItemIcon>
           <AssignmentIcon />
         </ListItemIcon>
-        <ListItemText primary="資産登録" />
+        <ListItemText primary="資産情報" />
       </ListItem>
     </Link>
   </div>

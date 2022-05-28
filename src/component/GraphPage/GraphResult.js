@@ -92,6 +92,7 @@ export default function GraphResult() {
           //console.debug(record);
           lineUnique[record.depositItem_name] = record.depositItem_name;
         })
+        console.debug(lineUnique);
         let outLines = [];
         Object.keys(lineUnique).forEach((line, index)=>{
           let i = coloers.length % index
@@ -114,8 +115,8 @@ export default function GraphResult() {
         data.map(record=>{
           dateUnique[record.insert_yyyymm] = record.insert_yyyymm;
         })
-        console.debug('dateUnique');
-        console.debug(dateUnique);
+        console.debug('outLines');
+        console.debug(outLines);
         // 日付毎に存在するレコードを抽出する
         let dateDatas = Object.keys(dateUnique).map(key=>
           data.filter( d => d.insert_yyyymm===key))
@@ -128,8 +129,10 @@ export default function GraphResult() {
         console.debug(dateDatas);
         let graf = dateDatas.map(datas => createDatas(datas))
         setGrafDatas(graf)
-        console.debug("graf");
+        console.debug("graf--------------");
         console.debug(graf);
+        console.debug("data--------------");
+        console.debug(data);
         
         setGraphDatas(data);
       }).catch(error=>console.error(error))

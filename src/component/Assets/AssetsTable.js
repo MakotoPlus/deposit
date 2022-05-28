@@ -93,6 +93,7 @@ export default function AssetsTable() {
     */
 
     async function getHeader(){
+      console.debug("AssetsTable--getHeader");
       let newHeaderColums = [];
       await ApiGetDepositItemList(user, false).then(result=>{
         let headerColums = [
@@ -118,14 +119,15 @@ export default function AssetsTable() {
           }}
           );
         newHeaderColums = [...headerColums, ...headeradds];
-        //console.debug('-*----------ApiGetDepositItemList');
+        console.debug('-*----------ApiGetDepositItemList Success');
         //console.debug(newHeaderColums);  
         return newHeaderColums;
       }).catch(error=>{
-        console.error("ApiGetDepositItemList");
+        console.error("ApiGetDepositItemList Error");
         console.error(error);
         return;
       });
+      console.debug('-*----------ApiGetDepositItemList End');
       return newHeaderColums;
     }
 
@@ -159,7 +161,7 @@ export default function AssetsTable() {
       //console.log(merged);  
       return merged;
     }
-    // 表示レコード用に、オブジェクトを加工する
+    // 表示レコード用に、オブジェクトを加工する 
     // キー情報が下記のようになっている
     // @param result.data
     //  [
@@ -187,8 +189,8 @@ export default function AssetsTable() {
       //
       // 行単位となる年月を取得する
       let resultDatas = result.data;
-      //console.debug('-*----------apiResult2Rowdata');
-      //console.debug(resultDatas);
+      console.debug('-*----------apiResult2Rowdata');
+      console.debug(resultDatas);
       // データの変更
       // キー情報が下記のようになっているので整形する
       //
@@ -214,23 +216,31 @@ export default function AssetsTable() {
       return records;
     }
     function getRowdata(resultColumn){
-      //console.debug('-*----------AssetsTable-useEffect');
+      console.debug("AssetsTable--getRowdata");
       ApiGetAsstesPandas(user, assetSearch).then(result=>{
-          let records = apiResult2Rowdata(result);
-          let rowdatas = records.map((record, index)=>{
-            record['insert_yyyymm'] = <UpdateDialog id={index} insert_yyyymm={record.insert_yyyymm}
-                                        datas={record} headers={resultColumn} />
-            return record;
-          })
-          //console.debug('-*----------apiResult2Rowdata');
-          //console.debug(rowdatas);
-          setAssetsRecords(rowdatas);
+        console.debug("AssetsTable--ApiGetAsstesPandas");
+        let records = apiResult2Rowdata(result);        
+        let insert_yyyymms = records.map(record=>record.insert_yyyymm);
+        let rowdatas = records.map((record, index)=>{
+          record['insert_yyyymm'] = <UpdateDialog id={index} headers={resultColumn} />
+          return record;
+        })
+        //console.debug(rowdatas);
+        console.debug('-*----------setAssetsRecords');
+        console.debug(rowdatas);
+        setAssetsRecords(
+          {
+            data : rowdatas
+            ,insert_yyyymms : insert_yyyymms
+            ,columns : resultColumn
+          }
+        );
       }).catch(error=>{
         console.error(error);
       });
     }
     getHeader().then(result=>{
-      //console.debug("getHeader");
+      console.debug("AssetsTable--getHeader");
       //console.debug(result);
       let headers = [];
       if (result != undefined && result.length > 2){
@@ -241,7 +251,7 @@ export default function AssetsTable() {
     }).catch(error=>{
       console.error(error);
     });
-},[assetSearch, assetSearchEvent]);
+  },[assetSearch, assetSearchEvent]);
 
 
   return (
@@ -251,7 +261,7 @@ export default function AssetsTable() {
           icons={tableIcons}
           title="Table"
           columns={columns}
-          data={assetsRecords}
+          data={assetsRecords.data}
           options={{
             fixedColumns: {left: 2, right: 0},
             toolbar : false,

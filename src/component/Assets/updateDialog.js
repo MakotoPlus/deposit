@@ -42,30 +42,44 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function UpdateDialog(props) {
-  const [datas, setDatas] = React.useState(props.datas);
+  const [datas, setDatas] = React.useState(0);
   const [headers] = React.useState(props.headers);
-  const assetRecordIndex = props.id;
-  const insert_yyyymm = props.insert_yyyymm;
+  const [assetRecordIndex] = React.useState(props.id);
+  const [insert_yyyymm, setInsert_yyyymm] = React.useState("");
   const classes = useStyles();
   const {user} = useUserContext();
   const [open, setOpen] = React.useState(false);
   const [fullWidth, ] = React.useState(true);
   const [textRecords, setTextRecords] = React.useState([]);
   const [message, setMessage] = React.useState("");
-  const [insertYyyymmdd, setInsertYyyymmdd] = useState(new Date(props.insert_yyyymm + "/01"));
+  const [insertYyyymmdd, setInsertYyyymmdd] = useState();
   const {assetSearchEvent, setAssetSearchEvent, assetsRecords, setAssetsRecords} = useResultDatasContext();
 
   useEffect(()=>{
+    console.debug(assetsRecords);
+    console.debug(assetRecordIndex);
+    //
+    let data = assetsRecords.data;
+    let insert_yyyymms = assetsRecords.insert_yyyymms;
+    // 存在しない場合があるのでチェックを追加
+    if ( data.length <= assetRecordIndex ){
+      console.debug("Noset setTextRecords");
+      return ;
+    }
+    let record = data[assetRecordIndex];
     let texts = headers.map(header=>{
-      header['value'] = Number(datas[header.id].replace(/,/g, ''));
+      //header['value'] = Number(datas[header.id].replace(/,/g, ''));
+      header['value'] = Number(record[header.id].replace(/,/g, ''));
       return header;
     });
-    console.debug("datas");
-    console.debug(datas);
+    console.debug("insert_yyyymm");
+    console.debug(insert_yyyymms);
     console.debug("setTextRecords");
     console.debug(texts);
+    setInsert_yyyymm(insert_yyyymms[assetRecordIndex]);
+    setInsertYyyymmdd( new Date(insert_yyyymms[assetRecordIndex] + "/01"));
     setTextRecords(texts);
-  },[datas, headers, open]);
+  },[open, assetsRecords]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -110,9 +124,13 @@ export default function UpdateDialog(props) {
     console.debug(updateDatas);
     ApiPutAssetsBulkUpdate(user, updateDatas).then(result=>{
       console.debug("ApiPostAssetsBulkUpdate-success!!");
+      // 戻ってきた結果から1行分の情報を再構築
+      // assetSearchEventをカウントアップすることで呼出し元画面で
+      // 再検索するようにしたため、ここはコメントアウト
+      // 
+      /*
       //console.debug(result);
       result = result.data;
-      // 戻ってきた結果から1行分の情報を再構築
       let tableRecord = {};
       tableRecord['insert_yyyymm'] = result[0]['insert_yyyymm'];
       result.map((record, index) =>{
@@ -122,15 +140,14 @@ export default function UpdateDialog(props) {
         <UpdateDialog 
           id={assetRecordIndex} 
           insert_yyyymm={result[0]['insert_yyyymm']}
-          datas={tableRecord} headers={headers} 
+          headers={headers} 
         />;
       console.debug("updateTableRecord");
       console.debug(tableRecord);
       assetsRecords[assetRecordIndex] = tableRecord;
-
       let newAssetsRecords = assetsRecords;
       setAssetsRecords(newAssetsRecords);
-
+      */
       setAssetSearchEvent(assetSearchEvent+1);
       setOpen(false);
     }).catch( error=>{

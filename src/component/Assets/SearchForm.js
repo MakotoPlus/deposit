@@ -1,23 +1,9 @@
-import React, {useEffect} from 'react';
-//import DepositGroupSelect from '../DepositGroupSelect';
-//import DepositItemSelect from '../DepositItemSelect';
-//import TextField from '@mui/material/TextField';
-//import DateRangePicker from '@mui/lab/DateRangePicker';
+import React from 'react';
 import DatePickerYearMonth from '../common/DatePickerYearMonth';
-//import AdapterDateFns from '@mui/lab/AdapterDateFns';
-//import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import Box from '@mui/material/Box';
 import { makeStyles } from '@material-ui/core/styles';
-import DepositItemMultiSelect from '../common/DepositItemMultiSelect';
-//import Typography from '@mui/material/Typography';
-//import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
 import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
 import {date2StringYyyymmdd} from '../common/prj_func';
 
 const useStyles = makeStyles((theme) => ({
@@ -60,7 +46,7 @@ export default function SearchForm(){
     const classes = useStyles();
     const [from_yyyymmdd, setFrom_yyyymmdd] = React.useState(null);
     const [to_yyyymmdd, setTo_yyyymmdd] = React.useState(null);
-    const {setAssetSearch} = useResultDatasContext();
+    const {assetSearch, setAssetSearch} = useResultDatasContext();
     const handleClickSearch = () => {
         console.debug("Search");
         setAssetSearch({
@@ -71,24 +57,17 @@ export default function SearchForm(){
         });    
     };
     const handleClickReset = () =>{
+        // クリアしたい・・
+        setFrom_yyyymmdd(null);
+        setTo_yyyymmdd(null);
         console.debug("handleClickReset-----");
-        // 日付がクリア出来ないため リセットを押してもクリアしないよう変更
         setAssetSearch({
             select_fromto_date : [
-                date2StringYyyymmdd(from_yyyymmdd, 1), 
-                date2StringYyyymmdd(to_yyyymmdd, 99)
-            ],
-        });    
-        setFrom_yyyymmdd(from_yyyymmdd);
-        setTo_yyyymmdd(to_yyyymmdd);
+                undefined, 
+                undefined
+            ]}
+        )
     }
-
-    useEffect(()=>{
-        console.debug("Data Clean-----");
-        //この画面から実績画面へ移動すると1ページ目のオブジェクトが空になってしまう
-        //仕方がないのでここで実績画面で監視しているオブジェクトを更新する
-        //setResultDatas([]);
-    },[]);
 
     return (
         <React.Fragment>

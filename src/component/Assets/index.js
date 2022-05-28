@@ -4,10 +4,11 @@ import Container from '@mui/material/Container';
 import Toolbar from '@mui/material/Toolbar';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-
 import AssetsTable from "./AssetsTable";
 import InputDialog from "./InputDialog";
 import SearchForm from "./SearchForm";
+import AssetsGraph from "./AssetsGraph";
+
 /*
 * 資産登録ページ
 * 
@@ -52,11 +53,23 @@ function Index(){
                     p: 1,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 600,
+                    height: 530,
                   }}
                 >
               <InputDialog subtitle="New Data"/>
               <AssetsTable />
+            </Paper>
+          </Grid>
+          <Grid item xs={12}>
+            <Paper
+                  sx={{
+                    p: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: 600,
+                  }}
+                >
+              <AssetsGraph />
             </Paper>
           </Grid>
         </Grid>
