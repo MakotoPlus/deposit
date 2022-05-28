@@ -23,7 +23,6 @@ export function ResultDatasProvider({children}){
     var enddt = new Date();
     enddt.setMonth(11);
     enddt.setDate(31);
-
     // Graph表示選択情報
     const [graphSearch, setGraphSearch] = useState({
         select_items : [],
@@ -31,11 +30,25 @@ export function ResultDatasProvider({children}){
     });
     // Graph表示結果情報
     const [graphDatas, setGraphDatas] = useState([]);
-
     // 全データ件数
     const [resultAllCount, setResultAllCount] = useState({count: 0})
     // グループサマリーデータ
     const [groupSumaryDatas, setGroupSumaryDatas] = useState([]);
+
+    // 資産検索条件
+    const [assetSearch, setAssetSearch] = useState({
+        select_fromto_date : [null,null],
+    });
+    // 資産検索結果
+    const [assetsRecords, setAssetsRecords] = useState(
+        {
+            data :[], 
+            insert_yyyymms : [],
+            columns : []
+        }
+    );
+    // 資産検索イベント
+    const [assetSearchEvent, setAssetSearchEvent] = useState(0);
 
     const value ={
         resultDatas, setResultDatas,
@@ -43,7 +56,10 @@ export function ResultDatasProvider({children}){
         resultSearch, setResultSearch,
         groupSumaryDatas, setGroupSumaryDatas,
         graphSearch, setGraphSearch,
-        graphDatas, setGraphDatas
+        graphDatas, setGraphDatas,
+        assetSearch, setAssetSearch,
+        assetsRecords, setAssetsRecords,
+        assetSearchEvent, setAssetSearchEvent,
     };
     return (
         <ResultDatasContext.Provider value={value}>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect }  from 'react';
-import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -7,8 +6,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import {useUserContext} from '../../context/userContext';
+import {ApiGetDepositItem} from './prj_url';
 
-const prj_const = require('./prj_const.js')
 
 /**
  * 預金項目 選択コントロール
@@ -42,21 +41,21 @@ export default function DepositItemSelect() {
   };
 
   useEffect(()=>{
-    async function fetchData(){
-      let headers = {
-        headers : user.Authorization
-      };
-      let result = await axios.get(prj_const.ServerUrl + "/api/deposit_item/", headers);
-      //console.debug(result);
-      // 空白データ先頭に追加
-      let data = [space_data];
-      result.data.results.map(result =>(
-        data.push({ 
-          value: result.depositItem_key.toString(),
-          label: result.depositItem_name
-        })
-      ));
-      setDepositItems(data);
+    function fetchData(){
+      ApiGetDepositItem(user).then(result=>{
+        //console.debug(result);
+        // 空白データ先頭に追加
+        let data = [space_data];
+        result.data.results.map(result =>(
+          data.push({ 
+            value: result.depositItem_key.toString(),
+            label: result.depositItem_name
+          })
+        ));
+        setDepositItems(data);
+      }).catch(error =>{
+        console.error(error);
+      })
     }
     fetchData();
   },[user]);

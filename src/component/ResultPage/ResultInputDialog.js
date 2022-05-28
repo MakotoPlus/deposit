@@ -1,24 +1,19 @@
 import React,{useState} from 'react';
 import Button from '@material-ui/core/Button';
-//import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-//import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DatePicker from '../common/DatePicker'
 import DepositItemSelectGrouping from '../common/DepositItemSelectGrouping';
-//import DepositItemMultiSelect from './../DepositItemMultiSelect';
 import DepositTypeSelect from '../common/DepositTypeSelect';
 import DepositValueText from '../common/DepositValueText';
 import { makeStyles } from '@material-ui/core/styles';
-import { TYPE_DEPOSIT } from '../common/prj_const';
-import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
 import InputMemoText from '../common/InputMemoText';
-const prj_const = require('../common/prj_const.js')
-
+import {TYPE_DEPOSIT,TYPE_DEPOSIT_STR,TYPE_EXPENSES_STR} from '../common/prj_const';
+import {ApiPostDeposit} from '../common/prj_url';
 //
 // 実績データ登録ダイアログ
 const useStyles = makeStyles((theme) => ({
@@ -117,18 +112,15 @@ export default function ResultInputDialog({subtitle}) {
     };
 
     //Post実行
-    axios.defaults.headers.common["Authorization"] = user.Authorization.Authorization;
-    axios.defaults.baseURL = prj_const.ServerUrl + "/api";
-    axios.post(prj_const.ServerUrl + "/api/deposit/", data 
-    ).then(response =>{
+    ApiPostDeposit(user, data).then(response=>{
       console.debug(response);
       let newRow = {
         deposit_key: response.data.deposit_key,
         deposit_group_name: depositItemObj.deposit_group_name,
         deposit_type: response.data.deposit_type,
         depositItem_name: depositItemObj.depositItem_name,
-        deposit_type_str: response.data.deposit_type === prj_const.TYPE_DEPOSIT 
-          ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR,
+        deposit_type_str: response.data.deposit_type === TYPE_DEPOSIT 
+          ? TYPE_DEPOSIT_STR : TYPE_EXPENSES_STR,
         deposit_value: Number(response.data.deposit_value).toLocaleString(),
         deposit_item_obj : depositItemObj,
         memo: memo,

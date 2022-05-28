@@ -1,26 +1,8 @@
 import React, {useEffect} from 'react';
 import Typography from '@mui/material/Typography';
-import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {usePlanContext} from '../../context/planContext';
-
-const prj_const = require('../common/prj_const.js')
-
-//function preventDefault(event) {
-//  event.preventDefault();
-//}
-
-//
-// 全データ取得
-async function getSavingsTotal(user){
-  let headers = {
-    headers : user.Authorization
-  };
-  let result;
-  let urlpath = prj_const.ServerUrl + "/api/savings_total/";
-  result = await axios.get(urlpath, headers);
-  return result;
-}
+import {ApiGetSavingsTotal} from '../common/prj_url';
 
 
 export default function PlanTotal() {
@@ -28,7 +10,7 @@ export default function PlanTotal() {
   const {plan} = usePlanContext();  
   const [savingTotal, setSavingTotal] = React.useState("0");
   useEffect(()=>{
-    getSavingsTotal(user).then(result=>{
+    ApiGetSavingsTotal(user).then(result=>{
       //console.debug(result);
       let value = result.data.value ? result.data.value : 0;
       setSavingTotal(value.toLocaleString('ja-JP', { style: 'currency', currency: 'JPY' }));

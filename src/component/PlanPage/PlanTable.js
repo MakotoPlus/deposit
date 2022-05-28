@@ -10,11 +10,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import PlunUpdateDialog from './PlanUpdateDialog';
-import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {usePlanContext} from '../../context/planContext';
-
-const prj_const = require('../common/prj_const.js')
+import {TYPE_DEPOSIT,TYPE_DEPOSIT_STR,TYPE_EXPENSES_STR} from '../common/prj_const';
+import {ApiGetSavingsList} from '../common/prj_url';
 
 //
 // 預金設定明細画面
@@ -33,8 +32,8 @@ function createObj(record, index, rowPage, page ){
     deposit_group_name : record.depositItem_key.deposit_group_name, 
     depositItem_name : record.depositItem_key.depositItem_name, 
     deposit_type : record.deposit_type, 
-    deposit_type_str : record.deposit_type === prj_const.TYPE_DEPOSIT ?
-      prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR, 
+    deposit_type_str : record.deposit_type === TYPE_DEPOSIT ?
+      TYPE_DEPOSIT_STR : TYPE_EXPENSES_STR, 
     deposit_value : record.deposit_value.toLocaleString(),
     delete_flag : record.delete_flag,
     deposit_item_obj : record.depositItem_key,
@@ -100,7 +99,7 @@ const useStyles = makeStyles({
   },
 });
 
-
+/*
 //
 // 複数データ取得時は、datasのみ追加して返す
 async function getSavingsList(user, urlParameters, urlPath){
@@ -122,7 +121,7 @@ async function getSavingsList(user, urlParameters, urlPath){
   }
   return await axios.get(path, headers);
 }
-
+*/
 
 export default function PlanTable() {
   const classes = useStyles();
@@ -150,7 +149,7 @@ export default function PlanTable() {
     let paramOffset = "offset=0";
     let searchParameters = paramLimit + "&" + paramOffset;
     //setThisUrl(searchParameters);
-    getSavingsList(user, searchParameters, undefined).then(result =>{
+    ApiGetSavingsList(user, searchParameters, undefined).then(result =>{
       console.debug(result);
       //前ページURL・次ページURL・データ件数設定
       const data = result.data;
@@ -175,7 +174,7 @@ export default function PlanTable() {
       url = prevUrl;
     }
     console.debug( `URL=${url}`);
-    getSavingsList(user, undefined, url).then(result=>{
+    ApiGetSavingsList(user, undefined, url).then(result=>{
       //前ページURL・次ページURL・データ件数設定
       const data = result.data;
       setPrevUrl(data.previous);
@@ -225,7 +224,7 @@ export default function PlanTable() {
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.id} className={rowClassName}>
                   {columns.map((column, index) => {
                     const value = row[column.id];                    
-                    const paperClass = row.deposit_type === prj_const.TYPE_DEPOSIT ?
+                    const paperClass = row.deposit_type === TYPE_DEPOSIT ?
                       classes.DepositPaper : classes.ExpensesPaper;              
                       return (
                         <TableCell key={column.id} align={column.align}>

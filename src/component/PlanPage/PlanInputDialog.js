@@ -10,11 +10,11 @@ import DepositItemSelectGrouping from '../common/DepositItemSelectGrouping'
 import DepositTypeSelect from '../common/DepositTypeSelect';
 import DepositValueText from '../common/DepositValueText';
 import { makeStyles } from '@material-ui/core/styles';
-import { TYPE_DEPOSIT } from '../common/prj_const';
-import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {usePlanContext} from '../../context/planContext';
-const prj_const = require('../common/prj_const.js')
+import {ApiPostSavings} from '../common/prj_url';
+import {TYPE_DEPOSIT, TYPE_DEPOSIT_STR, TYPE_EXPENSES_STR} from '../common/prj_const';
+
 
 //
 // 貯金計画データ登録ダイアログ
@@ -102,37 +102,31 @@ export default function PlanInputDialog({subtitle}) {
     }
     // Post実行
     //
-    //console.debug(user);
-    //console.debug(`JWT ${token}`);
-    //axios.defaults.headers.common["Authorization"] = `JWT ${token}`;
-    axios.defaults.headers.common["Authorization"] = user.Authorization.Authorization;
-    axios.defaults.baseURL = prj_const.ServerUrl + "/api";
-    axios.post(prj_const.ServerUrl + "/api/savings/", data 
-      ).then(response =>{
-        console.debug(response);
-        let newRow = {
-          savings_key: response.data.savings_key,
-          deposit_group_name: depositItemObj.deposit_group_name,
-          deposit_type: response.data.deposit_type,
-          depositItem_name: depositItemObj.depositItem_name,
-          deposit_type_str: response.data.deposit_type === prj_const.TYPE_DEPOSIT 
-            ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR,
-          deposit_value: Number(response.data.deposit_value).toLocaleString(),
-          deposit_item_obj : depositItemObj
-        }
-        //
-        // データ追加は行わないがトータル金額などの更新のためにデータを再設定する
-        //
-        // ここにデータ件数追加された事によりPlanTableの最大件数を1件増やすイベントを追加する
-        //
-        //
-        console.debug(newRow);
-        let newRows = [...plan];
-        setPlan(newRows);
-        setPlanAllCount(planAllCount+1);
-        setOpen(false);
-      }).catch( error =>{
-        console.error(error);
+    ApiPostSavings(user, data).then(response=>{
+      console.debug(response);
+      let newRow = {
+        savings_key: response.data.savings_key,
+        deposit_group_name: depositItemObj.deposit_group_name,
+        deposit_type: response.data.deposit_type,
+        depositItem_name: depositItemObj.depositItem_name,
+        deposit_type_str: response.data.deposit_type === TYPE_DEPOSIT 
+          ? TYPE_DEPOSIT_STR : TYPE_EXPENSES_STR,
+        deposit_value: Number(response.data.deposit_value).toLocaleString(),
+        deposit_item_obj : depositItemObj
+      }
+      //
+      // データ追加は行わないがトータル金額などの更新のためにデータを再設定する
+      //
+      // ここにデータ件数追加された事によりPlanTableの最大件数を1件増やすイベントを追加する
+      //
+      //
+      console.debug(newRow);
+      let newRows = [...plan];
+      setPlan(newRows);
+      setPlanAllCount(planAllCount+1);
+      setOpen(false);
+    }).catch( error =>{
+      console.error(error);
     });
   };
 

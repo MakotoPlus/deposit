@@ -8,11 +8,9 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
-
-const prj_const = require('../common/prj_const.js')
+import {ApiGetDepositSumaryList} from '../common/prj_url.js';
 
 //
 // GroupSumary
@@ -23,17 +21,7 @@ const columns = [
     ,{ id : 'sum_value', label: 'Value', minWidth:100, align: 'right', format:(value) => value.toLocaleString(), }
 ]
 
-//
-// 全データ取得
-async function getDepositSumaryList(user, nRunApiCount = 1, page = 1){
-  let headers = {
-    headers : user.Authorization
-  };
-  let urlpath = prj_const.ServerUrl + "/api/deposit_groupsumary_list/?no_page";
-  let result = await axios.get(urlpath, headers);
-  console.debug(result);
-  return result;
-}
+
 
 function createData(id, deposit_group_name, sum_value) {
     return { 
@@ -69,7 +57,7 @@ export default function GroupSumary() {
 
   useEffect(()=>{
     function fetchData(){
-      getDepositSumaryList(user, 1, serverPage).then(result=>{
+      ApiGetDepositSumaryList(user, 1, serverPage).then(result=>{
         let results = result.data;
         let rowsObj = results.map(( record, index ) => 
           createData( index + 1, 
@@ -83,6 +71,8 @@ export default function GroupSumary() {
         setRows(rowsObj);
         setServerPage(1 + serverPage);
         setGroupSumaryDatas(rowsObj);
+      }).catch(error =>{
+        console.error(error);
       })
     }
     fetchData();

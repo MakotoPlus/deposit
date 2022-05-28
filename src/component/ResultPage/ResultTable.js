@@ -12,9 +12,8 @@ import TableRow from '@material-ui/core/TableRow';
 import ResultUpdateDialog from './ResultUpdateDialog';
 import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
-import axios from 'axios';
-
-const prj_const = require('../common/prj_const.js')
+import {ApiGetDepositList} from '../common/prj_url';
+import {TYPE_DEPOSIT, TYPE_DEPOSIT_STR, TYPE_EXPENSES_STR} from '../common/prj_const';
 
 //
 //
@@ -32,21 +31,6 @@ const columns = [
     //,{ id : 'deposit_key', label: 'Key', minWidth:100 }
 ]
 
-async function getDepositList(user, urlParameters, urlPath){
-  //
-  // parameters : URLパラメータ (未設定の場合はURLを有効にする)
-  // url: アクセスURLパス
-  let path ="";
-  if (!urlParameters){
-    path = urlPath;
-  }else{
-    path = prj_const.ServerUrl + "/api/deposit_list/?" + urlParameters;
-  }
-  let headers = {
-    headers : user.Authorization
-  };
-  return await axios.get(path, headers);
-}
 
 function createObj(record, index, rowPage, page ){
   return {
@@ -54,8 +38,8 @@ function createObj(record, index, rowPage, page ){
     deposit_key : record.deposit_key,
     delete_flag : record.delete_flag,
     deposit_type : record.deposit_type,
-    deposit_type_str : (record.deposit_type === prj_const.TYPE_DEPOSIT) 
-    ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR,
+    deposit_type_str : (record.deposit_type === TYPE_DEPOSIT) 
+    ? TYPE_DEPOSIT_STR : TYPE_EXPENSES_STR,
     deposit_value : record.deposit_value.toLocaleString(),
     memo : record.memo,    
     insert_yyyymmdd : record.insert_yyyymmdd,
@@ -144,7 +128,7 @@ export default function ResultTable() {
     }else{
       url = prevUrl;
     }
-    getDepositList(user, undefined, url).then(result=>{
+    ApiGetDepositList(user, undefined, url).then(result=>{
       //console.debug(result);
       //前ページURL・次ページURL・データ件数設定
       const data = result.data;
@@ -225,7 +209,7 @@ export default function ResultTable() {
       }
     });
     //setThisUrl(searchParameters);
-    getDepositList(user, searchParameters, undefined).then(result =>{
+    ApiGetDepositList(user, searchParameters, undefined).then(result =>{
       console.debug(result);
       //前ページURL・次ページURL・データ件数設定
       const data = result.data;
@@ -263,7 +247,7 @@ export default function ResultTable() {
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.id} className={rowClassName}>
                   {columns.map((column, index) => {
                     const value = row[column.id];
-                    const paperClass = row.deposit_type === prj_const.TYPE_DEPOSIT ?
+                    const paperClass = row.deposit_type === TYPE_DEPOSIT ?
                       classes.DepositPaper : classes.ExpensesPaper;
                     return (
                       <TableCell key={column.id} align={column.align} className={classes.tableCell}>

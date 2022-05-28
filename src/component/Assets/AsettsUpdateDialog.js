@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function ResultUpdateDialog(props) {
+export default function AsettsUpdateDialog(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const {user} = useUserContext();
@@ -83,8 +83,6 @@ export default function ResultUpdateDialog(props) {
   }
 
   useEffect(()=>{
-    console.debug('-------------------------ResultUpdateDialog');
-    console.debug(props.record);
     setRecord(props.record);
     setDeposit_key(props.record.deposit_key);
     //

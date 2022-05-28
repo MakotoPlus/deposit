@@ -121,7 +121,11 @@ export default function ResultSearchForm(){
                     m={0} //margin
                     className={`${classes.Box} ${classes.ItemBox}`}
                     >
-                    <DepositItemMultiSelect userSelectItems={userSelectItems} setUserSelectItems={setUserSelectItems}/>
+                    <DepositItemMultiSelect 
+                        userSelectItems={userSelectItems} 
+                        setUserSelectItems={setUserSelectItems}
+                        deposit_flag={true}
+                    />
                 </Box>
                 <Box
                 component="span"

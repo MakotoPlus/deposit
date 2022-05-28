@@ -1,23 +1,20 @@
-import * as React from 'react';
+import React from 'react';
+import DatePickerYearMonth from '../common/DatePickerYearMonth';
 import Box from '@mui/material/Box';
 import { makeStyles } from '@material-ui/core/styles';
-import DepositItemMultiSelect from '../common/DepositItemMultiSelect';
-//import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
-//import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import Button from '@material-ui/core/Button';
-import DatePickerYearMonth from '../common/DatePickerYearMonth';
-// const prj_func = require('./../common/prj_func');
+import {date2StringYyyymmdd} from '../common/prj_func';
 
 const useStyles = makeStyles((theme) => ({
     Box: {
-        height: 65,
+        height: 85,
         display: "flex",
         border: "0px solid black",
         padding: 0,
     },
     ItemBox: {
-        height: 65,
+        height: 85,
         display: "flex",
         border: "0px solid black",
         padding: 0,
@@ -28,11 +25,15 @@ const useStyles = makeStyles((theme) => ({
         border: "0px solid black",
         padding: 20,
     },
+
     SearchBox: {
         height: 85,
         display: "flex",
         border: "0px solid black",
         padding: 20
+    },
+    deleteCheckBok : {
+        color : "gray",
     },
     bottomLeftBox: {
         justifyContent: "flex-end",
@@ -41,42 +42,32 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function GraphSearchForm(){
-
+export default function SearchForm(){
     const classes = useStyles();
-    const {graphSearch, setGraphSearch} = useResultDatasContext();
-    const [from_yyyymmdd, setFrom_yyyymmdd] = React.useState(graphSearch.select_fromto_date[0]);
-    const [to_yyyymmdd, setTo_yyyymmdd] = React.useState(graphSearch.select_fromto_date[1]);
-
-    const [userSelectItems, setUserSelectItems] = React.useState([]);
-    const handleClickShow = () => {
-        console.debug("handleClickShow");
-        console.debug(userSelectItems); 
-        let setObj = {
-            select_items : userSelectItems,
+    const [from_yyyymmdd, setFrom_yyyymmdd] = React.useState(null);
+    const [to_yyyymmdd, setTo_yyyymmdd] = React.useState(null);
+    const {assetSearch, setAssetSearch} = useResultDatasContext();
+    const handleClickSearch = () => {
+        console.debug("Search");
+        setAssetSearch({
             select_fromto_date : [
-                from_yyyymmdd, 
-                to_yyyymmdd,
+                date2StringYyyymmdd(from_yyyymmdd, 1), 
+                date2StringYyyymmdd(to_yyyymmdd, 99)
             ],
-        };
-        setGraphSearch(setObj);
+        });    
     };
-
-
     const handleClickReset = () =>{
-        // 日付が空白にならないため削除しない。
-        console.debug("handleClickReset");
-        console.debug(from_yyyymmdd);
-        console.debug(to_yyyymmdd);
-        setUserSelectItems([]);
-        setGraphSearch({
-            select_items : [],
-            select_fromto_date : [from_yyyymmdd, to_yyyymmdd]
-        });
-        //setFrom_yyyymmdd(undefined);
-        //setTo_yyyymmdd(undefined);
+        // クリアしたい・・
+        setFrom_yyyymmdd(null);
+        setTo_yyyymmdd(null);
+        console.debug("handleClickReset-----");
+        setAssetSearch({
+            select_fromto_date : [
+                undefined, 
+                undefined
+            ]}
+        )
     }
-
 
     return (
         <React.Fragment>
@@ -90,10 +81,6 @@ export default function GraphSearchForm(){
                     m={0} //margin
                     className={`${classes.Box} ${classes.ItemBox}`}
                     >
-                    <DepositItemMultiSelect userSelectItems={userSelectItems} 
-                        setUserSelectItems={setUserSelectItems}
-                        deposit_flag={true}
-                    />
                 </Box>
                 <Box
                 component="span"
@@ -108,17 +95,17 @@ export default function GraphSearchForm(){
                     </Box>
                 </Box>
                 <Box
-                  component="span"
-                  m={0} //margin
-                  className={`${classes.SearchBox} ${classes.bottomLeftBox}`}
-                  >       
+                component="span"
+                m={0} //margin
+                className={`${classes.SearchBox} ${classes.bottomLeftBox}`}
+                >       
                     <Button variant="outlined" color="primary"  onClick={handleClickReset}>
                         Reset
                     </Button>
-                    <Button variant="outlined" color="primary"  onClick={handleClickShow}>
-                        Show
+                    <Button variant="outlined" color="primary"  onClick={handleClickSearch}>
+                        search
                     </Button>
-                </Box>
+            </Box>
             </Box>
         </React.Fragment>
     );

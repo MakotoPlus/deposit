@@ -1,5 +1,5 @@
 //import 'date-fns';
-import React from 'react';
+import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { LocalizationProvider, DatePicker } from '@mui/lab'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
@@ -20,6 +20,15 @@ export default function DatePickerYearMonth(props) {
     props.setYyyymmdd(dt);
     setSelectedDate(dt);
   };
+
+  useEffect(()=>{
+    if (!props.yyyymmdd){
+      setSelectedDate(null);
+    }
+    //console.log(`selectedDate=${selectedDate}`);
+    //console.log(`props.yyyymmdd=${props.yyyymmdd}`);
+  });
+
   return (
     <div className={classes.root}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>

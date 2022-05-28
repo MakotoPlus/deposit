@@ -13,10 +13,9 @@ import Input from '@material-ui/core/Input';
 //import Checkbox from '@material-ui/core/Checkbox';
 import Chip from '@material-ui/core/Chip';
 import ListSubheader from '@mui/material/ListSubheader';
-import axios from 'axios';
+//import axios from 'axios';
 import {useUserContext} from '../../context/userContext';
-
-const prj_const = require('./prj_const.js')
+import {ApiGetDepositItemList} from './prj_url';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -64,6 +63,7 @@ export default function DepositItemMultiSelect(props) {
     const theme = useTheme();
     const {user} = useUserContext();
     const [selectMenuItems, setSelectMenuItems] = useState([]);
+    const deposit_flag = props.deposit_flag;
     //const [depositItem_key, setDepositItem_key] = useState([]);
     const [selectItems, setSelectItems] = useState([]);
     //const [userSelectItems, setUserSelectItems] = React.useState([]);
@@ -71,6 +71,7 @@ export default function DepositItemMultiSelect(props) {
     const setUserSelectItems = props.setUserSelectItems;
 
     useEffect(()=>{
+<<<<<<< HEAD
       async function fetchData(){
         let headers = {
           headers : user.Authorization
@@ -87,78 +88,95 @@ export default function DepositItemMultiSelect(props) {
         console.debug("DepositItemSelectGrouping.userEfect");
         console.debug(result);
         items = result.data.map((r)=>{
+=======
+      function fetchData(){
+        ApiGetDepositItemList(user, deposit_flag).then( result =>{
+          let groups = {}; // 全てのgropid, groupname を格納(重複なし)
+          let items = [];
+            //
+          // 1. 一度、表示すべきグループと項目をリストに別々に格納する
+          // 2. １の情報を利用しリストボックス出力用のXSLTを生成する
+          // 3. useStateに設定する
+>>>>>>> 202205-assets
           //
-          // Group情報格納
-          if (false === (r.deposit_group_key.deposit_group_key.toString() in groups )){
-            let menu_group_value = r.deposit_group_key.deposit_group_key.toString() + "," +
-            r.deposit_group_key.deposit_group_name;
-            // group keyが存在しなかったら新規なので追加する
-            groups[r.deposit_group_key.deposit_group_key.toString()] = {
-              group_id : r.deposit_group_key.deposit_group_key.toString(),
-              group_name : r.deposit_group_key.deposit_group_name,
-              menu_group_value : menu_group_value,
-              depositItem_key : "dumy" + r.deposit_group_key.deposit_group_key
+          console.debug("DepositItemSelectGrouping.userEfect");
+          console.debug(result);
+          items = result.data.map((r)=>{
+            //
+            // Group情報格納
+            if (false === (r.deposit_group_key.deposit_group_key.toString() in groups )){
+              let menu_group_value = r.deposit_group_key.deposit_group_key.toString() + "," +
+              r.deposit_group_key.deposit_group_name;
+              // group keyが存在しなかったら新規なので追加する
+              groups[r.deposit_group_key.deposit_group_key.toString()] = {
+                group_id : r.deposit_group_key.deposit_group_key.toString(),
+                group_name : r.deposit_group_key.deposit_group_name,
+                menu_group_value : menu_group_value,
+                depositItem_key : "dumy" + r.deposit_group_key.deposit_group_key
+              }
             }
-          }
-          let deposit_item_obj = {
-            deposit_group_key : r.deposit_group_key.deposit_group_key,
-            deposit_group_name: r.deposit_group_key.deposit_group_name,
-            depositItem_key : r.depositItem_key,
-            depositItem_name: r.depositItem_name,
-          }
-          return ({
-            depositItem_key : r.depositItem_key,
-            group_id : r.deposit_group_key.deposit_group_key.toString(),
-            deposit_item_obj : deposit_item_obj,
+            let deposit_item_obj = {
+              deposit_group_key : r.deposit_group_key.deposit_group_key,
+              deposit_group_name: r.deposit_group_key.deposit_group_name,
+              depositItem_key : r.depositItem_key,
+              depositItem_name: r.depositItem_name,
+            }
+            return ({
+              depositItem_key : r.depositItem_key,
+              group_id : r.deposit_group_key.deposit_group_key.toString(),
+              deposit_item_obj : deposit_item_obj,
+            });
           });
-        });
-        // groups は object なので 配列に変える。
-        let grouplist = [];
-        Object.keys(groups).forEach((key)=>{
-          let groupItem = {
-            group_id : groups[key].group_id,
-            group_name : groups[key].group_name
-          }
-          grouplist.push(groupItem);
-        });
-  
-        //
-        // 2. １の情報を利用しリストボックス出力用のXSLTを生成する
-        //    全てのItemをここで格納する・・
-        let menuItems = [];
-        //
-        // 空白は不要なため生成しない
-        menuItems.push(
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-        );
-        Object.keys(groups).forEach((key, i)=>{
-          let groupkey = key + "-" + i
+          // groups は object なので 配列に変える。
+          let grouplist = [];
+          Object.keys(groups).forEach((key)=>{
+            let groupItem = {
+              group_id : groups[key].group_id,
+              group_name : groups[key].group_name
+            }
+            grouplist.push(groupItem);
+          });
+
+          //
+          // 2. １の情報を利用しリストボックス出力用のXSLTを生成する
+          //    全てのItemをここで格納する・・
+          let menuItems = [];
+          //
+          // 空白は不要なため生成しない
           menuItems.push(
-            <ListSubheader key={groupkey}>{groups[key].group_name}</ListSubheader>
-          )
-          // 同一のGroup_idのみ追加して抽出
-          const additems = items.filter(item => item.group_id === groups[key].group_id );
-          let addMenuItems = additems.map((item) =>{
-            console.debug(`deposit_item_obj=${item.deposit_item_obj}`)
-            return (
-                <MenuItem key={item.depositItem_key} 
-                    value={item.deposit_item_obj.depositItem_key} 
-                    style={getStyles(item.deposit_item_obj.depositItem_name, userSelectItems, theme)}>
-                    {item.deposit_item_obj.depositItem_name}
-                </MenuItem>
-            );
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+          );
+          Object.keys(groups).forEach((key, i)=>{
+            let groupkey = key + "-" + i
+            menuItems.push(
+              <ListSubheader key={groupkey}>{groups[key].group_name}</ListSubheader>
+            )
+            // 同一のGroup_idのみ追加して抽出
+            const additems = items.filter(item => item.group_id === groups[key].group_id );
+            let addMenuItems = additems.map((item) =>{
+              console.debug(`deposit_item_obj=${item.deposit_item_obj}`)
+              return (
+                  <MenuItem key={item.depositItem_key} 
+                      value={item.deposit_item_obj.depositItem_key} 
+                      style={getStyles(item.deposit_item_obj.depositItem_name, userSelectItems, theme)}>
+                      {item.deposit_item_obj.depositItem_name}
+                  </MenuItem>
+              );
+            });
+            menuItems = [...menuItems, addMenuItems];
           });
-          menuItems = [...menuItems, addMenuItems];
-        });
-        //
-        // 3. useStateに設定する
-        //    console.debug(menuItems);
-        setSelectMenuItems(menuItems);
-        //
-        // Select Listの全データリストを保持
-        setSelectItems(items);
+          //
+          // 3. useStateに設定する
+          //    console.debug(menuItems);
+          setSelectMenuItems(menuItems);
+          //
+          // Select Listの全データリストを保持
+          setSelectItems(items);
+        }).catch( error =>{
+          console.error(error);
+        })
       }
       fetchData();
     },[]);

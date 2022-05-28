@@ -8,15 +8,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@mui/material/Grid';
-//import Title from './Title';
-//import { Link as RouterLink } from "react-router-dom";
-//import ResultUpdateDialog from './../component/ResultPage/ResultUpdateDialog';
 import {useUserContext} from './../context/userContext';
-//import {useResultDatasContext} from './../context/resultDatasContext';
 import TableContainer from '@material-ui/core/TableContainer';
-import axios from 'axios';
-
-const prj_const = require('../component/common/prj_const');
+import {ApiGetDepositList} from '../component/common/prj_url';
+import {TYPE_DEPOSIT, TYPE_DEPOSIT_STR, TYPE_EXPENSES_STR} from '../component/common/prj_const';
 
 const useStyles = makeStyles({
   root: {
@@ -79,26 +74,6 @@ const columns = [
   //,{ id : 'deposit_key', label: 'Key', minWidth:100 }
 ]
 
-//function preventDefault(event) {
-//  event.preventDefault();
-//}
-
-async function getDepositList(user, urlParameters, urlPath){
-  //
-  // parameters : URLパラメータ (未設定の場合はURLを有効にする)
-  // url: アクセスURLパス
-  let path ="";
-  if (!urlParameters){
-    path = urlPath;
-  }else{
-    path = prj_const.ServerUrl + "/api/deposit_list/?" + urlParameters;
-  }
-  let headers = {
-    headers : user.Authorization
-  };
-  return await axios.get(path, headers);
-}
-
 
 function createObj(record, index, rowPage, page ){
   return {
@@ -106,8 +81,8 @@ function createObj(record, index, rowPage, page ){
     deposit_key : record.deposit_key,
     delete_flag : record.delete_flag,
     deposit_type : record.deposit_type,
-    deposit_type_str : (record.deposit_type === prj_const.TYPE_DEPOSIT) 
-    ? prj_const.TYPE_DEPOSIT_STR : prj_const.TYPE_EXPENSES_STR,
+    deposit_type_str : (record.deposit_type === TYPE_DEPOSIT) 
+    ? TYPE_DEPOSIT_STR : TYPE_EXPENSES_STR,
     deposit_value : record.deposit_value.toLocaleString(),
     memo : record.memo,    
     insert_yyyymmdd : record.insert_yyyymmdd,
@@ -168,7 +143,7 @@ export default function Orders() {
       }
     });
     //setThisUrl(searchParameters);
-    getDepositList(user, searchParameters, undefined).then(result =>{
+    ApiGetDepositList(user, searchParameters, undefined).then(result =>{
       console.debug(result);
       const data = result.data;
       let rowsObj = data.results.map((record, index) => createObj(record, index, rowsPerPage, page));
@@ -201,7 +176,7 @@ export default function Orders() {
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.id} className={rowClassName}>
                   {columns.map((column, index) => {
                     const value = row[column.id];
-                    const paperClass = row.deposit_type === prj_const.TYPE_DEPOSIT ?
+                    const paperClass = row.deposit_type === TYPE_DEPOSIT ?
                       classes.DepositPaper : classes.ExpensesPaper;
                     return (
                       <TableCell key={column.id} align={column.align} className={classes.tableCell}>
