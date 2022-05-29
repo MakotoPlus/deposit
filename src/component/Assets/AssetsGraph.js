@@ -1,5 +1,5 @@
 //
-// 資産グラフ
+// 資産 項目別グラフ
 //
 import React, {useEffect} from 'react';
 //import { makeStyles } from '@material-ui/core/styles';
@@ -23,16 +23,12 @@ const coloers = [
 // 配列中の全てのオブジェクトを1つのオブジェクトに格納する
 //
 function ObjectMerge(objes){
-  //console.log("ObjectMerg START");
   let merged = objes.reduce((acc, obj, index)=>{
     for (let key in obj){
       acc[key] = obj[key];
-      //console.log(obj[key]);
     }
     return acc;
   },{});
-  //console.log(merged);  
-  //console.log("ObjectMerg END");
   return merged;
 }
 
@@ -42,10 +38,17 @@ export default function AssetsGraph() {
   const [graphDatas, setGraphDatas] = React.useState([])
   const [lines, setLines] = React.useState([])
 
+  const IS_DEBUG = false;
+  const debuglog = (message) =>{
+    if (IS_DEBUG){
+      console.debug(message);
+    }
+  }
+
   useEffect(()=>{
     function fetchData(){
-      console.log("AssetsGraph");
-      console.log(assetsRecords);
+      debuglog("AssetsGraph");
+      debuglog(assetsRecords);
 
       //graphDatas.map((grafData, index)=>{
       // データ行から項目名のデータを抽出し設定する
@@ -69,23 +72,23 @@ export default function AssetsGraph() {
       //　1次元に変換する
       // 
       let GrafAllRecords = dataRecords.map(records=> ObjectMerge(records));
-      console.log("GrafAllRecords");
-      console.log(GrafAllRecords);
+      debuglog("GrafAllRecords");
+      debuglog(GrafAllRecords);
       // 日付以外の値を数値型変換
       GrafAllRecords = GrafAllRecords.map(records=>{
-        console.log(records);
+        debuglog(records);
         let keys = Object.keys(records);
         for (let key of keys){
           if (key !== 'name'){
-            console.log(key);
-            console.log(records[key]);
+            debuglog(key);
+            debuglog(records[key]);
             records[key] = Number(records[key].replace(/,/g, ''));
           }
         }
         return records;  
       })
-      console.log("GrafAllRecords-2");
-      console.log(GrafAllRecords);
+      debuglog("GrafAllRecords-2");
+      debuglog(GrafAllRecords);
       // データを昇順にソート
       GrafAllRecords = GrafAllRecords.sort((a, b)=>{
         if (a.name < b.name){
@@ -127,7 +130,7 @@ export default function AssetsGraph() {
 
   return(
     <React.Fragment>
-      <Title>Glaph</Title>
+      <Title>項目別グラフ</Title>
       <ResponsiveContainer>
         <LineChart
           data={graphDatas}

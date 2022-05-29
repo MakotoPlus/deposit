@@ -242,3 +242,25 @@ export async function ApiPutAssetsBulkUpdate(user, data){
   return await axios.put(ServerUrl + "/api/assets_bulk_update/", data);
 }
 
+//資産グループ・日付単位データ取得
+export async function ApiGetAssetsGroupSumaryList(user, assetSearch){
+  let urlpath = ServerUrl + "/api/assets_group_sumary_list/?no_page";
+  let headers = {
+    headers : user.Authorization
+  };
+  const from_date = assetSearch.select_fromto_date[0];
+  const to_date = assetSearch.select_fromto_date[1];
+
+  console.debug("from_date");
+  console.debug(from_date);
+  console.debug("to_date");
+  console.debug(to_date);
+  if ((from_date !== undefined) && (from_date !== '') && (from_date !== null)){
+    urlpath += `&insert_yyyymm_from=${from_date.substr(0,7)}`
+  }
+  if ((to_date !== undefined) && (to_date !== '') && (to_date !== null)){
+    urlpath += `&insert_yyyymm_to=${to_date.substr(0,7)}`
+  }
+  return await axios.get(urlpath, headers);
+
+}

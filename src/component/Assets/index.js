@@ -8,7 +8,7 @@ import AssetsTable from "./AssetsTable";
 import InputDialog from "./InputDialog";
 import SearchForm from "./SearchForm";
 import AssetsGraph from "./AssetsGraph";
-
+import AssetsGroupGraph from "./AssetsGroupGraph"
 /*
 * 資産登録ページ
 * 
@@ -70,7 +70,19 @@ function Index(){
                   }}
                 >
               <AssetsGraph />
-            </Paper>
+            </Paper>            
+          </Grid>
+          <Grid item xs={12}>
+            <Paper
+                  sx={{
+                    p: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: 600,
+                  }}
+                >
+              <AssetsGroupGraph />
+            </Paper>            
           </Grid>
         </Grid>
       </Container>

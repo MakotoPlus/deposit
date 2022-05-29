@@ -71,24 +71,6 @@ export default function DepositItemMultiSelect(props) {
     const setUserSelectItems = props.setUserSelectItems;
 
     useEffect(()=>{
-<<<<<<< HEAD
-      async function fetchData(){
-        let headers = {
-          headers : user.Authorization
-        };
-        let groups = {}; // 全てのgropid, groupname を格納(重複なし)
-        let items = [];
-        let result = await axios.get(prj_const.ServerUrl + "/api/deposit_item_list/?no_page&deposit_flag=true", headers);
-  
-        //
-        // 1. 一度、表示すべきグループと項目をリストに別々に格納する
-        // 2. １の情報を利用しリストボックス出力用のXSLTを生成する
-        // 3. useStateに設定する
-        //
-        console.debug("DepositItemSelectGrouping.userEfect");
-        console.debug(result);
-        items = result.data.map((r)=>{
-=======
       function fetchData(){
         ApiGetDepositItemList(user, deposit_flag).then( result =>{
           let groups = {}; // 全てのgropid, groupname を格納(重複なし)
@@ -97,7 +79,6 @@ export default function DepositItemMultiSelect(props) {
           // 1. 一度、表示すべきグループと項目をリストに別々に格納する
           // 2. １の情報を利用しリストボックス出力用のXSLTを生成する
           // 3. useStateに設定する
->>>>>>> 202205-assets
           //
           console.debug("DepositItemSelectGrouping.userEfect");
           console.debug(result);
