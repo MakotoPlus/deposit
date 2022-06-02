@@ -8,7 +8,7 @@ import { Tooltip, CartesianGrid, LineChart, Line, XAxis, YAxis, Label, Responsiv
 import Title from '../../dashboard/Title';
 import {useUserContext} from '../../context/userContext';
 import {useResultDatasContext} from '../../context/resultDatasContext';
-import {ApiGetAssetsGroupSumaryList} from '../common/prj_url';
+import {ApiGetAssetsGroupSumaryList, ApiGetAssetsSumaryList} from '../common/prj_url';
 
 const coloers = [
   "red",
@@ -40,9 +40,10 @@ export default function AssetsGroupGraph() {
   const {user} = useUserContext();  
   const {assetSearch, assetsRecords, assetSearchEvent} = useResultDatasContext();
   const [graphDatas, setGraphDatas] = React.useState([])
+  const [totalGraphlDatas, setTotalGraphDatas] = React.useState([])
   const [lines, setLines] = React.useState([])
-
-  const IS_DEBUG = true;
+  const [groupNames, setGroupNames] = React.useState([])
+  const IS_DEBUG = false;
   const debuglog = (message) =>{
     if (IS_DEBUG){
       console.debug(message);
@@ -50,8 +51,30 @@ export default function AssetsGroupGraph() {
   }
 
   useEffect(()=>{
-    function fetchData(){
-      console.log("AssetsGroupGraph");
+    function fetchAll(){
+      fetchTotalData().then(totalDatas=>{
+        fetchData(totalDatas);
+      })
+    }
+    async function fetchTotalData(){
+      debuglog("ApiGetAssetsSumaryList-------");
+      return await ApiGetAssetsSumaryList(user, assetSearch).then(result=>{
+        debuglog(result);
+        let records = result.data.map(data=>{
+            return({
+              name : data.insert_yyyymm,
+              '合計' : data.value
+            });
+        });
+        debuglog(records);
+        debuglog("setTotalGraphDatas-----------------------99");
+        setTotalGraphDatas(records);
+        return records;
+      });
+    }
+
+    function fetchData(totalDatas){
+      debuglog("AssetsGroupGraph");
       ApiGetAssetsGroupSumaryList(user, assetSearch).then(result=>{
         debuglog(result);
         // 下記内容に整形する
@@ -98,12 +121,16 @@ export default function AssetsGroupGraph() {
           }
           return 0;
         });
-        debuglog("ObjectMerge-----------------------");
+        debuglog("totalDatas-----------------------02");
+        debuglog(totalDatas);
+        records = records.map((record=>{
+          let totaldata = totalDatas.find(data=>data.name===record.name);
+          record['合計'] = totaldata['合計'];
+          return record;
+        }));
+        debuglog("records-----------------------03");
         debuglog(records);
-
-        //
-        // Lineタグ生成
-
+        setGraphDatas(records);
         // グループ名を設定する
         let GroupNames = [];
         records.map(record=>{
@@ -116,30 +143,39 @@ export default function AssetsGroupGraph() {
             }
           }
         })
-        debuglog("GroupNames-----------------------");
-        debuglog(GroupNames);
         GroupNames = Object.keys(GroupNames);
-        let outLines = GroupNames.map((name, index)=>{
-          let i = coloers.length % index;
-          return(
-            <Line
-            key={index}
-            isAnimationActive={false}
-            type="monotone"
-            dataKey={name}
-            stroke={coloers[i]}
-            //stroke={theme.palette.primary.light}
-            dot={false}
-            activeDot={{ r: 8 }}
-            />
-        )});
-        setLines(outLines);
-        setGraphDatas(records);
+        GroupNames.push("合計");
+        debuglog("setGroupNames-----------------------");
+        setGroupNames(GroupNames);
+        setLinsData(GroupNames);
       }).catch(error=>{
         console.error(error);
       })
     }
-    fetchData();
+
+    function setLinsData(groupName){
+      debuglog("GroupNames-----------------------");
+      debuglog(groupName);
+      let outLines = groupName.map((name, index)=>{
+        let i = coloers.length % index;
+        //
+        // Lineタグ生成
+        return(
+          <Line
+          key={index}
+          isAnimationActive={false}
+          type="monotone"
+          dataKey={name}
+          stroke={coloers[i]}
+          //stroke={theme.palette.primary.light}
+          dot={false}
+          activeDot={{ r: 8 }}
+          />
+      )});
+      setLines(outLines);
+    }
+
+    fetchAll();
   },[assetSearch, assetSearchEvent]);
 
   //
