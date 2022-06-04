@@ -24,6 +24,7 @@ import Chart from '../dashboard/Chart';
 import Deposits from '../dashboard/Deposits';
 import Orders from '../dashboard/Orders';
 import Results from '../dashboard/Results';
+import AssetsTotalGraph from '../dashboard/AssetsTotalGraph';
 
 function Copyright(props) {
   return (
@@ -63,6 +64,20 @@ function MainPage() {
       <Toolbar />
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Grid container spacing={3}>
+          {/* 資産グラフ */}
+          <Grid item xs={12}>
+            <Paper sx={{ 
+              p: 2, 
+              display: 'flex', 
+              flexDirection: 'column',
+              height: 400,
+            }}>
+              <Link component={RouterLink} color="primary" to="/assets" >
+                資産情報
+              </Link>
+              <AssetsTotalGraph />
+            </Paper>
+          </Grid>
           {/* Chart */}
           <Grid item xs={12} md={8} lg={9}>
             <Paper
@@ -103,7 +118,7 @@ function MainPage() {
           <Grid item xs={12}>
             <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
               <Link component={RouterLink} color="primary" to="/result" >
-                実績
+                貯金実績
               </Link>
               <Orders />
             </Paper>

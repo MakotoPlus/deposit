@@ -5,10 +5,9 @@ import React, {useEffect} from 'react';
 //import { makeStyles } from '@material-ui/core/styles';
 import { useTheme } from '@mui/material/styles';
 import { Tooltip, CartesianGrid, LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
-import Title from '../../dashboard/Title';
-import {useUserContext} from '../../context/userContext';
-import {useResultDatasContext} from '../../context/resultDatasContext';
-import {ApiGetAssetsGroupSumaryList, ApiGetAssetsSumaryList} from '../common/prj_url';
+import {useUserContext} from '../context/userContext';
+import {useResultDatasContext} from '../context/resultDatasContext';
+import {ApiGetAssetsGroupSumaryList, ApiGetAssetsSumaryList} from '../component/common/prj_url';
 
 const coloers = [
   "red",
@@ -22,20 +21,16 @@ const coloers = [
 // 配列中の全てのオブジェクトを1つのオブジェクトに格納する
 //
 function ObjectMerge(objes){
-  //console.log("ObjectMerg START");
   let merged = objes.reduce((acc, obj, index)=>{
     for (let key in obj){
       acc[key] = obj[key];
-      //console.log(obj[key]);
     }
     return acc;
   },{});
-  //console.log(merged);  
-  //console.log("ObjectMerg END");
   return merged;
 }
 
-export default function AssetsGroupGraph() {
+export default function AssetsTotalGroupGraph() {
   const theme = useTheme();
   const {user} = useUserContext();  
   const {assetSearch, assetsRecords, assetSearchEvent} = useResultDatasContext();
@@ -207,7 +202,6 @@ export default function AssetsGroupGraph() {
 
   return(
     <React.Fragment>
-      <Title>Group別グラフ</Title>
       <ResponsiveContainer>
         <LineChart
           data={graphDatas}
@@ -218,33 +212,26 @@ export default function AssetsGroupGraph() {
             left: 24,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" />
-          <Tooltip />
-          <XAxis
-            dataKey="name"
-            /*
-            stroke={theme.palette.text.secondary}
-            style={theme.typography.body2}
-            */
-          />
-          <YAxis
-          /*
-            stroke={theme.palette.text.secondary}
-            style={theme.typography.body2}
-            */
-          >
-            <Label
-              angle={270}
-              position="left"
-              style={{
-                textAnchor: 'middle',
-                fill: theme.palette.text.primary,
-                ...theme.typography.body1,
-              }}
+        <XAxis
+          dataKey="name"
+          stroke={theme.palette.text.secondary}
+          style={theme.typography.body2}
+        />
+        <YAxis
+          stroke={theme.palette.text.secondary}
+          style={theme.typography.body2}
+        >
+          <Label
+            angle={270}
+            position="left"
+            style={{
+              textAnchor: 'middle',
+              fill: theme.palette.text.primary,
+              ...theme.typography.body1,
+            }}
             >
-              金額
-            </Label>
-          </YAxis>
+          </Label>
+        </YAxis>
           {lines}
         </LineChart>
       </ResponsiveContainer>

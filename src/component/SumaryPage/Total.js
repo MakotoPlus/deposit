@@ -27,7 +27,7 @@ export default function Total() {
   return (
     <React.Fragment>
       <Typography color="text.secondary" >
-        総預金額
+        貯金総額
       </Typography>
       <Typography component="p" variant="h4">
         {depositTotal}

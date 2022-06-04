@@ -37,7 +37,7 @@ export function ResultDatasProvider({children}){
 
     // 資産検索条件
     const [assetSearch, setAssetSearch] = useState({
-        select_fromto_date : [null,null],
+        select_fromto_date : ['2005/01',null],
     });
     // 資産検索結果
     const [assetsRecords, setAssetsRecords] = useState(

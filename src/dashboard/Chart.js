@@ -64,7 +64,7 @@ export default function Chart() {
   return (
     <React.Fragment>
       <Link component={RouterLink} color="primary" to="/graph" >
-        Graph
+        貯金Graph
       </Link>
       <ResponsiveContainer>
         <LineChart
@@ -102,13 +102,4 @@ export default function Chart() {
     </React.Fragment>
   );
 }
-/*
-          <Line
-            isAnimationActive={false}
-            type="monotone"
-            dataKey="amount"
-            stroke={theme.palette.primary.main}
-            dot={false}
-          />
 
-*/

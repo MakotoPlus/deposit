@@ -28,7 +28,7 @@ export const mainListItems = (
         <ListItemIcon>
           <ShoppingCartIcon />
         </ListItemIcon>
-        <ListItemText primary="計画" />
+        <ListItemText primary="貯金計画" />
       </ListItem>
     </Link>
     <Link to="/result">
@@ -36,7 +36,7 @@ export const mainListItems = (
         <ListItemIcon>
           <PeopleIcon />
         </ListItemIcon>
-        <ListItemText primary="実績" />
+        <ListItemText primary="貯金実績" />
       </ListItem>
     </Link>
     <Link to="/sumary">
@@ -44,7 +44,7 @@ export const mainListItems = (
         <ListItemIcon>
           <SummarizeIcon />
         </ListItemIcon>
-        <ListItemText primary="サマリ" />
+        <ListItemText primary="貯金サマリ" />
       </ListItem>
     </Link>
     <Link to="/graph">
@@ -52,7 +52,7 @@ export const mainListItems = (
         <ListItemIcon>
           <BarChartIcon />
         </ListItemIcon>
-        <ListItemText primary="Graph" />
+        <ListItemText primary="貯金Graph" />
       </ListItem>
     </Link>
   </List>
